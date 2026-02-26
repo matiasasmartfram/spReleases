@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análisis de Commits con Descripción Técnica</title>
+  
+  <!-- Estilos de la página y Prism.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.css" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+    :root {
+      --bg-color: #f4f7f9;
+      --card-bg-color: #ffffff;
+      --text-color: #212529;
+      --border-color: #dee2e6;
+      --analysis-bg: rgba(255, 193, 7, 0.1);
+      --analysis-border: #ffc107;
+      --analysis-text: #664d03;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2em;
+      line-height: 1.7;
+    }
+
+    .container { max-width: 1000px; margin: 0 auto; }
+    
+    .commit-card {
+      background-color: var(--card-bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 2.5em;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+    
+    .commit-header {
+      background-color: var(--bg-color);
+      padding: 1.5em;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1em;
+    }
+    
+    .commit-header h2 { margin: 0; font-size: 1.4em; }
+    .commit-header code { font-family: 'Fira Code', monospace; font-size: 0.9em; background-color: #e9ecef; padding: 0.3em 0.6em; border-radius: 4px; margin-right: 1em; }
+    .copy-btn { background-color: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8em; transition: background-color 0.2s; }
+    .copy-btn:hover { background-color: #5a6268; }
+    .copy-btn.copied { background-color: #28a745; }
+
+    .commit-body { padding: 1.5em; }
+    h3 { font-size: 1.2em; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5em; margin-top: 1.5em; margin-bottom: 1em; }
+    h3:first-child { margin-top: 0; }
+    
+    .file-change { border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 2em; }
+    .file-header { padding: 0.8em 1em; background-color: var(--bg-color); border-bottom: 1px solid var(--border-color); }
+    .file-header h4 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1em; }
+    
+    ul { padding-left: 20px; }
+    ul li { margin-bottom: 0.5em; }
+    
+    pre[class*="language-"] {
+        padding: 1.5em !important;
+        margin: 0 !important;
+        border-radius: 0 0 6px 6px;
+        font-family: 'Fira Code', monospace !important;
+        font-size: 0.85em !important;
+        line-height: 1.5 !important;
+    }
+    
+    .token.inserted { background: rgba(40, 167, 69, 0.15); }
+    .token.deleted { background: rgba(220, 53, 69, 0.15); }
+    
+    .analysis-comment {
+      display: block;
+      background-color: var(--analysis-bg);
+      border-left: 3px solid var(--analysis-border);
+      color: var(--analysis-text);
+      padding: 0.8em 1em;
+      margin: 0.8em 0;
+      font-family: 'Inter', sans-serif;
+      font-style: italic;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Análisis de Commits Recientes</h1>
+
+    <!-- COMMIT 1 CARD -->
+    <article class="commit-card">
+      <header class="commit-header">
+        <div>
+          <h2><code>643da4f1bbc497317b8089512df756362c6c116d</code></h2>
+          <h2>Mejora en manejo y registro de errores en mercadoPagoNotification</h2>
+        </div>
+      </header>
+      <div class="commit-body">
+        <h3>Análisis General</h3>
+        <p>Este commit es para la robustez de la integración con MercadoPago. Se divide en dos objetivos principales:</p>
+        <ul>
+            <li><strong>Fortalecer el Webhook (mercadoPagoNotification):</strong> Se añade una serie de validaciones y un registro de errores más detallado al punto de entrada de las notificaciones de MercadoPago. Esto hace que el platform logre procesar bien las peticiones y se adapta mas al formato de order que envia mercado pago delivery.</li>
+            <li><strong>Corregir el Mapeo de Datos (Envios y Promociones) (mercadoPago.js interface):</strong> Se ajusta la lógica del parser para que los datos extra (subtotal, envío) y agrega precision en los detalles de los productos en promoción para que se traduzcan correctamente al formato de <em>news</em>, asegurando la consistencia de los datos tambien en el POS.</li>
+        </ul>
+        
+        <h3>Cambios Detallados en Código</h3>
+        <div class="file-change">
+          <div class="file-header">
+            <h4>api/src/controllers/mercadoPago.js</h4>
+          </div>
+          <p style="padding: 0 1em;"><strong>Propósito:</strong> Añadir capas de validación y registro de errores en el controlador que gestiona las notificaciones de nuevas órdenes de MercadoPago.</p>
+<pre><code class="language-diff-javascript diff-highlight">
+-import config from '../config/settings';
++import config from '../config/settings';
+ 
+ const mercadoPagoNotification = async (req, res) => {
+   try {
+     const data = req.body;
++    // --- INICIO DE MODIFICACIÓN ---
++    // ANÁLISIS: Se añade una validación temprana. Si el cuerpo de la petición está vacío o no contiene el campo 'resource' (que es esencial para obtener el ID de la orden), el proceso se detiene inmediatamente.
++    if (!data || !data.resource) {
++      Log.saveError(null, { message: 'Missing data or resource in request body', data: req.body, platform: 'MercadoPago' });
++      return res.status(400).send({ message: 'Missing data or resource in request body' });
++    }
++    // ANÁLISIS: Se añade una validación de configuración. Si el token de seguridad para MercadoPago no está definido en el entorno de la aplicación, es un error crítico de configuración. El sistema lo notifica y responde con un error 500.
+     const VALID_TOKEN = config.MERCADOPAGO_DELIVERY_TOKEN
++    if (!VALID_TOKEN) {
++      Log.saveError(null, { message: 'Missing MercadoPago delivery token in config', data: req.body, platform: 'MercadoPago' });
++      return res.status(500).send({ message: 'Missing MercadoPago delivery token in config' });
++    }
++    // ANÁLISIS: Se valida que el token venga explícitamente en los parámetros de la URL. Si no está, se responde con un error de no autorizado (401).
+     const { token } = req.query;
++    if (!token) {
++      Log.saveError(null, { message: 'Missing token in request query', data: req.body, platform: 'MercadoPago' });
++      return res.status(401).send({ message: 'Missing token in request query' });
++    }
+ 
+-    let mercadoPagoClient = await mercadoPagoClientModel.findOne({user_id : req.body.user_id })
++    let mercadoPagoClient = await mercadoPagoClientModel.findOne({ user_id: req.body.user_id })
++    // ANÁLISIS: Se añade una validación crucial. El sistema ahora verifica si existe un cliente de MercadoPago asociado al 'user_id' de la notificación. Si no se encuentra, la orden no puede ser procesada.
++    if (!mercadoPagoClient) {
++      Log.saveError(null, { message: 'MercadoPago client not found', data: req.body, platform: 'MercadoPago' });
++      return res.status(404).json({ message: 'MercadoPago client not found' });
++    }
++    // ANÁLISIS: Se refactoriza la extracción del 'orderId' para ser más segura, usando "optional chaining" (?.) para evitar errores si 'resource' es nulo o indefinido.
++    const orderId = data?.resource?.split('/').pop();
+-    const shipment_id = data.resource;
+-    const orderId = shipment_id.split('/').pop();
+     if (!orderId) {
+-      return res.status(400).send({ message: 'Falta Order ID en la consulta' });
++      // ANÁLISIS: Se mejora el log de error cuando el ID de la orden no puede ser extraído.
++      Log.saveError(null, { message: 'Missing Order ID in request', data: req.body, platform: 'MercadoPago' });
++      return res.status(400).json({ message: 'Falta Order ID en la consulta' });
+     }
+...
+</code></pre>
+        </div>
+        <div class="file-change">
+          <div class="file-header">
+            <h4>api/src/platforms/interfaces/mercadoPago.js</h4>
+          </div>
+          <p style="padding: 0 1em;"><strong>Propósito:</strong> Corregir el mapeo de datos económicos y la estructura de los ítems de promociones dentro del parser de MercadoPago.</p>
+<pre><code class="language-diff-javascript diff-highlight">
+...
+           paymentNews.typeId = paymentType.CREDIT.paymentId;
+           paymentNews.online = true;
+-          paymentNews.shipping = 0;
+-          paymentNews.subtotal = payment.prepaid;
++          // --- INICIO DE LA MODIFICACIÓN ---
++          // ANÁLISIS: El costo de envío ('shipping') ahora se extrae del objeto 'discounts.otherFees'. Anteriormente se asignaba un valor fijo de 0.
++          paymentNews.shipping = discounts.otherFees.value || 0;
++          // ANÁLISIS: El subtotal ahora se basa en 'discounts.itemsPrice', que representa el costo real de los productos. Anteriormente usaba 'payment.prepaid', que podría no ser preciso.
++          paymentNews.subtotal = discounts.itemsPrice.value || 0;  //payment.prepaid;
+           paymentNews.currency = '$';
+...
+                   detDetails.promo = 1; //1 = indica que es ítem de la PROMO
+                   detDetails.groupId = numberOfPromotions;
+-                  detDetails.description = option.extension.group.trim(); //option.name.trim();
+-                  optionsString +=
++                  // ANÁLISIS: Se corrige el origen de la descripción del ítem de la promo, usando 'option.name' que es más directo.
++                  detDetails.description = option.name.trim();//option.extension.group.trim();
++                  // ANÁLISIS: Se comenta la lógica que construía 'optionsString', simplificando el procesamiento.
++                  /*optionsString +=
+-                    ' ' + option.name.trim() +
+-                    ' X ' + option.quantity + ' | ';
++                    ' ' + option.name.trim() + ' X ' + option.quantity + ' | ';*/
+ 
+                   detDetails.sku = option.externalCode;
+                   detDetails.optionalText = optionsString;
+                   detDetails.count = option.quantity;
++                  // ANÁLISIS: Se corrige un bug crítico. El ítem de la promoción ('detDetails') ahora se añade al array 'details' y el objeto se resetea. Antes, no se agregaba correctamente.
++                  details.push(detDetails);
++                  detDetails = {};
+                 }
+-                const optionDetail = Object.assign({}, detDetails);
+-                details.push(optionDetail);
++                // ANÁLISIS: Se elimina código que duplicaba la inserción del ítem de la promoción.
++                //const optionDetail = Object.assign({}, detDetails);
++                //details.push(optionDetail);
+                 numberOfPromotions += 1;
+...
+</code></pre>
+        </div>
+      </div>
+    </article>
+
+    <!-- COMMIT 2 CARD -->
+    <article class="commit-card">
+      <header class="commit-header">
+        <div>
+          <h2><code>45688016b1646fe07057ea0abb64bc9d7622bd4e</code></h2>
+          <h2>Manejo de productos sustitutos en pedidos de Rappi</h2>
+        </div>
+      </header>
+      <div class="commit-body">
+        <h3>Análisis General</h3>
+        <p>Este commit introduce el manejo de Productos Sustitutos de Rappi, es decir una opcion extra de un topping que el ususario puede elegir para "Sustituir" en caso de que no este en stock uno de los elegidos principalmente. El objetivo es identificar y procesar correctamente los "productos sustitutos" que Rappi puede enviar dentro de una orden. Cuando un cliente selecciona un producto sustituto, la información del ítem ahora se anexa a la descripción del ítem original posterior a un "II". Esto proporciona una trazabilidad más clara y evita confusiones en el procesamiento del pedido.</p>
+        
+        <h3>Cambios Detallados en Código</h3>
+        <div class="file-change">
+          <div class="file-header">
+            <h4>api/src/platforms/interfaces/rappi.js</h4>
+          </div>
+          <p style="padding: 0 1em;"><strong>Propósito:</strong> Modificar la función <code>detailsMapper</code> para identificar productos sustitutos y ajustar cómo se construye el campo <code>optionalText</code> en la news final.</p>
+<pre><code class="language-diff-javascript diff-highlight">
+...
+                   for (let product of detail.subitems) {
+                     /* If the product has an item with sku 99999. It's sku is inside toppings */
++                    // ANÁLISIS: Se introduce la lógica para identificar un producto sustituto. Se revisa si la 'categoryDescription' del sub-item contiene la palabra "sustituto".
++                    let isSubstitute = product.categoryDescription && product.categoryDescription.toLowerCase().includes('sustituto');
++                    let nameSubstitute = product.name.trim();
+                     if (product.unit_price_without_discount > 0) {
+...
+-                          if (number == 0) {
+-                            detDetails.optionalText += topping.name;
+-                            number += 1;
+-                          } else {
+-                            detDetails.optionalText += ', ' + topping.name;
++                          // ANÁLISIS: La lógica para agregar toppings al 'optionalText' ahora está condicionada. Solo se ejecuta si el producto NO es un sustituto, evitando que se mezclen conceptos.
++                          if (!isSubstitute) {
++                            if (number == 0) {
++                              detDetails.optionalText += topping.name;
++                              number += 1;
++                            } else {
++                              detDetails.optionalText += ', ' + topping.name;
++                            }
+                           }
+...
+-                      if (number == 0) {
+-                        det.optionalText += product.name;
+-                        number += 1;
+-                      } else {
+-                        det.optionalText += ', ' + product.name;
++                      // ANÁLISIS: De igual manera, la lógica para agregar sub-items como texto opcional ahora solo aplica si NO se trata de un sustituto.
++                      if (!isSubstitute) {
++                        if (number == 0) {
++                          det.optionalText += product.name;
++                          number += 1;
++                        } else {
++                          det.optionalText += ', ' + product.name;
++                        }
+                       }
+                     }
++                    // ANÁLISIS: Esta es la nueva lógica clave. Si el flag 'isSubstitute' es verdadero, el nombre del producto sustituto se concatena al 'optionalText' del ítem original, precedido por un separador claro "|| SUSTITUTO:".
++                    if (isSubstitute) {
++                      det.optionalText += ` || SUSTITUTO: ${nameSubstitute}`;
++                    }
+                   }
+                 details.push(det);
+...
+</code></pre>
+        </div>
+        
+        <h3>Impacto Funcional del Cambio</h3>
+        <ul>
+            <li><strong>Antes del cambio:</strong> Un producto sustituto no era tratado.</li>
+            <li><strong>Después del cambio:</strong> El sistema ahora identifica explícitamente al sustituto. No añade su nombre a la lista de toppings, sino que lo anexa al final con una etiqueta clara.<br><em>Ej: <code>optionalText: "Vainilla, Dulce de Leche || SUSTITUTO: Chocolate"</code></em></li>
+        </ul>
+        <p>En resumen, este commit agrega a la integración con Rappi el manejo de sustitución de productos.</p>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Scripts de Prism.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // Función para extraer y formatear nuestros comentarios de análisis personalizados
+      function formatAnalysisComments() {
+        document.querySelectorAll('code.language-diff-javascript').forEach(codeBlock => {
+            let content = codeBlock.textContent;
+            // La regex busca líneas que empiezan con // ANÁLISIS: y las captura.
+            const analysisRegex = /(\/\/ ANÁLISIS:.*?)(?=\n[ \t]*[+\-@\w]|\n$)/gs;
+            
+            // Reemplaza los comentarios de análisis encontrados por un span HTML personalizado.
+            // Esto se hace en una variable temporal para no afectar el texto original que Prism necesita.
+            const newHtml = content.replace(analysisRegex, (match) => {
+                const cleanMatch = match.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
+                return `<span class="analysis-comment">${cleanMatch}</span>`;
+            });
+            
+            // Elimina los comentarios del contenido original para que Prism no los resalte
+            const codeOnly = content.replace(analysisRegex, '');
+            
+            // Inserta el código limpio en el elemento <code>
+            codeBlock.textContent = codeOnly;
+            
+            // Ahora que Prism ha hecho su trabajo sobre el código limpio, reemplazamos el contenido
+            // del elemento <pre> padre con nuestra versión que incluye los bloques de análisis.
+            // Esto se hace en un timeout para asegurar que Prism termine primero.
+            setTimeout(() => {
+              const prismHighlightedHtml = codeBlock.innerHTML;
+              const finalHtml = prismHighlightedHtml.replace(/(<span class="token comment">\/\/ --- (INICIO|FIN) DE LA MODIFICACIÓN ---<\/span>\n?)/g, '');
+              codeBlock.parentElement.innerHTML = `<code class="language-diff-javascript diff-highlight">${finalHtml}</code>`;
+              // Re-insertamos nuestros bloques de análisis en su lugar correcto (un truco un poco más complejo pero efectivo)
+              // Esto es más simple: solo procesamos el bloque de código una vez.
+            }, 0);
+        });
+      }
+
+      function processCodeBlocks() {
+          document.querySelectorAll('pre > code').forEach(codeElement => {
+              const rawCode = codeElement.textContent;
+              const analysisBlocks = new Map();
+              let placeholderId = 0;
+
+              // 1. Reemplazar bloques de análisis con placeholders y guardarlos
+              const codeWithoutAnalysis = rawCode.replace(/(\/\/ ANÁLISIS:.*?)(?=\n[ \t]*[+\-@\w]|\n$)/gs, (match) => {
+                  const id = `__ANALYSIS_PLACEHOLDER_${placeholderId++}__`;
+                  analysisBlocks.set(id, `<div class="analysis-comment">${match.trim()}</div>`);
+                  return id;
+              });
+
+              // 2. Asignar el código limpio (con placeholders) para que Prism lo resalte
+              codeElement.textContent = codeWithoutAnalysis;
+              Prism.highlightElement(codeElement);
+
+              // 3. Reemplazar los placeholders con los bloques de análisis HTML
+              let finalHtml = codeElement.innerHTML;
+              analysisBlocks.forEach((html, id) => {
+                  finalHtml = finalHtml.replace(id, html);
+              });
+              
+              // Limpiar cualquier marcador sobrante
+              finalHtml = finalHtml.replace(/(\/\/ --- (INICIO|FIN) DE LA MODIFICACIÓN ---)/g, '');
+
+              codeElement.innerHTML = finalHtml;
+          });
+      }
+
+      // --- Función para los botones de copiar ---
+      function setupCopyButtons() {
+        document.querySelectorAll('.copy-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            const hashToCopy = button.dataset.hash;
+            navigator.clipboard.writeText(hashToCopy).then(() => {
+              const originalText = button.innerText;
+              button.innerText = 'Copiado!';
+              button.classList.add('copied');
+              setTimeout(() => {
+                button.innerText = originalText;
+                button.classList.remove('copied');
+              }, 2000);
+            }).catch(err => {
+              console.error('Error al copiar el hash: ', err);
+            });
+          });
+        });
+      }
+
+      processCodeBlocks();
+      setupCopyButtons();
+    });
+  </script>
+
+</body>
+</html>

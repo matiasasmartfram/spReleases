@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Backoffice 6.2.3</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+
+    <style>
+        /* Importación de Fuentes de Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        /* Variables CSS para la Paleta de Colores */
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        /* Estilos Base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* Encabezado Principal */
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 {
+            margin: 0 0 0.25em 0;
+            font-size: 2.2em;
+            color: var(--primary-color);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--text-muted-color);
+        }
+
+        /* Información de Despliegue */
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #166534;
+        }
+
+        .deployment-info-box p {
+            margin: 0.5em 0 0 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+        }
+
+        /* Secciones de Servicio */
+        .service-section {
+            margin-bottom: 3em;
+        }
+
+        .service-section>h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        /* Tarjeta de Componente (details) */
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        /* Encabezado de la Tarjeta (summary) */
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none; /* Oculta el marcador de triángulo por defecto */
+        }
+
+        /* Oculta el marcador de triángulo en WebKit (Chrome/Safari) */
+        .component-header::-webkit-details-marker {
+            display: none;
+        }
+
+        .component-header h3 {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2em;
+        }
+
+        /* Cuerpo de la Tarjeta */
+        .component-body {
+            padding: 1.5em;
+        }
+
+        .component-body h4 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.2em;
+            color: #343a40;
+        }
+
+        .component-body h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        /* Caja de Conclusión del Análisis */
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+
+        .analysis-box h4 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+
+        /* Bloques de Código (Prism.js) */
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            /* CRÍTICO: Ajuste de código para evitar el scroll horizontal */
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Backoffice 6.2.3</h1>
+            <p>
+                Implementación de filtros avanzados por País y Cadena, y mejoras de UI.
+            </p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 6.2.3</p>
+            <p><b>Fecha de Despliegue:</b> 29/12/2025</p>
+            <p><b>AWS Task:</b> [Pendiente]</p>
+            <p><b>Commits:</b> 1bf71eee480b6e6178b074a033196bc7d98b8b41</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General de la Versión</h2>
+            <p>
+                Esta actualización implementa mejoras funcionales significativas en la gestión de sucursales. Se introduce la capacidad de filtrar sucursales por País y Cadena, esencial para operaciones multi-región. A nivel visual, se actualizan los estilos para soportar menús desplegables extensos y controles de navegación tipo carrusel.
+            </p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+
+            <!-- Bloque para branches.component.css -->
+            <details class="component-card" open>
+              <summary class="component-header">
+                <h3>app/src/app/pages/management/branches/branches.component.css</h3>
+              </summary>
+              <div class="component-body">
+                  <h4>Análisis General</h4>
+                  <p>
+                    Se incorporan clases para personalizar componentes de navegación (carrusel) y menús desplegables (dropdowns), mejorando la usabilidad de listas largas y controles visuales.
+                  </p>
+                  
+                  <h4>Cambios Detallados</h4>
+            
+                  <h5>Estilización de Controles de Carrusel</h5>
+                  <p><b>Explicación:</b> Se definen estilos para los botones de navegación, utilizando SVGs personalizados y posicionando los controles fuera del contenedor principal para evitar superposiciones.</p>
+                  <b>Código Nuevo:</b>
+                  <pre><code class="language-css">
+/* DESPUÉS: Personalización de iconos y posición del carrusel */
+.carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,..."); /* SVG Azul */
+    width: 30px;
+    height: 48px;
+}                  
+.carousel-control-prev { left: -100px; }                          
+.carousel-control-next { right: -100px; }
+                  </code></pre>
+
+                  <h5>Ajuste de Menús Desplegables (Dropdowns)</h5>
+                  <p><b>Explicación:</b> Se fuerza el comportamiento de los menús para manejar listas largas, estableciendo una altura máxima y scroll automático.</p>
+                  <b>Código Nuevo:</b>
+                  <pre><code class="language-css">
+/* DESPUÉS: Dropdown con scroll interno */
+.dropdown-menu {
+  min-width: 100% !important;
+  max-height: 20rem; /* ~200px */                              
+  overflow-y: auto;
+}
+                  </code></pre>
+                  
+                  <div class="analysis-box">
+                  <h4>Conclusión del análisis</h4>
+                  <p><b>Mejora de UX:</b> Asegura que los filtros con muchas opciones sean accesibles y visualmente limpios.</p>
+                </div>
+              </div>
+            </details>
+            
+            <!-- Bloque para branches.component.ts -->
+            <details class="component-card" open>
+              <summary class="component-header">
+                <h3>app/src/app/pages/management/branches/branches.component.ts</h3>
+              </summary>
+              <div class="component-body">
+                  <h4>Análisis General</h4>
+                  <p>
+                    Se implementa la lógica de negocio para soportar filtros avanzados, integrando servicios externos para cargar países y cadenas, y gestionando el estado de la selección en la interfaz.
+                  </p>
+                  
+                  <h4>Cambios Detallados</h4>
+            
+                  <h5>Integración de Servicios y Estado para Filtros</h5>
+                  <p><b>Explicación:</b> Se importan <code>CountriesService</code> y <code>ChainsService</code> y se definen las variables de estado necesarias para habilitar el filtrado dinámico.</p>
+                  <b>Código Nuevo:</b>
+                  <pre><code class="language-typescript">
+// DESPUÉS: Importación de dependencias y definición de estado
+import { CountriesService } from "../../management/shared/services/countries.service"       
+import { ChainsService } from "../../management/chains/shared/services/chains.service";     
+// ...
+  public countries: Country[] = [];
+  public selectedCountries: any[] = []; // Almacena la selección actual
+  public countryName = "Todos los Paises";
+  public chains: Chain[] = [];
+  public selectedChains: any[] = [];
+                  </code></pre>
+
+                  <h5>Lógica de Selección y Eventos (onCheckboxChange)</h5>
+                  <p><b>Explicación:</b> Se añade el método <code>onCheckboxChange</code> para gestionar la interacción del usuario con los filtros desplegables.</p>
+                  <b>Código Nuevo:</b>
+                  <pre><code class="language-typescript">
+// DESPUÉS: Método manejador de eventos de checkbox (resumido)
+  cargarPaises() { ... }
+  cargarCadenas() { ... }
+  onCheckboxChange(event: any, item: any, change: string) { ... }
+                  </code></pre>
+
+                  <h5>Refactorización en Exportación de Excel</h5>
+                  <p><b>Explicación:</b> Limpieza de sintaxis en el operador ternario durante la generación del JSON.</p>
+                  <b>Código Anterior:</b>
+                  <pre><code class="language-typescript">
+// ANTES:
+"Cloud": element["cloud"] ? 'SI': 'NO',
+                  </code></pre>
+                  <b>Código Nuevo:</b>
+                  <pre><code class="language-typescript">
+// DESPUÉS: Corrección de estilo
+"Cloud": element["cloud"] ? 'SI' : 'NO',
+                  </code></pre>
+                  
+                  <div class="analysis-box">
+                  <h4>Conclusión del análisis</h4>
+                  <p><b>Capacidad de Filtrado:</b> Habilita filtros esenciales para organizaciones grandes.<br>
+                  <b>Estandarización:</b> Promueve el uso de servicios compartidos dentro de la aplicación.</p>
+                </div>
+              </div>
+            </details>
+
+        </section>
+    </div>
+
+    <!-- Scripts de Prism.js para resaltar código -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+</html>

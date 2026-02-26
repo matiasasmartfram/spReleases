@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Release Técnico: Platform 8.4.0</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .main-header h1 {
+            margin: 0 0 0.25em 0;
+            font-size: 2.2em;
+            color: var(--primary-color);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--text-muted-color);
+        }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #166534;
+        }
+
+        .deployment-info-box p {
+            margin: 0.5em 0 0 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+        }
+
+        .service-section {
+            margin-bottom: 3em;
+        }
+
+        .service-section>h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker {
+            display: none;
+        }
+
+        .component-header h3 {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2em;
+        }
+
+        .component-body {
+            padding: 1.5em;
+        }
+
+        .component-body h4 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.2em;
+            color: #343a40;
+        }
+
+        .component-body h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+
+        .analysis-box h4 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Platform 8.4.0</h1>
+            <p>Estandarizacion de Motivos de Rechazo.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 8.4.0</p>
+            <p><b>Fecha de Despliegue:</b> 2025-09-08</p>
+            <p><b>Entorno:</b> Producción</p>
+            <p><b>AWS TASK:</b> 170</p>
+            <p><b>COMMIT:</b> 9f0148e1731e89f541a5836ff41cebb02dd8be5d</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General</h2>
+            <p>
+                Este commit ejecuta una refactorización clave que desmantela por completo el antiguo sistema descentralizado de gestión de parámetros de plataforma, como los motivos de rechazo y los tiempos de
+  entrega.
+
+  Anteriormente, cada plataforma era responsable de obtener estos datos, ya sea leyendo archivos de configuración estáticos o consultando APIs externas de forma individual. Este enfoque era      
+  inconsistente y difícil de mantener.
+
+
+  Los cambios eliminan sistemáticamente los métodos y las tareas programadas (cron jobs) responsables de esta lógica en todas las clases de plataforma (Platform, PedidosYa, Rappi, UberEats,
+  etc.). Al hacerlo, se limpia la base de código y se prepara el terreno para una nueva arquitectura centralizada, donde una única fuente de datos (base de datos) y un nuevo endpoint de API
+  servirán esta información de manera estandarizada a todos los sistemas, como el POS.
+            </p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/platforms/management/platform.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        El objetivo principal es eliminar la responsabilidad de gestionar parámetros (tiempos de entrega y motivos de rechazo) desde esta clase genérica. Se desmantela por completo el antiguo sistema que leía datos de configuración desde archivos estáticos (`/assets`) y los sincronizaba periódicamente en la base de datos.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Eliminación de la Lógica de Obtención de Parámetros</h5>
+                    <p><b>Explicación:</b> Se han eliminado por completo los métodos `getDeliveryTimes`, `getRejectedMessages` y `getPlatformParameters`. Estas funciones constituían  el antiguo sistema de gestión de parámetros. Su eliminación indica que la clase `Platform` y sus clases hijas ya no son responsables de obtener ni de actualizar esta información.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: La clase base contenía métodos para obtener datos de archivos locales y un orquestador para sincronizarlos.
+// ...
+  getDeliveryTimes() { /* ... */ }
+
+  getRejectedMessages() { /* ... */ }
+
+  async getPlatformParameters() {
+    try {
+      const [rejectedMessages, deliveryTimes] = await Promise.all([
+        this.getRejectedMessages(),
+        this.getDeliveryTimes()
+      ]);
+      this.updateRejectedMessage(rejectedMessages);
+      this.updateDeliveryTimes(deliveryTimes);
+    } catch (error) { /* ... */ }
+  }// ...
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: Todos los métodos relacionados con la obtención y sincronización de parámetros han sido eliminados.
+// ...
+      this.aws = new Aws();
+    }
+    cronGetPlatformParameters() { // <-- Este método ahora tiene un nuevo propósito
+// ...
+                    </code></pre>
+                    <h5>2. Neutralización de la Tarea Programada (Cron Job)</h5>
+                    <p><b>Explicación:</b> El método `cronGetPlatformParameters`, que antes programaba la tarea periódica de sincronización de parámetros, ha sido vaciado de su lógica original. Ahora, su única función es imprimir un mensaje en la consola al iniciar la plataforma. Esto desactiva el antiguo mecanismo de actualización.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El método configuraba un cron job para ejecutar 'getPlatformParameters' cada hora a los 55 minutos.
+  cronGetPlatformParameters() {
+    const schedule = '55 * * * *';
+    cron.schedule(schedule, () => this.getPlatformParameters());
+  }
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El método ya no programa ninguna tarea. Solo sirve como un punto de log para confirmar la inicialización.
+  cronGetPlatformParameters() {
+    console.log(`${this._platform.name}.\t [CRON] Inicializated.`);
+  }
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>La modificación en la clase base `Platform` elimina la lógica de gestión de parámetros de la base, se obliga a que todas las clases hijas (PediGrido, Rappi, etc.) también pierdan esta responsabilidad.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/platforms/management/platform/mercadoPago.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        Siguiendo el patrón de eliminar la lógica de gestión de parámetros. Se eliminan los métodos que cargaban datos de configuración (tiempos de entrega y motivos de rechazo) desde archivos estáticos y se desactiva la tarea programada que los sincronizaba.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Eliminación de la Lógica de Obtención de Parámetros</h5>
+                    <p><b>Explicación:</b> Se han eliminado por completo los métodos `getDeliveryTimes` y `getRejectedMessages`. Estas funciones sobreescribían la lógica de la clase padre para cargar datos específicos de MercadoPago, combinando información de archivos genéricos y de la propia plataforma.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: La clase tenía métodos propios para cargar sus tiempos de entrega y motivos de rechazo.
+// ...
+  getDeliveryTimes() { /* ... */ }
+
+  getRejectedMessages() { /* ... */ }
+
+      async receiveOrder(order) { /* ... */ }
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: Los métodos 'getDeliveryTimes' y 'getRejectedMessages' han sido eliminados por completo.
+// ...
+      importParser() {
+        return require('../../interfaces/mercadoPago');
+      }
+
+      async receiveOrder(order) { /* ... */ }
+                    </code></pre>
+                    <h5>2. Neutralización de la Tarea Programada (Cron Job)</h5>
+                    <p><b>Explicación:</b> El método `cronGetPlatformParameters`, que antes programaba la tarea periódica de sincronización de parámetros, ha sido vaciado de su lógica original. Ahora, su única función es imprimir un mensaje en la consola al iniciar la plataforma, desactivando el antiguo mecanismo de actualización.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El método configuraba un cron job para ejecutar la sincronización de parámetros.
+      cronGetPlatformParameters() {
+        const schedule = '55 * * * *';
+        cron.schedule(schedule, () => this.getPlatformParameters());
+      }
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El método ya no programa ninguna tarea. Solo sirve como un punto de log para confirmar la inicialización.
+      cronGetPlatformParameters() {
+        console.log(`${this._platform.name}.\t [CRON] Inicializated.`);
+      }
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>Los cambios en `mercadoPago.js` eliminan la lógica de carga de parámetros, esta clase ahora depende de un mecanismo externo para obtener esta información.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/platforms/management/platform/pad.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        La modificación en la clase `Pad` elimina la lógica específica que esta clase tenía para cargar motivos de rechazo, alineándola con el nuevo enfoque.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Eliminación del Método `getRejectedMessages`</h5>
+                    <p><b>Explicación:</b> Se ha eliminado por completo el método `getRejectedMessages`. Anteriormente, esta función sobreescribía el comportamiento de la clase base `Platform` para cargar una lista específica de motivos de rechazo "negativos" desde el archivo `rejectedMessages.js` en la carpeta `/assets`.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: La clase 'Pad' tenía su propio método para cargar una lista específica de motivos de rechazo.
+// ...
+  getRejectedMessages() {
+    return new Promise(async (resolve) => {
+      try {
+        let data = [];   
+        let negatives = require('../../../assets/rejectedMessages').negatives;
+        data = data.concat(negatives);
+        resolve(data);
+      } catch (error) {
+        Log.saveError(error, { message: 'Falló getRejectedMessages PAD', platform: 'PAD'});    
+        const msg = 'Can not get parameters of PaD.';
+        new CustomError(APP_BRANCH.PARAMS, msg, this.uuid, {
+          platformError: error
+        });
+      }
+    });
+  }
+}
+export default Pad;
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El método 'getRejectedMessages' ha sido eliminado por completo.
+// ...
+}
+export default Pad;
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>El cambio en `pad.js elimina su propia lógica de carga de parámetros, la clase `Pad` ahora dependerá del nuevo sistema para obtener los motivos de rechazo.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/platforms/management/platform/pedidosYa.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        La clase `PedidosYa` ha sido modificada para eliminar la lógica de gestión de parámetros. Se eliminan los métodos que cargaban datos desde archivos locales y se desactiva la tarea programada que los sincronizaba. Es importante notar que esta refactorización es selectiva: se elimina únicamente la lógica de carga de parámetros, pero se mantiene otra funcionalidad programada que es específica de esta plataforma (el `peyaLogin` periódico).
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Eliminación de la Lógica de Obtención de Parámetros</h5>
+                    <p><b>Explicación:</b> Se han eliminado por completo los métodos `getDeliveryTimes` y `getRejectedMessages`. Estas funciones sobreescribían la lógica de la clase base para cargar datos desde archivos en `/assets`, combinando motivos de rechazo y tiempos de entrega genéricos con otros específicos para PedidosYa.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: La clase 'PedidosYa' tenía sus propios métodos para cargar una lista combinada de parámetros.
+// ...
+  getDeliveryTimes() {
+    return new Promise(async (resolve) => {
+      // ... (Lógica para cargar deliveryTimes.generic)
+    });
+  }
+  getRejectedMessages() {
+    return new Promise(async (resolve) => {
+      // ... (Lógica para cargar rejectedMessages.generic, .negatives y .peyaRejects)
+    });
+  }
+// ...
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: Los métodos 'getDeliveryTimes' y 'getRejectedMessages' han sido eliminados por completo.
+// ...
+      }
+    }
+  }
+
+  /**
+   * @param {*} order
+// ...
+                    </code></pre>
+                    <h5>2. Modificación de la Tarea Programada (Cron Job)</h5>
+                    <p><b>Explicación:</b> Dentro del método `cronGetPlatformParameters`, se ha eliminado la línea que programaba la tarea para actualizar los parámetros (`cron.schedule(schedule, ...)`). En su lugar, se ha añadido un `console.log` que confirma la inicialización de los crons. La otra tarea programada que ya existía en esta función (`peyaLogin`) se ha mantenido sin cambios.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El método programaba DOS tareas: una para actualizar parámetros y otra para el login de Peya.
+  cronGetPlatformParameters() {
+    try {
+      const schedule = '55 * * * *';
+      const schedulePeyaLogin = '*/25 * * * *';
+
+      cron.schedule(schedule, () => this.getPlatformParameters());
+      cron.schedule(schedulePeyaLogin, () => this.peyaLogin());
+    } catch (error) {
+      Log.saveError(error, { message: 'Falló cronGetPlatformParameters', platform: 'PedidosYa' });
+    }
+  }
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El método ahora solo programa UNA tarea (peyaLogin) y añade un log de inicialización.
+  cronGetPlatformParameters() {
+    try {
+      const schedulePeyaLogin = '*/25 * * * *';
+
+      cron.schedule(schedulePeyaLogin, () => this.peyaLogin());
+      console.log(`${this._platform.name}.\t [CRON] Inicializated.`);
+    } catch (error) {
+      Log.saveError(error, { message: 'Falló cronGetPlatformParameters', platform: 'PedidosYa' });
+    }
+  }
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>Este cambio aísla y elimina únicamente la lógica de carga de parámetros desde archivos, manteniendo otras funcionalidades programadas que son específicas y necesarias para la operación de la plataforma PedidosYa.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/platforms/management/platform/rapiboy.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        La modificación en la clase `Rapiboy` (PediGrido) es particularmente significativa. A diferencia de otras plataformas que solo leían archivos locales, esta clase tenía que consultar APIs externas para obtener dinámicamente los tiempos de entrega y motivos de rechazo.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Eliminación del Método `getDeliveryTimes`</h5>
+                    <p><b>Explicación:</b> Se ha eliminado por completo el método `getDeliveryTimes`. Esta función realizaba una llamada `axios.get` a un endpoint de la API de Rapiboy (`/TiemposEntrega`) para obtener la lista de tiempos de demora disponibles, la procesaba y la devolvía en el formato esperado por el sistema.
+                    </p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El método realizaba una llamada a la API externa para obtener los tiempos de entrega dinámicamente.
+// ...
+  getDeliveryTimes() {
+    return new Promise(async (resolve) => {
+      try {
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        const url = `${this.baseUrl}${this.urlDeliveryTime}`;
+        const deliveryTimesRes = await axios.get(url, {}, headers);
+        const deliveryTimes = deliveryTimesRes.data.map((obj, index) => { /* ... */ });
+        resolve(deliveryTimes);
+      } catch (error) { /* ... */ }
+    });
+  }
+// ...
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El método 'getDeliveryTimes' y toda su lógica de consulta a la API han sido eliminados.
+// ...
+      }
+    });
+  }
+}
+export default Rapiboy;
+                    </code></pre>
+                    <h5>2. Eliminación del Método `getRejectedMessages`</h5>
+                    <p><b>Explicación:</b> De manera similar, se ha eliminado el método `getRejectedMessages`. Esta función realizaba una llamada `axios.get` al endpoint `/MotivosRechazo` de la API de Rapiboy, procesaba la respuesta para estandarizarla y la combinaba con los motivos de rechazo "negativos" del sistema.
+                    </p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El método realizaba una llamada a la API externa para obtener los motivos de rechazo dinámicamente.
+// ...
+  getRejectedMessages() {
+    return new Promise(async (resolve) => {
+      try {
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        const url = `${this.baseUrl}${this.urlRejectedType}`;
+        const rejectedMessagesRes = await axios.get(url, {}, headers);
+        let data = rejectedMessagesRes.data.map((obj) => { /* ... */ });
+        let negatives = require('../../../assets/rejectedMessages').negatives;
+        data = data.concat(negatives);
+        resolve(data);
+      } catch (error) { /* ... */ }
+    });
+  }
+}
+export default Rapiboy;
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El método 'getRejectedMessages' y toda su lógica de consulta a la API han sido eliminados.
+// ...
+      }
+    });
+  }
+}
+export default Rapiboy;
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>La eliminación de esta lógica en `rapiboy.js` se enfoca exclusivamente en el flujo transaccional de las órdenes, sin preocuparse por la configuración. **Habilitación de la Nueva Arquitectura**: Este cambio es un prerrequisito para que el nuevo sistema centralizado se convierta en la única fuente de verdad para estos datos de configuración.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/platforms/management/platform/rappi.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        La modificación en la clase `Rappi` se enfoca en desactivar la tarea programada que se encargaba de la sincronización de parámetros.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Modificación de la Tarea Programada (Cron Job)</h5>
+                    <p><b>Explicación:</b> Dentro del método `cronGetPlatformParameters`, se ha eliminado la línea que programaba la tarea para actualizar los parámetros (`cron.schedule(schedule2, ...)`). En su lugar, se ha añadido un `console.log` que confirma la inicialización de los crons. La otra tarea programada que ya existía en esta función (`rappiLogin`) se ha mantenido sin cambios.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El método programaba DOS tareas: una para actualizar parámetros y otra para el login de Rappi.
+// ...
+      cronGetPlatformParameters() {
+        try {
+          const schedule2 = '55 * * * *';
+          const scheduleLoginRappi = '0 0 * * *';  
+          cron.schedule(schedule2, () => this.getPlatformParameters());
+          cron.schedule(scheduleLoginRappi, () => this.rappiLogin());
+        } catch (error) {
+          Log.saveError(error, { message: 'Falló cronGetPlatformParameters', platform: 'Rappi' });
+        }
+      }// ...
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El método ahora solo programa UNA tarea (rappiLogin) y añade un log de inicialización.
+// ...
+      cronGetPlatformParameters() {
+        try {
+          const scheduleLoginRappi = '0 0 * * *';  
+          cron.schedule(scheduleLoginRappi, () => this.rappiLogin());
+          console.log(`${this._platform.name}.\t [CRON] Inicializated.`);
+        } catch (error) {
+          Log.saveError(error, { message: 'Falló cronGetPlatformParameters', platform: 'Rappi' });
+        }
+      }// ...
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>Este cambio demuestra anular el antiguo sistema de actualización de parámetros, sin afectar otras operaciones programadas. La lógica de `rappiLogin` se preserva, mientras que la de `getPlatformParameters` se desactiva.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/platforms/management/platform/uberEats.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>La clase `UberEats` elimina la lógica de gestión de parámetros que dependía de archivos estáticos y se desactiva la tarea programada asociada.</p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Eliminación de la Lógica de Obtención de Parámetros</h5>
+                    <p><b>Explicación:</b> Se han eliminado por completo los métodos `getDeliveryTimes` y `getRejectedMessages`. Estas funciones cargaban datos específicos para Uber Eats desde los archivos de `/assets`, combinando motivos de rechazo "negativos" con los específicos de Uber.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: La clase 'UberEats' tenía sus propios métodos para cargar una lista combinada de parámetros.
+// ...
+  getDeliveryTimes() {
+    try {
+      return new Promise(async (resolve) => {
+        // ... (Lógica para cargar deliveryTimes.generic)
+      });
+    }
+    catch (error) { /* ... */ }
+  }
+
+  getRejectedMessages() {
+    return new Promise(async (resolve) => {
+      try {
+        // ... (Lógica para cargar rejectedMessages.negatives y .uberRejects)
+      } catch (error) { /* ... */ }
+    });
+  }
+
+      async receiveOrder(order) { /* ... */ }
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: Los métodos 'getDeliveryTimes' y 'getRejectedMessages' han sido eliminados por completo.
+// ...
+      importParser() {
+        return require('../../interfaces/uberEats');
+      }
+
+      async receiveOrder(order) { /* ... */ }
+                    </code></pre>
+                    <h5>2. Modificación de la Tarea Programada (Cron Job)</h5>
+                    <p><b>Explicación:</b> Dentro del método `cronGetPlatformParameters`, se ha eliminado la línea que programaba la tarea para actualizar los parámetros (`cron.schedule(schedule, ...)`). Se ha mantenido intacta la tarea `uberLogin` y se ha añadido un `console.log` para confirmar la inicialización.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El método programaba DOS tareas: una para actualizar parámetros y otra para el login de Uber.
+      cronGetPlatformParameters() {
+        const schedule = '55 * * * *';
+        const scheduleLoginUber = '0 0 1,10,20 * *';
+        cron.schedule(schedule, () => this.getPlatformParameters());
+        cron.schedule(scheduleLoginUber, () => this.uberLogin());
+      }
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El método ahora solo programa UNA tarea (uberLogin) y añade un log de inicialización.
+      cronGetPlatformParameters() {
+        const scheduleLoginUber = '0 0 1,10,20 * *';
+        cron.schedule(scheduleLoginUber, () => this.uberLogin());
+        console.log(`${this._platform.name}.\t [CRON] Inicializated.`);
+      }
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>La modificación en `uberEats.js` al igual que las demás, ahora dependerá de un sistema centralizado para la gestión de sus parámetros de configuración.</p>
+                    </div>
+                </div>
+            </details>
+           <details class="component-card">
+    <summary class="component-header">
+        <h3>api/src/platforms/management/platform/thirdParty.js</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            La clase `ThirdParty` ha sido modificada para eliminar por completo lógica de gestión de parámetros cuyo objetivo es centralizar esta responsabilidad. Anteriormente, esta clase contenía una lógica dual que le permitía obtener los parámetros de configuración (tiempos de entrega y motivos de rechazo) de dos maneras:
+        </p>
+        <ul>
+            <li>Realizando llamadas a APIs externas si la plataforma estaba configurada para ello.</li>
+            <li>Cargando datos estáticos desde los archivos en `/assets` como alternativa.</li>
+        </ul>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Eliminación del Método `getDeliveryTimes`</h5>
+        <p><b>Explicación:</b> Se ha eliminado por completo el método `getDeliveryTimes`. Si `this.statusResponse.deliveryTimes` era `true`, realizaba una llamada `axios.get` a un endpoint externo para obtener los tiempos de entrega. Si era `false`, cargaba una lista genérica desde un archivo local.</p>
+        <b>Código Anterior:</b>
+        <pre><code class="language-javascript">
+// ANTES: El método tenía una lógica dual para obtener los tiempos de entrega, ya sea desde una API o desde un archivo local.
+// ...
+  getDeliveryTimes() {
+    return new Promise(async (resolve) => {
+      try {
+        let deliveryTimes = [];
+        let deliveryTimesRes;
+        if (this.statusResponse.deliveryTimes) {
+          if (this.token) {
+            // ... (Lógica de llamada a la API con token)
+          } else if (this.authData) {
+            // ... (Lógica de llamada a la API con authData)
+          }
+          deliveryTimes = deliveryTimesRes.data.map((obj, index) => {
+            // ... (Lógica para procesar la respuesta de la API)
+            return { /* ... */ };
+          });
+          resolve(deliveryTimes);
+        } else {
+          deliveryTimes = require('../../../assets/deliveryTimes').generic;
+          // ... (Lógica para procesar el archivo local)
+          resolve(deliveryTimes);
+        }
+      } catch (error) {
+        // ... (Manejo de error)
+      }
+    });
+  }
+// ...
+        </code></pre>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: El método 'getDeliveryTimes' y toda su lógica han sido eliminados.
+// ...
+      }
+    });
+  }
+}
+export default ThirdParty;
+        </code></pre>
+        <h5>2. Eliminación del Método `getRejectedMessages`</h5>
+        <p><b>Explicación:</b> De manera similar, se ha eliminado el método `getRejectedMessages`. Esta función seguía el mismo patrón : consultaba un endpoint externo si `this.statusResponse.rejectedMessages` era `true`, o cargaba una combinación de motivos genéricos y negativos desde archivos locales si era `false`.</p>
+        <b>Código Anterior:</b>
+        <pre><code class="language-javascript">
+// ANTES: El método tenía una lógica dual para obtener los motivos de rechazo.
+// ...
+  getRejectedMessages() {
+    return new Promise(async (resolve) => {
+      try {
+        let data = [];
+        let rejectedMessagesRes;
+        if (this.statusResponse.rejectedMessages) {
+          if (this.token) {
+            // ... (Lógica de llamada a la API con token)
+          } else if (this.authData) {
+            // ... (Lógica de llamada a la API con authData)
+          }
+          data = rejectedMessagesRes.data.map((obj) => {
+            // ... (Lógica para procesar la respuesta de la API)
+            return { /* ... */ };
+          });
+          resolve(data);
+          return;
+        } else {
+          data = require('../../../assets/rejectedMessages').generic;
+          // ... (Lógica para procesar el archivo local)
+          resolve(data);
+        }
+      } catch (error) {
+        // ... (Manejo de error)
+      }
+    });
+  }
+}
+export default ThirdParty;
+        </code></pre>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: El método 'getRejectedMessages' y toda su lógica han sido eliminados.
+// ...
+      }
+    });
+  }
+}
+export default ThirdParty;
+        </code></pre>
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <p>La clase `ThirdParty` elimina una lógica que mezclaba dos formas diferentes de obtener datos. Al igual que con las otras clases, este vaciado de la lógica de configuración es un prerrequisito para poder implementar el nuevo endpoint.</p>
+        </div>
+    </div>
+</details>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+
+</html>

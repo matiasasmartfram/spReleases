@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Release Notes: Platform v8.1.3</title>
+  
+  <!-- Estilos de la librería Prism.js para resaltado de sintaxis -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --primary-color: #0d6efd;
+      --success-color: #198754;
+      --danger-color: #dc3545;
+      --bg-color: #f8f9fa;
+      --text-color: #212529;
+      --text-muted-color: #6c757d;
+      --border-color: #dee2e6;
+      --code-bg: #22272e;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2em;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    header {
+      padding: 2em;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; }
+    header .release-summary { margin: 0; color: var(--text-muted-color); font-size: 1.1em; }
+    
+    main { padding: 2em; }
+    
+    .deployment-info {
+      background-color: #e7f1ff;
+      border: 1px solid #b3d1ff;
+      border-radius: 6px;
+      padding: 1.5em;
+      margin-bottom: 2.5em;
+    }
+    
+    .deployment-info h2 {
+      margin-top: 0;
+      margin-bottom: 0.8em;
+      color: var(--primary-color);
+      font-size: 1.4em;
+    }
+    
+    .deployment-info table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .deployment-info td { padding: 0.5em 0; }
+    .deployment-info td:first-child { font-weight: 500; width: 30%; color: #333; }
+    
+    .commit-section { margin-bottom: 3em; }
+    .commit-section h3 { font-size: 1.5em; margin-bottom: 0.5em; }
+    
+    .analysis-block { margin-bottom: 1.5em; }
+    .analysis-block h4 { font-size: 1.2em; color: var(--primary-color); margin-top: 1.5em; margin-bottom: 1em; }
+    .analysis-block p { margin-top: 0; }
+    
+    .code-changes h4 {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+        font-size: 1.1em;
+        font-weight: 500;
+    }
+
+    details {
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        margin-bottom: 1em;
+        background-color: #fff;
+    }
+
+    summary {
+        padding: 0.8em 1.2em;
+        cursor: pointer;
+        font-weight: 500;
+        background-color: var(--bg-color);
+        border-radius: 6px 6px 0 0;
+    }
+    summary:hover { background-color: #e9ecef; }
+    
+    pre {
+      margin: 0;
+      padding: 1.5em;
+      background-color: var(--code-bg);
+      color: #adbac7;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+      overflow-x: hidden;
+      border-radius: 0 0 6px 6px;
+    }
+    
+    ul { padding-left: 20px; }
+    ul li { margin-bottom: 0.5em; }
+    code { font-family: 'Fira Code', monospace; background-color: #e9ecef; padding: 0.2em 0.4em; border-radius: 4px; }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Notas de Release: Platform v8.1.3</h1>
+      <p class="release-summary">
+        Esta versión refactoriza los mappers de MercadoPago para mejorar la robustez del código.
+      </p>
+    </header>
+
+    <main>
+      <section class="deployment-info">
+        <h2>Información de Despliegue</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td>Versión:</td>
+              <td><strong>8.1.3</strong></td>
+            </tr>
+            <tr>
+              <td>Fecha de Despliegue: 2025-08-27</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Entorno:</td>
+              <td>Producción</td>
+            </tr>
+            <tr>
+              <td>AWS TASK: 164</td>
+               <tr>
+                 </tr>
+              <td>COMMIT: a84ed54dd2493e23daf7a0d09aab6422f9f10a4b</td>
+            </tr>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <h2>Análisis de Cambios</h2>
+
+      <section class="commit-section">
+        <h3>Refactorización de Mappers de MercadoPago</h3>
+        <div class="analysis-block">
+          <h4>Explicación</h4>
+          <p>Este commit refactoriza los mappers de la integración con MercadoPago. El objetivo principal es hacer el código más robusto y agregar datos necesarios en la orden como el numero de Pedido (Visualizado en la App) y la Datos del Delivery.</p>
+          <p>Tambien se han incorporado dos operadores de JavaScript:</p>
+          <ul>
+            <li><strong>Encadenamiento Opcional (<code>?.</code>):</strong> Permite leer el valor de una propiedad anidada sin tener que validar explícitamente que cada eslabón de la cadena exista.</li>
+            <li><strong>Operador de Coalescencia Nula (<code>??</code>):</strong> Proporciona un valor por defecto cuando una expresión da como resultado <code>null</code> o <code>undefined</code>.</li>
+          </ul>
+        </div>
+        <div class="code-changes">
+          <details>
+            <summary>1. <code>orderMapper</code>: Observaciones más seguras</summary>
+            <div class="analysis-block" style="margin: 1em;">
+                <h4>Código Antiguo</h4>
+                <pre><code class="language-javascript">order.observations = note;</code></pre>
+                
+                <h4>Código Nuevo</h4>
+                <pre><code class="language-javascript">order.observations = data?.displayId ? `#${data.displayId}` : '';</code></pre>
+                
+                <h4>Análisis del Cambio</h4>
+                <ul>
+                    <li><code>data?.displayId</code>: Intenta acceder al <code>displayId</code> de la orden necsario para obtener la informacion del numero de Pedido que da la aplicacion de MercadoPagoDelivery al usuario. Si el objeto <code>data</code> es nulo o no tiene la propiedad, la expresión devuelve <code>undefined</code> y no rompe el programa.</li>
+                    <li><code>? ... : ''</code>: Es un operador ternario. Si <code>displayId</code> tiene un valor, se le añade el prefijo <code>#</code>. Si es <code>undefined</code>, se asigna una cadena vacía <code>''</code>. Esto asegura que <code>order.observations</code> nunca sea nulo.</li>
+                </ul>
+            </div>
+          </details>
+          
+          <details>
+            <summary>2. <code>paymentenMapper</code>: Valores por defecto para pagos</summary>
+            <div class="analysis-block" style="margin: 1em;">
+                <h4>Código Antiguo</h4>
+                <pre><code class="language-javascript">
+paymentNews.discount = discounts.discount.value;
+paymentNews.shipping = discounts.otherFees.value || 0;
+paymentNews.subtotal = discounts.itemsPrice.value || 0;
+                </code></pre>
+                
+                <h4>Código Nuevo</h4>
+                <pre><code class="language-javascript">
+paymentNews.discount = discounts?.discount?.value ?? 0;
+paymentNews.shipping = discounts?.otherFees?.value ?? 0;
+paymentNews.subtotal = discounts?.itemsPrice?.value ?? 0;
+                </code></pre>
+                
+                <h4>Análisis del Cambio</h4>
+                <p>Aquí se blindan los campos numéricos para evitar errores de tipo <code>NaN</code> (Not a Number).</p>
+                <ul>
+                    <li><code>discounts?.discount?.value</code>: Se accede de forma segura al valor del descuento. Si <code>discounts</code> o <code>discounts.discount</code> no existen, el resultado es <code>undefined</code>.</li>
+                    <li><code>?? 0</code>: Si la expresión de la izquierda es <code>null</code> o <code>undefined</code>, el operador de coalescencia nula le asigna un valor por defecto de <code>0</code>. Esto garantiza que el descuento, el envío y el subtotal siempre sean números válidos.</li>
+                </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>3. <code>customerMapper</code>: Enriquecimiento de la dirección del cliente</summary>
+            <div class="analysis-block" style="margin: 1em;">
+                <h4>Código Antiguo</h4>
+                <pre><code class="language-javascript">
+const customerMapper = (client) => {
+  try {
+    let customer = {};
+    // ...
+    customer.address = '';
+    // ...
+  }
+};
+                </code></pre>
+                
+                <h4>Código Nuevo</h4>
+                <pre><code class="language-javascript">
+const customerMapper = (client, delivery) => {
+  try {
+    let customer = {};
+    // ...
+    customer.address = delivery.deliveryAddress.formattedAddress.trim();
+    // ...
+  }
+}
+                </code></pre>
+                
+                <h4>Análisis del Cambio</h4>
+                <ul>
+                    <li><strong>Nueva Informacion:</strong> La función ahora recibe un segundo parámetro, <code>delivery</code>, que contiene los datos de la entrega, necesesario para.</li>
+                    <li><strong>Dirección Completa:</strong> En lugar de asignar una cadena vacía, ahora se extrae la dirección completa (<code>formattedAddress</code>) del objeto <code>delivery</code>. Este cambio enriquece significativamente los datos del cliente.</li>
+                </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>4. Llamada a <code>customerMapper</code> actualizada</summary>
+            <div class="analysis-block" style="margin: 1em;">
+                <h4>Código Antiguo</h4>
+                <pre><code class="language-javascript">news.order.customer = customerMapper(data.order.customer);</code></pre>
+                
+                <h4>Código Nuevo</h4>
+                <pre><code class="language-javascript">news.order.customer = customerMapper(data.order.customer, data.order.delivery);</code></pre>
+                
+                <h4>Análisis del Cambio</h4>
+                <p>Este es el cambio necesario para que la modificación anterior funcione. Al invocar <code>customerMapper</code>, ahora se le pasa <code>data.order.delivery</code> como segundo argumento, proporcionándole los datos que necesita para rellenar la dirección.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts para funcionalidad (resaltado de sintaxis) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Activar el resaltado de sintaxis de Prism
+      Prism.highlightAll();
+
+      // Funcionalidad del botón de copiar (si se añade en el futuro)
+      document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const hashToCopy = button.dataset.hash;
+          navigator.clipboard.writeText(hashToCopy).then(() => {
+            const originalText = button.innerText;
+            button.innerText = 'Copiado!';
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+              button.innerText = 'Copiar Hash';
+              button.classList.remove('copied');
+            }, 2000);
+          }).catch(err => {
+            console.error('Error al copiar el hash: ', err);
+          });
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

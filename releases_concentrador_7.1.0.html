@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación: Gestión Manual de Estado de Sucursales</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Source+Code+Pro:wght@400;600&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #f7f8fa;
+            color: #333;
+            margin: 0;
+            padding: 2em;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 2em 3em;
+        }
+
+        h1, h2, h3, h4 {
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0.5em;
+            margin-bottom: 1em;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-top: 2.5em;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            color: #34495e;
+        }
+        
+        h3 {
+            font-size: 1.4em;
+            margin-top: 2em;
+            color: #34495e;
+            border-bottom-style: dashed;
+            border-bottom-width: 1px;
+            padding-bottom: 5px;
+        }
+        
+        h4 {
+            font-size: 1.1em;
+            color: #2980b9;
+            margin-top: 1.5em;
+        }
+
+        code {
+            font-family: 'Source Code Pro', monospace;
+
+
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #2d3436;
+            color: #dfe6e9;
+            padding: 1.5em;
+            border-radius: 6px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9em;
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 0.8em; }
+
+        .note {
+            background-color: #eaf2f8;
+            border-left: 5px solid #3498db;
+            padding: 1em;
+            margin: 1.5em 0;
+            border-radius: 4px;
+        }
+
+        /* UI Mockup Styles */
+        .ui-mockup {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 1.5em;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .ui-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .ui-header .global-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .ui-header .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .ui-header .btn-success { background-color: #28a745; }
+        .ui-header .btn-secondary { background-color: #6c757d; }
+        .ui-platform-list .platform-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .platform-name { display: flex; align-items: center; gap: 8px; }
+        .platform-actions { text-align: center; }
+        .platform-status { display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .platform-actions .btn-primary { background-color: #007bff; padding: 6px 12px; border:none; border-radius: 5px; color: #fff; cursor: pointer; }
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .status-dot.on { background-color: #28a745; }
+        .status-dot.off { background-color: #dc3545; }
+        .status-dot.error { background-color: #343a40; }
+        .btn-refresh { background-color: #6c757d; color: #fff; border: none; border-radius: 5px; padding: 6px 10px; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Documentación: Consulta y Gestion Manual de Estado de Tiendas en BO</h1>
+
+        <!-- =============================================================== -->
+        <!-- 1. APARTADO FUNCIONAL Y DE INTERFAZ                             -->
+        <!-- =============================================================== -->
+        <h2>1. Funcionamiento de Endpoints e Interfaz de Usuario</h2>
+        <p>Esta sección describe el propósito de la funcionalidad, cómo interactúa el usuario con la nueva interfaz y cómo esta se comunica con los endpoints del backend.</p>
+
+        <h3>1.1 Resumen Ejecutivo</h3>
+        <p>La nueva funcionalidad ofrece un control manual y en tiempo real sobre el estado de disponibilidad (Abierto/Cerrado) de las sucursales en las plataformas de delivery <strong>PedidosYa, Uber Eats, Rappi</strong>. Permite a los operadores consultar el estado actual y forzar la apertura de una sucursal.</p>
+
+        <h3>1.2 Interfaz de Usuario y Simulación</h3>
+        <p>Para gestionar el estado, se ha añadido una nueva sección en la página de detalles de cada sucursal. A continuación se muestra una recreación interactiva de esta interfaz.</p>
+        
+        <div class="ui-mockup">
+            <div class="ui-header">
+                <h4>Plataformas *</h4>
+                <div class="global-actions">
+                    <button class="btn btn-success" onclick="alert('Acción: Enviar OPEN a todas las plataformas activas.')">Enviar Open a todos</button>
+                    <span><strong>Status</strong></span>
+                    <button class="btn btn-secondary btn-refresh" onclick="alert('Acción: Actualizar el estado de TODAS las plataformas.')"><i class="fas fa-sync-alt"></i></button>
+                </div>
+            </div>
+            <div class="ui-platform-list">
+                <!-- Rappi -->
+                <div class="platform-row">
+                    <div class="platform-name"><input type="checkbox" id="rappi-check"> <label for="rappi-check">Rappi</label></div>
+                    <div class="platform-actions"><button class="btn-primary" onclick="alert('Acción: Enviar OPEN solo a Rappi.')">Open Rappi</button></div>
+                    <div class="platform-status"><span class="status-dot error"></span><button class="btn-refresh" onclick="alert('Acción: Actualizar estado solo de Rappi.')"><i class="fas fa-sync-alt"></i></button></div>
+                </div>
+                <!-- Toque -->
+                <div class="platform-row">
+                    <div class="platform-name"><input type="checkbox" id="toque-check"> <label for="toque-check">Toque</label></div>
+                    <div class="platform-actions"><span>—</span></div>
+                    <div class="platform-status"><span>—</span></div>
+                </div>
+                <!-- I+D -->
+                <div class="platform-row">
+                    <div class="platform-name"><input type="checkbox" id="id-check"> <label for="id-check">I+D</label></div>
+                    <div class="platform-actions"><span>—</span></div>
+                    <div class="platform-status"><span>—</span></div>
+                </div>
+                <!-- PedidosYa -->
+                <div class="platform-row">
+                    <div class="platform-name"><input type="checkbox" id="peya-check" checked> <label for="peya-check">PedidosYa</label> <input type="checkbox" id="peya-api-check" checked> <label for="peya-api-check">API</label></div>
+                    <div class="platform-actions"><button class="btn-primary" onclick="alert('Acción: Enviar OPEN solo a PedidosYa.')">Open PedidosYa</button></div>
+                    <div class="platform-status"><span class="status-dot off"></span><button class="btn-refresh" onclick="alert('Acción: Actualizar estado solo de PedidosYa.')"><i class="fas fa-sync-alt"></i></button></div>
+                </div>
+                <!-- PediGrido -->
+                <div class="platform-row">
+                    <div class="platform-name"><input type="checkbox" id="pedigrido-check" checked> <label for="pedigrido-check">PediGrido</label></div>
+                    <div class="platform-actions"><span>—</span></div>
+                    <div class="platform-status"><span>—</span></div>
+                </div>
+                <!-- UberEats -->
+                <div class="platform-row">
+                    <div class="platform-name"><input type="checkbox" id="uber-check"> <label for="uber-check">UberEats</label></div>
+                    <div class="platform-actions"><button class="btn-primary" onclick="alert('Acción: Enviar OPEN solo a UberEats.')">Open UberEats</button></div>
+                    <div class="platform-status"><span class="status-dot error"></span><button class="btn-refresh" onclick="alert('Acción: Actualizar estado solo de UberEats.')"><i class="fas fa-sync-alt"></i></button></div>
+                </div>
+            </div>
+        </div>
+
+        <h3>1.3 Análisis de Endpoints</h3>
+        <h4>Endpoint de Consulta: <code>POST /api/branches/getStatus</code></h4>
+        <p>Se utiliza para verificar y devolver el estado de disponibilidad (abierto o cerrado) de una o más sucursales en las plataformas especificadas. Se usa el método <code>POST</code> para permitir el envío de un array de consultas en el cuerpo de la solicitud.</p>
+        <p><strong>Request Body:</strong></p>
+        <pre><code>[
+  { "platform": 1, "branchId": 123 },
+  { "platform": 2, "branchId": 123 }
+]</code></pre>
+        <p><strong>Response Body:</strong></p>
+        <pre><code>[
+  { "platform": 1, "closed": false },
+  { "platform": 2, "closed": true }
+]</code></pre>
+
+        <h4>Endpoint de Acción: <code>PUT /api/branches/sendOpen</code></h4>
+        <p>Se utiliza para enviar una solicitud explícita a una plataforma para que marque una sucursal como "Abierta" u "Online". El cuerpo de la solicitud es idéntico al de <code>getStatus</code>.</p>
+        
+        <!-- =============================================================== -->
+        <!-- 2. APARTADO TÉCNICO DEL CONCENTRADOR (BACKEND)                    -->
+        <!-- =============================================================== -->
+        <h2>2. Cambios Técnicos en el Concentrador (Backend)</h2>
+        <p>Esta sección profundiza en la arquitectura y el flujo de código de las nuevas funciones implementadas en el controlador <code>api/src/controllers/branch.js</code>.</p>
+        
+        <h3>2.1 Estructura y Patrones Comunes</h3>
+        <p>Ambas funciones, <code>getStatus</code> y <code>sendOpen</code>, comparten una estructura de base común diseñada para ser robusta y escalable:</p>
+        <ul>
+            <li><strong>Declaración Asíncrona:</strong> Son funciones <code>async</code>, permitiendo el uso de <code>await</code> para manejar operaciones de I/O de forma limpia.</li>
+            <li><strong>Carga de Configuración Dinámica:</strong> Al inicio, cargan desde la base de datos la configuración de cada plataforma, evitando configuraciones hardcodeadas.</li>
+            <li><strong>Gestión Centralizada de Autenticación:</strong> Los tokens se obtienen de variables globales gestionadas por procesos de fondo (cron jobs).</li>
+            <li><strong>Procesamiento en Bucle:</strong> Iteran sobre el array <code>branchForms</code> para procesar múltiples consultas en una sola llamada.</li>
+            <li><strong>Manejo de Errores Detallado:</strong> Cada llamada a una API externa está envuelta en un bloque <code>try...catch</code> para asegurar la resiliencia.</li>
+        </ul>
+
+        <h3>2.2 Implementación de <code>getStatus()</code></h3>
+        <div class="note"><strong>Objetivo:</strong> Consultar y devolver el estado de disponibilidad de una sucursal en una o varias plataformas.</div>
+        <pre><code>// api/src/controllers/branch.js
+
+const getStatus = async (req, res) => {
+  try {
+    // 1. Inicialización y carga de configuraciones
+    let result = [];
+    let peya = await platforms.findOne({ name: 'PedidosYa' });
+    let uber = await platforms.findOne({ name: 'UberEats' });
+    let rappi = await platforms.findOne({ name: 'Rappi' });
+    // ... (Definición de headers y URLs base)
+
+    let branchForms = req.body;
+    let branch = await model.findOne({ branchId: branchForms[0].branchId });
+
+    // 2. Iteración sobre las consultas solicitadas
+    for (const branchForm of branchForms) { 
+      try {
+        // 3. Lógica específica por plataforma
+        if (branchForm.platform === 1) { // PedidosYa
+          // ... (Lógica para obtener el identificador y construir la URL)
+          const statuspos = await axios.get(urlAvailability, headersConfig3);   
+          if(statuspos.data[0].availabilityState === "CLOSED"){
+            result.push({platform: 1, closed: true });   
+          } else {
+            result.push({platform: 1, closed : false });
+          }
+        }
+        // ... (Bloques análogos para UberEats y Rappi)
+      } catch (error) {
+        result.push({platform: branchForm.platform, closed : "Error: "+ error?.message });
+        Log.saveError(error, { /* ... contexto del error ... */ });               
+      }      
+    }
+    // 4. Envío de la respuesta final
+    return res.status(200).json(result).end();
+  } catch (error) { /* ... */ }
+};</code></pre>
+
+        <h3>2.3 Implementación de <code>sendOpen()</code></h3>
+        <div class="note"><strong>Objetivo:</strong> Enviar una solicitud explícita a una plataforma para marcar una sucursal como abierta.</div>
+        <pre><code>// api/src/controllers/branch.js
+
+const sendOpen = async (req, res) => {
+  try {
+    // 1. Inicialización y carga de configuraciones (similar a getStatus)
+    // ...
+
+    // 2. Iteración sobre las acciones solicitadas
+    for (const branchForm of branchForms) {
+      // 3. Lógica específica por plataforma
+      if (branchForm.platform === 1) { // PedidosYa
+        // 3a. Obtener datos necesarios para la actualización (leer para escribir)
+        const statuspos = await axios.get(urlAvailability, headersConfig3);
+        let body = {
+          "availabilityState": "OPEN",
+          "platformKey": statuspos.data[0].platformKey,
+          // ...
+        };
+        // 3b. Enviar la actualización
+        await axios.put(urlAvailability, body, headersConfig3);
+      }
+
+      if (branchForm.platform === 4) { // UberEats
+        let body = { "status": "ONLINE", "reason": "STORE OPEN" };
+        await axios.post(urlAvailability, body, headersConfig);
+      }
+
+      if (branchForm.platform === 2) { // Rappi
+        let body = { "stores": [rappiNumber], "is_enabled": true };
+        await axios.put(url, body, options);
+      }
+    }
+    // 4. Envío de la respuesta final
+    return res.status(200).json({}).end();
+  } catch (error) { /* ... */ }
+};</code></pre>
+
+        <!-- =============================================================== -->
+        <!-- 3. APARTADO TÉCNICO DEL BACKOFFICE (FRONTEND)                     -->
+        <!-- =============================================================== -->
+        <h2>3. Cambios Técnicos en el BackOffice (Frontend)</h2>
+        <p>Esta sección detalla los cambios realizados en el código de Angular para integrar la nueva interfaz y su lógica.</p>
+
+        <h3>3.1 Archivo de Servicio: <code>branches.service.ts</code></h3>
+        <div class="note"><strong>Propósito:</strong> Se añaden los métodos para comunicarse con los nuevos endpoints del backend.</div>
+        <pre><code>// ...
+   public getBranch(id: number): Observable<Branch> { /* ... */ }
+ 
++  public sendOpen(branchForms: any): Observable<any> {
++    return this.http.put<any>(environment.apiUrl + `/branches/sendOpen`, branchForms);  
++  }
++
++  public getStatus(branchForms: any): Observable<any> {
++    return this.http.post<any>(environment.apiUrl + `/branches/getStatus`, branchForms);
++  }
++
+   public getBranches(): Observable<Branch[]> { /* ... */ }
+// ...</code></pre>
+        <ul>
+            <li><strong><code>sendOpen(...)</code>:</strong> Nuevo método que realiza una petición <code>PUT</code> a <code>/branches/sendOpen</code> para enviar la orden de apertura.</li>
+            <li><strong><code>getStatus(...)</code>:</strong> Nuevo método que realiza una petición <code>POST</code> a <code>/branches/getStatus</code> para solicitar el estado actual de las plataformas.</li>
+        </ul>
+
+        <h3>3.2 Archivo de Lógica del Componente: <code>branch.component.ts</code></h3>
+        <div class="note"><strong>Propósito:</strong> Se añade toda la lógica para manejar el estado en la interfaz, llamar a los servicios y actualizar la vista.</div>
+        <h4>Nuevas propiedades de la clase</h4>
+        <pre><code>// ...
+   public rappiActive: boolean;
++  public platformsOpenClosed = ["Rappi","UberEats","PedidosYa"]
++  public platformMap = { 1: 'PedidosYa', 2: 'Rappi', 4: 'UberEats' };
++  public branchForms: { [platformName: string]: { closed: boolean | string } } = {};
+// ...</code></pre>
+        <ul>
+            <li><strong><code>platformsOpenClosed</code>:</strong> Array que define qué plataformas son compatibles con esta funcionalidad.</li>
+            <li><strong><code>platformMap</code>:</strong> Objeto para traducir IDs de plataforma a nombres legibles.</li>
+            <li><strong><code>branchForms</code>:</strong> Objeto que almacenará dinámicamente el estado de cada plataforma para que la vista lo pueda leer.</li>
+        </ul>
+        <h4>Llamada inicial en <code>ngOnInit</code></h4>
+        <pre><code>// ...
+   this.isLoaded = Promise.resolve(false);
+   this.generateNewsDashboard(1, branch);
++  this.getStatus(this.dataPlatform);
+// ...</code></pre>
+        <ul>
+            <li>Se añade una llamada a <code>this.getStatus()</code> para que, al cargar la página, se obtenga inmediatamente el estado de todas las plataformas.</li>
+        </ul>
+        <h4>Nuevos Métodos</h4>
+        <ul>
+            <li><strong><code>sendOpen(platforms)</code> y <code>sendOpenFilter(platformName)</code>:</strong> Lógica para preparar y enviar la solicitud de apertura al servicio, ya sea para todas las plataformas o para una sola.</li>
+            <li><strong><code>getStatus(platforms)</code> y <code>getStatusFilter(platformName)</code>:</strong> Lógica para preparar y enviar la solicitud de estado. Al recibir la respuesta, itera sobre los resultados y actualiza el objeto <code>this.branchForms</code>, lo que provoca que la interfaz gráfica se actualice con los indicadores de estado correctos.</li>
+        </ul>
+
+        <h3>3.3 Archivo de Plantilla Visual: <code>branch.component.html</code></h3>
+        <div class="note"><strong>Propósito:</strong> Se añaden los nuevos botones e indicadores visuales a la interfaz de usuario. (Punto 1.2) </div>
+       
+    </div>
+
+</body>
+</html>

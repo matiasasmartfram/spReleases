@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Backoffice 6.1.2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 {
+            margin: 0 0 0.25em 0;
+            font-size: 2.2em;
+            color: var(--primary-color);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--text-muted-color);
+        }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #166534;
+        }
+
+        .deployment-info-box p {
+            margin: 0.5em 0 0 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+        }
+
+        .service-section {
+            margin-bottom: 3em;
+        }
+
+        .service-section>h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker {
+            display: none;
+        }
+
+        .component-header h3 {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2em;
+        }
+
+        .component-body {
+            padding: 1.5em;
+        }
+
+        .component-body h4 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.2em;
+            color: #343a40;
+        }
+
+        .component-body h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+
+        .analysis-box h4 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+
+        .code-wrapper {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 1em 0;
+        }
+
+        .code-header {
+            background-color: #e0e0e0;
+            padding: 0.5em 1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .dot {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5em;
+        }
+
+        .dot.red {
+            background-color: #ff5f56;
+        }
+
+        .dot.yellow {
+            background-color: #ffbd2e;
+        }
+
+        .dot.green {
+            background-color: #27c93f;
+        }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 0 !important;
+            border-radius: 0 0 6px 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Backoffice 6.1.2</h1>
+            <p>Mejoras de búsqueda en el Dashboard Status.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 6.1.2</p>
+            <p><b>Fecha de Despliegue:</b> 2025-10-03</p>
+            <p><b>Entorno:</b> Producción</p>
+            <p><b>Commit:</b> e5e2b1554acb544800b9f06b9078dffb207382f7</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General</h2>
+            <p>
+                Esta modificación en la interfaz de usuario del Dashboard Status introduce una nueva capacidad de filtrado y mejora la claridad de los filtros existentes. Como parte de la iniciativa de **Mejora de Filtros en Dashboard Status**, el principal impacto funcional es la adición de un nuevo filtro para "Canje", permitiendo a los operadores segmentar los pedidos entrantes basándose en si son de canje o no. Adicionalmente, se han realizado ajustes menores en el texto de otros filtros para mejorar la usabilidad y se ha reorganizado el layout de los botones para mantener la coherencia visual.
+            </p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+          
+          
+          
+          
+          
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>app/src/app/pages/dashboard/status/status.component.html</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        Esta modificación en la interfaz de usuario del Dashboard Status introduce una nueva capacidad de filtrado y mejora la claridad de los filtros existentes. Como parte de la iniciativa de **Mejora de Filtros en Dashboard Status**, el principal impacto funcional es la adición de un nuevo filtro para "Canje", permitiendo a los operadores segmentar los pedidos entrantes basándose en si son de canje o no. Adicionalmente, se han realizado ajustes menores en el texto de otros filtros para mejorar la usabilidad y se ha reorganizado el layout de los botones para mantener la coherencia visual.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Clarificación del Texto en los Filtros "Cloud" y "Turbo"</h5>
+                    <p><b>Explicación:</b> El texto de la opción `value="all"` en los selectores de "Cloud" y "Turbo" ha sido actualizado. Se cambió "Todas las sucursales" por "Cloud/No Cloud" y "Turbo/No Turbo" respectivamente. Esta modificación busca eliminar ambigüedades y hacer más explícito para el usuario que esta opción anula el filtro específico y mostrará ambos tipos de resultados.</p>
+                    <b>Código Anterior:</b>
+                    <div class="code-wrapper">
+                        <div class="code-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <pre><code class="language-html">
+&lt;option value="all">Todas las sucursales&lt;/option>
+                        </code></pre>
+                    </div>
+                    <b>Código Nuevo:</b>
+                    <div class="code-wrapper">
+                        <div class="code-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <pre><code class="language-html">
+&lt;option value="all">Cloud/No Cloud&lt;/option>
+                        </code></pre>
+                    </div>
+                    <h5>2. Nuevo Filtro para "Canje"</h5>
+                    <p><b>Explicación:</b> Se ha añadido un nuevo grupo de formulario (`<div class="form-group">`) que contiene un `select` para filtrar pedidos por "Canje". Este nuevo control, vinculado a la propiedad `exchangeBoolean` del componente, ofrece tres opciones: "Canje", "Sin Canje" y "Canje/Sin Canje" (opción por defecto). Esto introduce una nueva dimensión de filtrado que permite a los operadores aislar y analizar pedidos de canje.</p>
+                    <b>Código Anterior:</b>
+                    <div class="code-wrapper">
+                        <div class="code-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <pre><code class="language-html">
+// ANTES: El filtro para "Canje" no existía.
+...
+                        </code></pre>
+                    </div>
+                    <b>Código Nuevo:</b>
+                    <div class="code-wrapper">
+                        <div class="code-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <pre><code class="language-html">
+&lt;div class="col-12 col-md-2"> // DESPUÉS: Nueva columna para el filtro de Canje.
+&lt;div class="form-group">
+&lt;select name="" id="" class="form-control form-control-sm" [(ngModel)]="exchangeBoolean"> // DESPUÉS: Vinculado a la nueva propiedad 'exchangeBoolean'.
+&lt;option value="exchange">Canje&lt;/option>
+&lt;option value="noExchange">Sin Canje&lt;/option>
+&lt;option value="all">Canje/Sin Canje&lt;/option>
+&lt;/select>
+&lt;/div>
+&lt;/div>
+                        </code></pre>
+                    </div>
+                    <h5>3. Reorganización del Layout de los Botones de Acción</h5>
+                    <p><b>Explicación:</b> Se ha introducido una nueva fila (`<div class="row">`) específicamente para el botón "Actualizar". Se ha añadido un `div` con la clase `col-10` antes del botón para empujarlo hacia la derecha, manteniendo una alineación visual consistente con los filtros de arriba. Esto mejora la estructura del HTML y separa los controles de filtrado de los botones de acción.</p>
+                    <b>Código Anterior:</b>
+                    <div class="code-wrapper">
+                        <div class="code-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <pre><code class="language-html">
+// ANTES: El botón "Actualizar" estaba en la misma fila que los últimos filtros.
+&lt;div class="col-12 col-md-2">
+&lt;button class="btn btn-sm btn-block btn-primary" (click)="generateNewsDashboard()">
+&lt;i class="fa fa-sync">&lt;/i>&lt;span class="d-none d-lg-inline"> Actualizar&lt;/span>
+&lt;/button>
+&lt;/div>
+                        </code></pre>
+                    </div>
+                    <b>Código Nuevo:</b>
+                    <div class="code-wrapper">
+                        <div class="code-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <pre><code class="language-html">
+// DESPUÉS: El botón "Actualizar" se mueve a su propia fila.
+&lt;div class="row">
+&lt;div class="col-10">&lt;/div> // DESPUÉS: Div de espaciado para alinear a la derecha.
+&lt;div class="col-12 col-md-2">
+&lt;button class="btn btn-sm btn-block btn-primary" (click)="generateNewsDashboard()">
+&lt;i class="fa fa-sync">&lt;/i>&lt;span class="d-none d-lg-inline"> Actualizar&lt;/span>
+&lt;/button>
+&lt;/div>
+&lt;/div>
+                        </code></pre>
+                    </div>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>
+                            La actualización de `status.component.html` mejora la funcionalidad y la usabilidad del Dashboard Status a través de tres cambios clave.
+                        </p>
+                        <ul>
+                            <li><b>Nuevo Filtro "Canje":</b> Se introduce una nueva y potente capacidad de filtrado que permite a los operadores segmentar los pedidos por su naturaleza de "Canje", facilitando análisis y operaciones específicas.</li>
+                            <li><b>Mayor Claridad en la UI:</b> La modificación del texto en los filtros "Cloud" y "Turbo" hace que la interfaz sea más intuitiva, eliminando ambigüedades.</li>
+                            <li><b>Mejora del Layout:</b> La reorganización de los filtros y el botón de acción en filas separadas proporciona una estructura visual más limpia y organizada.</li>
+                        </ul>
+                        <p>
+                            En conjunto, estos cambios refinan la interfaz de usuario, la hacen más potente y preparan el componente para la lógica de backend que gestionará el nuevo filtro de "Canje".
+                        </p>
+                    </div>
+                </div>
+            </details>
+          
+          
+
+
+<details class="component-card">
+    <summary class="component-header">
+        <h3>app/src/app/pages/management/branches/branch/branch.component.css</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            Esta modificación en la hoja de estilos, como parte de la iniciativa de **Filtros de Selección Múltiple en Dashboard Status**, tiene como propósito mejorar la presentación visual y la usabilidad de los nuevos menús desplegables (`.dropdown-menu`) que fueron introducidos en `branch.component.html`. Los cambios de estilo aseguran que los `dropdowns` se ajusten al ancho del botón que los activa y que su contenido sea navegable a través de un scroll vertical si la lista de opciones es muy larga, evitando problemas de desbordamiento en la interfaz.
+        </p>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Estilos para la Clase `.dropdown-menu`</h5>
+        <p><b>Explicación:</b> Se añadió un nuevo bloque de reglas CSS para la clase `.dropdown-menu`.</p>
+        <ul>
+            <li>`min-width: 100% !important;`: Esta regla fuerza al menú desplegable a tener como mínimo el 100% del ancho de su elemento padre (en este caso, el `div` del `dropdown`). Esto asegura que el menú se alinee perfectamente con el botón que lo activa, creando una apariencia limpia y organizada. El `!important` se usa para sobreescribir cualquier estilo de Bootstrap u otra hoja de estilos que pueda estar en conflicto.</li>
+            <li>`max-height: 20rem;`: Se establece una altura máxima para el menú desplegable (aproximadamente 320px, asumiendo 1rem = 16px).</li>
+            <li>`overflow-y: auto;`: Esta regla es clave. Si el contenido del `dropdown` (la lista de checkboxes) excede la `max-height` definida, aparecerá automáticamente una barra de scroll vertical. Esto previene que el menú se extienda indefinidamente y desborde la pantalla, mejorando significativamente la experiencia de usuario en casos con muchas opciones de filtro.</li>
+        </ul>
+        <b>Código Anterior:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-css">
+// ANTES: No existían estilos específicos para .dropdown-menu en este archivo.
+.checkResponses{
+    width: 75%;
+}
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-css">
+// DESPUÉS: Nuevos estilos para los menús desplegables.
+.checkResponses{
+    width: 75%;
+}
+.dropdown-menu {
+    min-width: 100% !important; // DESPUÉS: Asegura que el dropdown ocupe todo el ancho del botón.
+    max-height: 20rem; /* ~320px */ // DESPUÉS: Limita la altura del dropdown.
+    overflow-y: auto; // DESPUÉS: Añade una barra de scroll vertical si el contenido excede la altura máxima.
+}
+            </code></pre>
+        </div>
+        <div class="analysis-box">
+            <h4>Conclusión del Análisis</h4>
+            <p>
+                La actualización en `branch.component.css` es un complemento esencial para la nueva funcionalidad de filtros de selección múltiple.
+            </p>
+            <ul>
+                <li><b>Mejora Visual:</b> Al asegurar que el ancho del dropdown coincida con el del botón, se logra una apariencia más pulida y profesional.</li>
+                <li><b>Usabilidad Mejorada:</b> La combinación de `max-height` y `overflow-y: auto` es crucial para la usabilidad. Previene que listas largas de opciones rompan el layout de la página, manteniendo la interfaz contenida y accesible.</li>
+                <li><b>Escalabilidad del Diseño:</b> El diseño ahora está preparado para manejar un número creciente de opciones de filtro sin comprometer la integridad visual de la página.</li>
+            </ul>
+            <p>
+                En conjunto, estos estilos son un detalle técnico importante que asegura que la nueva funcionalidad no solo sea potente, sino también visualmente coherente y robusta.
+            </p>
+        </div>
+    </div>
+</details>
+          <details class="component-card">
+    <summary class="component-header">
+        <h3>app/src/app/pages/management/branches/branch/branch.component.html</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            La modificación en `branch.component.html` es una refactorización de la sección de filtros de "Novedades". Como parte de la iniciativa de **Filtros de Selección Múltiple en Dashboard Status**, este cambio reemplaza los `<select>` de selección única para "Estados", "Motivos de Rechazo" y "Plataformas" por `dropdowns` con checkboxes, heredando la misma funcionalidad avanzada que se implementó en `status.component.html`. El objetivo es unificar la experiencia de usuario y proporcionar la misma capacidad de filtrado múltiple en la vista de "Novedades" dentro del detalle de la sucursal.
+        </p>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Reemplazo de Selector de Estados por Dropdown de Checkboxes</h5>
+        <p><b>Explicación:</b> Se eliminó el `<select>` para el filtro de estados (`searchStatus`) y se reemplazó por un `dropdown` de Bootstrap con una lista de checkboxes. Este nuevo control visualiza el/los estado(s) seleccionado(s) en su botón y permite la selección múltiple, llamando al método `onCheckboxChange` del componente para gestionar la lógica de selección.</p>
+        <b>Código Anterior:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-html">
+// ANTES: Un selector simple que permitía solo una opción.
+&lt;div class="form-group col-12 col-md">
+    &lt;select class="form-control form-control-sm" [(ngModel)]="searchStatus">
+        &lt;option value="0">Todos los Estados&lt;/option>
+        &lt;option *ngFor="let newState of newStates; index as i" [value]="newState.stateId">
+            {{ newState.spName }}
+        &lt;/option>
+    &lt;/select>
+&lt;/div>
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-html">
+// DESPUÉS: Un dropdown interactivo para selección múltiple.
+&lt;div class="col 12 form-group dropdown col-md-2 d-flex justify-content-start">
+    &lt;button class="btn border dropdown-toggle d-flex justify-content-between align-items-center w-100" type="button" data-toggle="dropdown">
+        &lt;span>{{newStatesspName}}&lt;/span> // DESPUÉS: Muestra la selección actual.
+    &lt;/button>
+    &lt;div class="dropdown-menu dropdown-menu-right" (click)="$event.stopPropagation()">
+        &lt;div *ngFor="let newState of newStates; let i = index" class="form-check">
+            &lt;input
+                class="form-check-input"
+                type="checkbox"
+                [id]="'state' + i"
+                [value]="newState"
+                (change)="onCheckboxChange($event, newState, 'States')" // DESPUÉS: Llama al método de manejo de selección.
+                [checked]="selectedStates.includes(newState)"/> // DESPUÉS: El estado del checkbox se basa en el array de selección.
+            &lt;label *ngIf="newState.spName !== 'Todos los Estados'" class="form-check-label" [for]="'state' + i">
+                {{ newState.spName }}
+            &lt;/label>
+            &lt;label *ngIf="newState.spName === 'Todos los Estados'" class="form-check-label" [for]="'state' + i">
+                &lt;b>{{ newState.spName }}&lt;/b>
+            &lt;/label>
+        &lt;/div>
+    &lt;/div>
+&lt;/div>
+            </code></pre>
+        </div>
+        <h5>2. Reemplazo de Selectores de Motivos de Rechazo y Plataformas por Dropdowns de Checkboxes</h5>
+        <p><b>Explicación:</b> Siguiendo el mismo patrón del filtro de "Estados", los `<select>` para `rejectedMessage` y `platform` fueron reemplazados por `dropdowns` de Bootstrap con checkboxes. Esta unificación del diseño y la funcionalidad asegura una experiencia de usuario consistente en toda la aplicación, permitiendo la selección múltiple también para estos filtros.</p>
+        <b>Código Anterior:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-html">
+// ANTES: Selectores simples para Motivos de Rechazo y Plataformas.
+&lt;div class="col-12 col-md mb-2">
+    &lt;select class="form-control form-control-sm" [(ngModel)]="rejectedMessage">
+        &lt;/select>
+&lt;/div>
+&lt;div class="col-12 col-md mb-2">
+    &lt;select class="form-control form-control-sm" [(ngModel)]="platform">
+        &lt;/select>
+&lt;/div>
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-html">
+// DESPUÉS: Dropdowns con checkboxes para Motivos de Rechazo y Plataformas.
+&lt;div class="form-group dropdown col-12 col-md-2 d-flex justify-content-start">
+    &lt;button class="btn border dropdown-toggle d-flex justify-content-between align-items-center w-100" type="button" data-toggle="dropdown">
+        &lt;span>{{rejectedMesagesName}}&lt;/span>
+    &lt;/button>
+    &lt;div class="dropdown-menu dropdown-menu-right" (click)="$event.stopPropagation()">
+        &lt;div *ngFor="let row of rejectedMesages; index as i" class="form-check">
+            &lt;input
+                class="form-check-input"
+                type="checkbox"
+                (change)="onCheckboxChange($event, row, 'Rejs')"
+                [checked]="selectedRej.includes(row)"/>
+            &lt;/div>
+    &lt;/div>
+&lt;/div>
+&lt;div class="form-group dropdown col-12 col-md-2 d-flex justify-content-start">
+    &lt;button class="btn border dropdown-toggle d-flex justify-content-between align-items-center w-100" type="button" data-toggle="dropdown">
+        &lt;span>{{platformName}}&lt;/span>
+    &lt;/button>
+    &lt;div class="dropdown-menu dropdown-menu-right" (click)="$event.stopPropagation()">
+        &lt;div *ngFor="let platform of platforms; index as i" class="form-check">
+            &lt;input
+                class="form-check-input"
+                type="checkbox"
+                (change)="onCheckboxChange($event, platform, 'Platforms')"
+                [checked]="selectedPlatforms.includes(platform)"/>
+            &lt;/div>
+    &lt;/div>
+&lt;/div>
+            </code></pre>
+        </div>
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <p>
+                Los cambios en `branch.component.css` y `branch.component.html` trabajan en conjunto para mejorar la funcionalidad de la sección "Novedades" dentro del detalle de la sucursal.
+            </p>
+            <ul>
+                <li><b>Funcionalidad de Selección Múltiple:</b> La modificación principal en `branch.component.html` es la adopción de los `dropdowns` con checkboxes, que reemplazan a los `selects` simples. Esto unifica la experiencia de usuario con la del Dashboard Status y proporciona a los operadores una capacidad de filtrado mucho más potente y precisa.</li>
+                <li><b>Mejora de la Presentación:</b> Los estilos añadidos en `branch.component.css` son cruciales para que estos nuevos `dropdowns` se vean bien y sean funcionales. El `min-width` asegura una alineación visual limpia, mientras que `max-height` y `overflow-y` previenen problemas de layout cuando las listas de opciones son largas.</li>
+                <li><b>Consistencia de la Interfaz:</b> Al replicar la funcionalidad del Dashboard Status, se crea una experiencia de usuario consistente a lo largo de la aplicación.</li>
+            </ul>
+            <p>
+                En resumen, estas modificaciones no solo mejoran la estética de los `dropdowns`, sino que, fundamentalmente, transforman la sección de "Novedades" en una herramienta de análisis más robusta y coherente con el resto de la aplicación.
+            </p>
+        </div>
+    </div>
+</details>
+             <details class="component-card">
+    <summary class="component-header">
+        <h3>app/src/app/pages/dashboard/status/status.component.ts</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            Esta actualización en el componente TypeScript (`status.component.ts`), como parte de la iniciativa de **Mejora de Filtros en Dashboard Status**, implementa la lógica de soporte para el nuevo filtro de "Canje" y realiza un importante refactor en la forma en que los parámetros de filtro se envían al backend. El impacto funcional más significativo es que el componente ahora puede manejar el estado del filtro de "Canje" (`exchangeBoolean`) y lo incluye en todas las peticiones relevantes a la API. Además, el refactor en los métodos de navegación del modal de detalles (`prevControl` y `nextControl`) asegura una consistencia en los filtros aplicados durante la navegación entre órdenes.
+        </p>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Nueva Propiedad `exchangeBoolean`</h5>
+        <p><b>Explicación:</b> Se ha añadido una nueva propiedad pública `exchangeBoolean: string = "all";` a la clase `StatusComponent`. Esta propiedad sirve como el modelo (`[(ngModel)]`) para el nuevo control `<select>` de "Canje" introducido en el HTML. Se inicializa en `"all"` para que, por defecto, se muestren todos los pedidos, independientemente de si son de canje o no.</p>
+        <b>Código Anterior:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+cloudBoolean: string = "all";
+turboBoolean: string = "all";
+public chartsTimestamp = new Date();
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+cloudBoolean: string = "all";
+turboBoolean: string = "all";
+exchangeBoolean: string = "all"; // DESPUÉS: Nueva propiedad para el estado del filtro de Canje.
+public chartsTimestamp = new Date();
+            </code></pre>
+        </div>
+        <h5>2. Integración del Filtro `exchangeBoolean` en la Búsqueda Principal</h5>
+        <p><b>Explicación:</b> En el método `generateNewsDashboard`, que es el responsable de construir el objeto de datos para la petición a la API de búsqueda de noticias, se ha añadido la nueva propiedad `exchangeBoolean`. Esto asegura que cada vez que el usuario realice una búsqueda o actualice la tabla, el estado del filtro de "Canje" se envíe al backend para que este pueda aplicar el filtrado correspondiente.</p>
+        <b>Código Anterior:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+let data = {
+// ...
+page: this.page,
+cloudBoolean: this.cloudBoolean,
+rejectedMessage: this.rejectedMesagesName === "Todos los Motivos de Rechazo" ? '' : this.selectedRej,
+// ...
+turboBoolean: this.turboBoolean
+};
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+let data = {
+// ...
+page: this.page,
+cloudBoolean: this.cloudBoolean,
+exchangeBoolean: this.exchangeBoolean, // DESPUÉS: El estado del filtro de Canje se incluye en la petición a la API.
+rejectedMessage: this.rejectedMesagesName === "Todos los Motivos de Rechazo" ? '' : this.selectedRej,
+// ...
+turboBoolean: this.turboBoolean
+};
+            </code></pre>
+        </div>
+        <h5>3. Refactor y Unificación de Parámetros en los Métodos de Navegación (`prevControl` y `nextControl`)</h5>
+        <p><b>Explicación:</b> Se ha realizado un refactor en los métodos `prevControl` y `nextControl`, que gestionan la navegación entre los detalles de los pedidos dentro del modal. Se observó que en la versión anterior, estos métodos no enviaban al backend algunos de los filtros que sí se enviaban en la búsqueda principal (`generateNewsDashboard`), como `cloudBoolean` y `turboBoolean`. El cambio añade `cloudBoolean`, `exchangeBoolean` y `turboBoolean` a los objetos de `data` en ambos métodos, `prevControl` y `nextControl`. Esto soluciona un bug de consistencia, garantizando que cuando el usuario navega entre los detalles de los pedidos, la lista subyacente de la cual se está navegando respeta **todos** los filtros que se aplicaron en la vista principal.</p>
+        <b>Código Anterior:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+// ANTES: El objeto 'data' en prevControl y nextControl no incluía cloudBoolean ni turboBoolean, y tampoco exchangeBoolean.
+let data = {
+search: this.search,
+platform: this.platformName === "Todas las Plataformas" ? '' : this.selectedPlatforms.map(item => item.internalCode),
+status: this.newStatesspName === "Todos los Estados" ? '' : this.selectedStates.map(item => item.stateId),
+branch: this.searchBranch,
+order: this.order,
+page: this.page,
+chain: this.chainsName === "Todas las Cadenas" ? '' : this.selectedChains.map(item => item.chain),
+rejectedMessage: this.rejectedMesagesName === "Todos los Motivos de Rechazo" ? '' : this.selectedRej,
+country: this.countryName === "Todos los Paises" ? '' : this.selectedCountries.map(item => item.country),
+dateSelected: this.dateSelected,
+searchSKU: this.searchSKU,
+};
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+// DESPUÉS: El objeto 'data' ahora incluye todos los filtros booleanos para mantener la consistencia.
+let data = {
+search: this.search,
+platform: this.platformName === "Todas las Plataformas" ? '' : this.selectedPlatforms.map(item => item.internalCode),
+status: this.newStatesspName === "Todos los Estados" ? '' : this.selectedStates.map(item => item.stateId),
+branch: this.searchBranch,
+order: this.order,
+page: this.page,
+chain: this.chainsName === "Todas las Cadenas" ? '' : this.selectedChains.map(item => item.chain),
+rejectedMessage: this.rejectedMesagesName === "Todos los Motivos de Rechazo" ? '' : this.selectedRej,
+cloudBoolean: this.cloudBoolean, // DESPUÉS: Añadido para consistencia.
+exchangeBoolean: this.exchangeBoolean, // DESPUÉS: Añadido para consistencia.
+country: this.countryName === "Todos los Paises" ? '' : this.selectedCountries.map(item => item.country),
+dateSelected: this.dateSelected,
+searchSKU: this.searchSKU,
+turboBoolean: this.turboBoolean // DESPUÉS: Añadido para consistencia.
+};
+// (Esta estructura se replica en prevControl y en ambas llamadas a getNews dentro de nextControl).
+            </code></pre>
+        </div>
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <p>
+                La actualización de `status.component.ts` es el complemento lógico para los cambios en la interfaz de usuario, completando la implementación del nuevo filtro de "Canje" y mejorando la robustez general de la funcionalidad de filtrado.
+            </p>
+            <ul>
+                <li><b>Implementación Completa del Filtro "Canje":</b> Al añadir la propiedad `exchangeBoolean` y pasarla en la petición a la API, el componente ahora soporta completamente la nueva capacidad de filtrado.</li>
+                <li><b>Corrección de Inconsistencia de Filtros:</b> El refactor en `prevControl` y `nextControl` soluciona un bug latente donde la navegación dentro del modal no respetaba todos los filtros aplicados en la vista principal. Ahora, la experiencia de usuario es consistente tanto en la búsqueda inicial como en la navegación de detalles.</li>
+                <li><b>Preparación para el Backend:</b> El componente ahora está preparado para que el backend reciba y procese el nuevo parámetro `exchangeBoolean`, permitiendo una segmentación más profunda de los datos de pedidos.</li>
+            </ul>
+            <p>
+                En resumen, estos cambios no solo añaden una nueva característica, sino que también mejoran la coherencia y fiabilidad de la funcionalidad de filtrado existente en el Dashboard Status.
+            </p>
+        </div>
+    </div>
+</details>
+
+<details class="component-card">
+    <summary class="component-header">
+        <h3>app/src/app/pages/management/branches/branch/branch.component.ts</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            Esta modificación adapta la sección de "Novedades" dentro del componente de detalle de la sucursal para que sea **consistente** con la nueva funcionalidad de selección múltiple implementada en el Dashboard Status principal. El propósito de este refactor es asegurar que los usuarios tengan la misma experiencia de filtrado potente y flexible en cualquier lugar de la aplicación donde se muestre la lista de pedidos entrantes. Los cambios principales incluyen la introducción de nuevas propiedades de estado para gestionar las selecciones múltiples, la inicialización de los datos de los filtros para incluir una opción "Todos", un nuevo método central para manejar la lógica de los checkboxes, y la actualización de la construcción de la petición a la API para enviar arrays de filtros en lugar de valores únicos.
+        </p>
+        <hr>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Refactorización de Propiedades de Filtro a Arrays de Selección Múltiple</h5>
+        <p><b>Explicación:</b> Se han eliminado las propiedades que antes almacenaban un único valor de filtro (como <code>platform</code>, <code>searchStatus</code>, <code>rejectedMessage</code>). En su lugar, se han añadido nuevos arrays para cada filtro (<code>selectedStates</code>, <code>selectedRej</code>, <code>selectedPlatforms</code>) para almacenar los objetos seleccionados por el usuario, y propiedades de tipo <code>string</code> (<code>newStatesspName</code>, <code>rejectedMesagesName</code>, <code>platformName</code>) para controlar el texto que se muestra en el botón del <code>dropdown</code> correspondiente.</p>
+        <b>Código Anterior:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+public rejectedMesages: RejectedMessage[] = [];
+// ...
+public search: string = "";
+public platform: number = 0;
+public searchStatus: number = 0;
+// ...
+public rejectedMessage: string = "";
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+public rejectedMesages: any[] = []; // DESPUÉS: Tipo cambiado a 'any[]' para consistencia.
+// ...
+public selectedStates: any[] = []; // DESPUÉS: Nuevo array para los estados seleccionados.
+public selectedRej: any[] = []; // DESPUÉS: Nuevo array para los motivos de rechazo seleccionados.
+public selectedPlatforms: any[] = []; // DESPUÉS: Nuevo array para las plataformas seleccionadas.
+public newStatesspName = "Todos los Estados"; // DESPUÉS: Texto para el botón del dropdown de estados.
+public rejectedMesagesName = "Todos los Motivos de Rechazo"; // DESPUÉS: Texto para el botón del dropdown de motivos de rechazo.
+public platformName = "Todas las Plataformas"; // DESPUÉS: Texto para el botón del dropdown de plataformas.
+public search: string = "";
+// public platform: number = 0; // DESPUÉS: Propiedad eliminada.
+// public searchStatus: number = 0; // DESPUÉS: Propiedad eliminada.
+// ...
+// public rejectedMessage: string = ""; // DESPUÉS: Propiedad eliminada.
+            </code></pre>
+        </div>
+        <hr>
+        <h5>2. Modificación de `ngOnInit` para Inicializar Filtros</h5>
+        <p><b>Explicación:</b> La lógica en <code>ngOnInit</code> que carga los datos para los filtros ha sido extendida. Ahora, después de obtener los datos para los filtros de "Estados", "Plataformas" y "Motivos de Rechazo", se añade una opción "Todos" al principio de cada lista (<code>unshift</code>). Inmediatamente después, el array de selección correspondiente (<code>selectedStates</code>, <code>selectedPlatforms</code>, etc.) se inicializa con una copia completa de la lista de opciones. Esto asegura que, por defecto, el filtro "Todos" esté seleccionado y activo cuando la página carga por primera vez.</p>
+        <b>Código Anterior:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+this._dashboardService.getNewStates().subscribe((result) => {
+    this.newStates = result;
+    resolve();
+});
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+this._dashboardService.getNewStates().subscribe((result) => {
+    this.newStates = result;
+    this.newStates.unshift({spName: "Todos los Estados"}); // DESPUÉS: Añade la opción "Todos" al inicio de la lista de estados.
+    this.selectedStates = Array.from(this.newStates); // DESPUÉS: Inicializa el array de selección con todos los estados.
+    resolve();
+});
+// (Este patrón se repite para 'platforms' y 'rejectedMesages')
+            </code></pre>
+        </div>
+        <hr>
+        <h5>3. Nuevo Método Central `onCheckboxChange`</h5>
+        <p><b>Explicación:</b> Se ha añadido un nuevo método <code>onCheckboxChange(event, item, change)</code>. Este método es el manejador de eventos para todos los checkboxes de los nuevos <code>dropdowns</code> de la sección "Novedades". Utiliza un <code>switch</code> basado en el parámetro <code>change</code> ('States', 'Rejs', 'Platforms') para direccionar la lógica al array de selección correcto. Su función principal es añadir o quitar elementos del array de selección basándose en si el checkbox está marcado o desmarcado. Además, incluye una lógica especial para la opción "Todos": si se marca, selecciona todos los elementos; si se desmarca, deselecciona todos. También deselecciona la opción "Todos" si se desmarca cualquier otra opción individual.</p>
+        <b>Código Anterior:</b> (No existe, es un método nuevo)
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+// (No existe el método)
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+onCheckboxChange(event: any, item: any, change: string) {
+    switch (change) {
+        case "States": // DESPUÉS: Lógica para el filtro de estados.
+            if (event.target.checked) {
+                if(item.spName === "Todos los Estados") { // DESPUÉS: Si se marca "Todos", selecciona todo.
+                    this.selectedStates = Array.from(this.newStates);
+                    this.newStatesspName = "Todos los Estados";
+                } else {
+                    this.selectedStates.push(item);
+                }
+            } else {
+                if(item.spName === "Todos los Estados"){ // DESPUÉS: Si se desmarca "Todos", deselecciona todo.
+                    this.selectedStates = Array.from([]);
+                    this.newStatesspName = "Estados Seleccionados";
+                } else {
+                    this.selectedStates = this.selectedStates.filter(i => i !== item); // DESPUÉS: Quita el elemento de la selección.
+                    if(this.selectedStates.find(r => r.spName === "Todos los Estados")) { // DESPUÉS: Si "Todos" estaba marcado, lo desmarca.
+                        this.selectedStates = this.selectedStates.filter(i => i.spName !== "Todos los Estados");
+                        this.newStatesspName = "Estados Seleccionados";
+                    }
+                }
+            }
+            break;
+        // (Este patrón se repite para 'Rejs' y 'Platforms')
+    }
+}
+            </code></pre>
+        </div>
+        <hr>
+        <h5>4. Refactorización del Método `generateNewsDashboard`</h5>
+        <p><b>Explicación:</b> El método <code>generateNewsDashboard</code>, que prepara los datos para la petición al backend, ha sido modificado para que sea compatible con la selección múltiple. En lugar de enviar valores únicos para los filtros, ahora se comprueba si la opción "Todos" está seleccionada (comparando el <code>...Name</code> con el texto "Todos..."). Si es así, se envía una cadena vacía. Si no, se utiliza <code>map()</code> sobre el array de selección correspondiente (<code>selectedPlatforms</code>, <code>selectedStates</code>, etc.) para extraer solo la propiedad necesaria (ej. <code>item.internalCode</code>, <code>item.stateId</code>) y se envía este array de valores al backend.</p>
+        <b>Código Anterior:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+let data = {
+    search: this.search,
+    platform: this.platform,
+    status: this.searchStatus,
+    branch: searchBranch.branchId,
+    order: this.order,
+    page: this.page,
+    country: "",
+    rejectedMessage: this.rejectedMessage !== "0" ? this.rejectedMessage : "",
+};
+            </code></pre>
+        </div>
+        <b>Código Nuevo:</b>
+        <div class="code-wrapper">
+            <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <pre><code class="language-javascript">
+let data = {
+    search: this.search,
+    platform: this.platformName === "Todas las Plataformas" ? '' : this.selectedPlatforms.map(item => item.internalCode), // DESPUÉS: Envía un array de internalCodes o una cadena vacía.
+    status: this.newStatesspName === "Todos los Estados" ? '' : this.selectedStates.map(item => item.stateId), // DESPUÉS: Envía un array de stateIds o una cadena vacía.
+    branch: searchBranch.branchId,
+    order: this.order,
+    page: this.page,
+    country: '',
+    chain: '', // DESPUÉS: Se añade el campo 'chain' (aunque vacío por ahora).
+    rejectedMessage: this.rejectedMesagesName === "Todos los Motivos de Rechazo" ? '' : this.selectedRej // DESPUÉS: Envía un array de mensajes de rechazo o una cadena vacía.
+};
+            </code></pre>
+        </div>
+        <hr>
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <p>
+                La actualización de <code>branch.component.ts</code> es un refactor significativo que alinea la funcionalidad de filtrado de "Novedades" con la del Dashboard Status principal.
+            </p>
+            <ul>
+                <li><b>Unificación de la Experiencia de Usuario:</b> Al implementar la misma lógica de selección múltiple, el componente ahora ofrece una experiencia de usuario consistente en toda la aplicación.</li>
+                <li><b>Gestión de Estado Robusta:</b> El cambio de propiedades de valor único a arrays (<code>selected...</code>) y propiedades de display (<code>...Name</code>) crea un sistema de estado claro y robusto para gestionar las selecciones complejas del usuario.</li>
+                <li><b>Lógica de Selección Centralizada:</b> El nuevo método <code>onCheckboxChange</code> centraliza toda la lógica de interacción con los checkboxes, incluyendo el manejo del caso especial "Todos", lo que reduce la duplicación de código y simplifica el mantenimiento.</li>
+                <li><b>Adaptación al Backend:</b> El método <code>generateNewsDashboard</code> se adapta para transformar los arrays de objetos seleccionados en el frontend a los arrays de valores primitivos (IDs o nombres) que el backend espera, asegurando una comunicación correcta con la API.</li>
+            </ul>
+            <p>
+                En resumen, estos cambios en el TypeScript son el motor que habilita la potente y flexible experiencia de filtrado introducida en el HTML de este componente, completando la refactorización para una mayor consistencia y funcionalidad.
+            </p>
+        </div>
+    </div>
+</details>
+          
+          
+       
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+
+</html>

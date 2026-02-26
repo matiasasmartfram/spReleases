@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Release Notes: Platform v8.2.4</title>
+  
+  <!-- Estilos de la librería Prism.js para resaltado de sintaxis -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --primary-color: #0d6efd;
+      --success-color: #198754;
+      --warning-color: #ffc107;
+      --bg-color: #f8f9fa;
+      --text-color: #212529;
+      --text-muted-color: #6c757d;
+      --border-color: #dee2e6;
+      --code-bg: #22272e;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2em;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    header {
+      padding: 2em;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; }
+    header .release-summary { margin: 0; color: var(--text-muted-color); font-size: 1.1em; }
+    
+    .versioning-note {
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #664d03;
+        padding: 1em 1.5em;
+        margin: 1.5em 0 0 0;
+        border-radius: 6px;
+    }
+
+    main { padding: 2em; }
+    
+    .deployment-info {
+      background-color: #e7f1ff;
+      border: 1px solid #b3d1ff;
+      border-radius: 6px;
+      padding: 1.5em;
+      margin-bottom: 2.5em;
+    }
+    
+    .deployment-info h2 {
+      margin-top: 0;
+      margin-bottom: 0.8em;
+      color: var(--primary-color);
+      font-size: 1.4em;
+    }
+    
+    .deployment-info table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .deployment-info td { padding: 0.5em 0; }
+    .deployment-info td:first-child { font-weight: 500; width: 30%; color: #333; }
+    
+    .commit-section { margin-bottom: 3em; }
+    .commit-section h3 { font-size: 1.5em; margin-bottom: 0.5em; }
+    .commit-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--bg-color);
+      padding: 0.5em 1em;
+      border-radius: 4px;
+      margin-bottom: 1em;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+    }
+    .commit-meta code {
+      background-color: #d0d7de;
+      padding: 0.2em 0.5em;
+      border-radius: 3px;
+    }
+    
+    .copy-btn {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8em;
+      transition: background-color 0.2s;
+    }
+    .copy-btn:hover { background-color: #f0f0f0; }
+    .copy-btn.copied { background-color: var(--success-color); color: white; border-color: var(--success-color); }
+    
+    .analysis-block { margin-bottom: 1.5em; }
+    .analysis-block h4 { font-size: 1.2em; color: var(--primary-color); margin-top: 1.5em; margin-bottom: 1em; }
+    .analysis-block p { margin-top: 0; }
+    
+    .code-changes h4 {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+        font-size: 1.1em;
+        font-weight: 500;
+    }
+
+    details {
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        margin-bottom: 1em;
+        background-color: #fff;
+    }
+
+    summary {
+        padding: 0.8em 1.2em;
+        cursor: pointer;
+        font-weight: 500;
+        background-color: var(--bg-color);
+        border-radius: 6px;
+    }
+    summary:hover { background-color: #e9ecef; }
+    
+    pre {
+      margin: 0;
+      padding: 1.5em;
+      background-color: var(--code-bg);
+      color: #adbac7;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+      overflow-x: hidden;
+    }
+    
+    ul { padding-left: 20px; }
+    ul li { margin-bottom: 0.5em; }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Notas de Release: Platform v8.2.4</h1>
+      <p class="release-summary">
+        Esta versión corrige un error crítico de tipo <code>TypeError</code> en el procesamiento de pedidos de MercadoPago, haciendo la integración más robusta y segura.
+      </p>
+      <div class="versioning-note">
+        <strong>Nota de corrección:</strong> Esta versión se ha etiquetado incorrectamente como 8.2.4. De acuerdo con el versionado semántico, los cambios incluidos corresponden a una versión de parche. La etiqueta correcta debió haber sido 8.1.4. Vamos a publicar la 8.2.4 y continuar a partir de esta.
+      </div>
+    </header>
+
+    <main>
+      <section class="deployment-info">
+        <h2>Información de Despliegue</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td>Versión:</td>
+              <td><strong>8.2.4</strong></td>
+            </tr>
+            <tr>
+              <td>Fecha de Despliegue: 2025-08-28</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Entorno:</td>
+              <td>Producción</td>
+            </tr>
+            <tr>
+              <td>AWS TASK: 165</td>
+               <tr>
+                 </tr>
+              <td>COMMIT: 9f9c37e607cd9e2072b2764de577b7f97e5eb7c3</td>
+            </tr>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <h2>Análisis Detallado del Cambio</h2>
+
+      <section class="commit-section">
+        <h3>Corrección: <code>TypeError</code> en <code>customerMapper</code> de MercadoPago</h3>
+
+        <div class="analysis-block">
+          <h4>Contexto del Error</h4>
+          <p>Se detectó un error recurrente en producción al procesar pedidos de MercadoPago, resultando en logs como el siguiente:</p>
+          <details>
+            <summary>Ver Error de MongoDB</summary>
+            <pre><code>"message": "Falló customerMapper MercadoPago",
+"error": {
+  "error": "TypeError: Cannot read property 'deliveryAddress' of undefined",
+  "message": "Cannot read property 'deliveryAddress' of undefined",
+  "stack": "TypeError: Cannot read property 'deliveryAddress' of undefined\n    at customerMapper (/usr/src/app/dist/platforms/interfaces/mercadoPago.js:114:47)\n    ..."
+}</code></pre>
+          </details>
+
+          <h4>Causa Raíz</h4>
+          <p>La función <code>customerMapper</code> está definida para aceptar dos argumentos: <code>client</code> y <code>delivery</code>. Sin embargo, al procesar los pedidos, la función se invocaba solo con el argumento <code>client</code>, omitiendo el argumento <code>delivery</code>. En consecuencia, el parámetro <code>delivery</code> dentro de la función era <code>undefined</code>, y el intento de acceder a la propiedad <code>deliveryAddress</code> sobre él daba como resultado un <code>TypeError</code>.</p>
+        </div>
+        <div class="code-changes">
+          <h4>Solución Implementada</h4>
+          <p>El error se solucionó con dos cambios clave en el archivo <code>api/src/platforms/interfaces/mercadoPago.js</code>:</p>
+
+          <details>
+            <summary>1. Llamada a <code>customerMapper</code> corregida</summary>
+            <div class="analysis-block" style="margin: 1em;">
+                <p>Se actualizó la llamada a la función para pasarle la información del <code>delivery</code> (entrega), que antes se omitía.</p>
+                <h4>Antes:</h4>
+                <pre><code class="language-javascript">news.order.customer = customerMapper(data.order.customer);</code></pre>
+                
+                <h4>Después:</h4>
+                <pre><code class="language-javascript">news.order.customer = customerMapper(data.order.customer, data.order.delivery);</code></pre>
+            </div>
+          </details>
+          
+          <details>
+            <summary>2. Mayor seguridad en el código (Null Safety)</summary>
+            <div class="analysis-block" style="margin: 1em;">
+                <p>Se añadió el "encadenamiento opcional" (<code>?.</code>) para evitar errores si el objeto <code>delivery</code> o alguna de sus propiedades anidadas no existen.</p>
+                <h4>Antes:</h4>
+                <pre><code class="language-javascript">customer.address = delivery.deliveryAddress.formattedAddress.trim();</code></pre>
+                
+                <h4>Después:</h4>
+                <pre><code class="language-javascript">customer.address = delivery?.deliveryAddress?.formattedAddress?.trim();</code></pre>
+            </div>
+          </details>
+
+          <div class="analysis-block" style="margin-top: 2em;">
+            <h4>Conclusión del Impacto</h4>
+            <p>La solución implementada asegura que la función <code>customerMapper</code> reciba siempre los argumentos que necesita y, además, es capaz de manejar de forma segura los casos en que la información de la entrega no venga completa. Esto previene la caída de la aplicación y garantiza un procesamiento de pedidos más robusto y fiable.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts para funcionalidad (botón de copiar y resaltado de sintaxis) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Activar el resaltado de sintaxis de Prism
+      Prism.highlightAll();
+
+      // Funcionalidad del botón de copiar
+      document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const hashToCopy = button.dataset.hash;
+          navigator.clipboard.writeText(hashToCopy).then(() => {
+            const originalText = button.innerText;
+            button.innerText = 'Copiado!';
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+              button.innerText = 'Copiar Hash';
+              button.classList.remove('copied');
+            }, 2000);
+          }).catch(err => {
+            console.error('Error al copiar el hash: ', err);
+          });
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

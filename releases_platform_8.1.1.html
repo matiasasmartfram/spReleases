@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Release Notes: Platform 8.1.1 - Mejoras MercadoPago</title>
+  
+  <!-- Carga de la librería Prism.js para resaltado de sintaxis -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.css" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+    :root {
+      --bg-color: #f8f9fa;
+      --card-bg-color: #ffffff;
+      --text-color: #212529;
+      --text-muted-color: #6c757d;
+      --border-color: #dee2e6;
+      --primary-color: #0056b3;
+      --analysis-bg: #e6f7ff;
+      --analysis-border: #91d5ff;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2em;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    
+    .main-header {
+      text-align: center;
+      margin-bottom: 3em;
+    }
+    
+    .main-header h1 {
+      margin: 0 0 0.25em 0;
+      font-size: 2.5em;
+    }
+    
+    .main-header p {
+      margin: 0;
+      font-size: 1.1em;
+      color: var(--text-muted-color);
+      font-style: italic;
+    }
+    
+    .commit-card {
+      background-color: var(--card-bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 2.5em;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    
+    .commit-header {
+      padding: 1.5em;
+      background-color: #fafbfc;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .commit-header h2 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+    
+    .commit-header code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+      background-color: #e9ecef;
+      padding: 0.3em 0.6em;
+      border-radius: 4px;
+    }
+
+    .commit-body {
+      padding: 1.5em;
+    }
+    
+    .analysis-block {
+      background-color: var(--analysis-bg);
+      border-left: 4px solid var(--analysis-border);
+      padding: 1em 1.5em;
+      margin-top: 1.5em;
+      border-radius: 4px;
+    }
+    
+    .analysis-block h3 {
+      margin-top: 0;
+      font-size: 1.2em;
+      color: var(--primary-color);
+    }
+    
+    .analysis-comment {
+      display: block;
+      background-color: var(--analysis-bg);
+      border-left: 3px solid var(--analysis-border);
+      color: #0c5460;
+      padding: 0.8em 1.2em;
+      margin: 1em 0;
+      font-family: 'Inter', sans-serif;
+      font-style: italic;
+      font-size: 0.95em;
+      white-space: normal;
+    }
+
+    pre[class*="language-"] {
+      padding: 1.5em !important;
+      margin: 0 !important;
+      border-radius: 6px;
+      font-family: 'Fira Code', monospace !important;
+      font-size: 0.9em !important;
+      line-height: 1.5 !important;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    
+    .token.inserted { background: rgba(40, 167, 69, 0.15); display: block; }
+    .token.deleted { background: rgba(220, 53, 69, 0.15); display: block; }
+    
+    ul, ol { padding-left: 20px; }
+    li { margin-bottom: 0.5em; }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <header class="main-header">
+      <h1>Notas de Release: Platform 8.1.1</h1>
+      <p>Análisis de Cambios en la Integración con MercadoPago</p>
+    </header>
+
+    <section id="summary">
+        <h2>Resumen General</h2>
+        <p>Este documento detalla tres commits consecutivos que introducen mejoras significativas en la integración con MercadoPago, abordando desde la gestión de rechazos y la corrección de bugs críticos hasta la mejora de la observabilidad del sistema.</p>
+    </section>
+
+    <!-- Commit 1: Rejection Messages -->
+    <article class="commit-card">
+      <header class="commit-header">
+        <h2>Commit: <code>f476e1ad</code></h2>
+      </header>
+      <div class="commit-body">
+          <h3>Análisis Funcional</h3>
+          <p>Este cambio enriquece drásticamente la capacidad del sistema para gestionar los rechazos de pedidos de MercadoPago. Antes, la lista de motivos estaba vacía, obligando a usar razones genéricas. Ahora, se introduce una lista detallada y estandarizada que permite mejorar la comunicación con el cliente, habilitar un análisis de datos más profundo y sentar las bases para futuras automatizaciones.</p>
+        
+          <pre class="diff-highlight"><code class="language-diff-javascript">
+// --- a/api/src/assets/rejectedMessages.js
+// +++ b/api/src/assets/rejectedMessages.js
+// @@ -449,9 +449,78 @@
+ ];
+ 
+ module.exports.mercadoPagoRejects = [
+-
++// --- INICIO DE MODIFICACIÓN ---
++  {
++    id: 300,//ITEM_ISSUE
++    name: 'Sin producto/variedad',
++    descriptionES: 'Sin producto/variedad',
++    descriptionPT: 'Sin producto/variedad',
++    forRestaurant: true,
++    forLogistics: true,
++    forPickup: true
++  },
++  // ... (otros motivos como 'CUSTOMER_CALLED_TO_CANCEL', etc.)
+ ];
+ 
+ module.exports.mercadoPagoRejectsToSearch  = [
+-  
++  {
++    id: 300,
++    reason: "ITEM_ISSUE",
++    message:"Sin producto/variedad"
++  },
++  // ... (Se repite la estructura para los demás motivos)
+ ];
++// --- FIN DE LA MODIFICACIÓN ---
+          </code></pre>
+          <div class="analysis-comment">
+            <strong>Análisis del Código:</strong>
+            <ul>
+              <li>La sección <code>mercadoPagoRejects</code>, antes vacía, se puebla con una lista detallada de objetos, cada uno con un ID, nombre para la UI, descripciones multilingües y flags de aplicabilidad.</li>
+              <li>El array <code>mercadoPagoRejectsToSearch</code> se llena con una estructura optimizada para el backend, mapeando el ID a un <code>reason</code> estandarizado por la API de MercadoPago.</li>
+            </ul>
+          </div>
+      </div>
+    </article>
+
+    <!-- Commit 2: Bugfix brandId -->
+    <article class="commit-card">
+      <header class="commit-header">
+        <h2>Commit: <code>b6cd1395</code></h2>
+      </header>
+      <div class="commit-body">
+          <h3>Análisis Funcional</h3>
+          <p>Este es un <strong>bug fix crítico</strong>. El sistema fallaba al asociar los pedidos de MercadoPago con la sucursal correcta porque usaba un identificador incorrecto (<code>brandId</code>). Esto probablemente causaba que todos los pedidos de esta plataforma fallaran. La solución usa el campo correcto (<code>id</code>), desbloqueando el flujo de procesamiento.</p>
+          <pre class="diff-highlight"><code class="language-diff-javascript">
+// --- a/api/src/platforms/interfaces/mercadoPago.js
+// +++ b/api/src/platforms/interfaces/mercadoPago.js
+// @@ -278,8 +278,8 @@
+   },
+   retriveMinimunData: function (order) {
+     return {
+--      branchReference: order.extension.store.brandId.toString(),
+++      branchReference: order.extension.store.id.toString(),
+       posId: order.id.toString(),
+       originalId: order.id.toString(),
+       displayId: order.id.toString()
+            </code></pre>
+            <div class="analysis-comment">
+              <strong>Análisis del Código:</strong>
+              <ul>
+                <li><strong>Línea Eliminada:</strong> Se usaba <code>brandId</code> para identificar la sucursal, lo cual era incorrecto y causaba que la búsqueda fallara.</li>
+                <li><strong>Línea Añadida:</strong> Se corrige para usar <code>id</code>, el identificador correcto de la tienda en los datos de MercadoPago, para el campo interno <code>branchReference</code>.</li>
+              </ul>
+            </div>
+      </div>
+    </article>
+
+    <!-- Commit 3: Logging -->
+    <article class="commit-card">
+      <header class="commit-header">
+        <h2>Commit: <code>9b168993</code></h2>
+      </header>
+      <div class="commit-body">
+          <h3>Análisis Funcional</h3>
+          <p>El objetivo es mejorar la <strong>observabilidad</strong> del sistema. Al añadir registros en momentos clave del webhook, se facilita enormemente el diagnóstico de problemas, permitiendo trazar si una notificación de MercadoPago llegó, qué datos contenía y cómo se procesó internamente. Esto reduce drásticamente el tiempo de investigación de incidentes.</p>
+          <pre class="diff-highlight"><code class="language-diff-javascript">
+// --- a/api/src/controllers/mercadoPago.js
+// +++ b/api/src/controllers/mercadoPago.js
+// @@ -10,6 +10,8 @@
+ const mercadoPagoNotification = async (req, res) => {
+   try {
++    // --- INICIO DE LA MODIFICACIÓN ---
++    Log.saveError(null, { message: 'Received MercadoPago notification', data: req.body, platform: 'MercadoPago' });
+     const data = req.body;
+     if (!data || !data.resource) {
+// ...
+// @@ -59,11 +61,21 @@
+     let MercadoPagoOrder = await axios.get(urlAvailability, headersConfig);
+--    let order = MercadoPagoOrder.data;
+--    let currentBranch = await branchModel.findOne({ /* ... */ 'branchReference': order.extension.store.brandId });
+--    order.branchId = currentBranch.branchId;
+--    order.state = "PENDING";
++    Log.saveError(null, { message: 'MercadoPago Order fetched', data: MercadoPagoOrder.data, platform: 'MercadoPago' });
++
++    let order = MercadoPagoOrder.data;
++    let currentBranch = await branchModel.findOne({
++       'platforms.platform': new mongoose.Types.ObjectId(mercadoPago.id),
++       'platforms.branchReference': order.extension.store.id
++      });
++      order.branchId = currentBranch.branchId;
++      order.state = "PENDING";
++
++    Log.saveError(null, { message: 'MercadoPago Order Pending', data: order, platform: 'MercadoPago' });
++    // --- FIN DE LA MODIFICACIÓN ---
+     // ... resto del código ...
+          </code></pre>
+          <div class="analysis-comment">
+              <strong>Análisis del Código:</strong>
+              <ol>
+                <li>Se añade un log al inicio del webhook para confirmar que la notificación ha sido recibida.</li>
+                <li>Se añade un segundo log para registrar los detalles completos de la orden obtenidos de la API de MercadoPago.</li>
+                <li>Se añade un tercer log para registrar el objeto <code>order</code> final después de ser enriquecido internamente, confirmando la correcta asignación de la sucursal.</li>
+              </ol>
+          </div>
+      </div>
+    </article>
+      
+  </div>
+
+  <!-- Scripts de Prism.js al final del body -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.js"></script>
+
+</body>
+</html>

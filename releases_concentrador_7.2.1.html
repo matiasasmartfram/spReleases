@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análisis de Cambios: Automatización Rappi y Robustez de Logging</title>
+  
+  <!-- Estilos de la librería Prism.js para resaltado de sintaxis -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.css" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+    :root {
+      --bg-color: #f8f9fa;
+      --card-bg-color: #ffffff;
+      --text-color: #212529;
+      --text-muted-color: #6c757d;
+      --border-color: #dee2e6;
+      --primary-color: #0d6efd;
+      --analysis-bg: #e6f7ff;
+      --analysis-border: #91d5ff;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2em;
+      line-height: 1.7;
+    }
+
+    .container { max-width: 1000px; margin: 0 auto; }
+    
+    .main-header { text-align: center; margin-bottom: 3em; }
+    .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.5em; }
+    .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); font-style: italic; }
+    
+    .commit-card {
+      background-color: var(--card-bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 2.5em;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+    
+    .commit-header {
+      background-color: #fafbfc;
+      padding: 1.5em;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .commit-header h2 { margin: 0; font-size: 1.6em; }
+    .commit-header code { font-family: 'Fira Code', monospace; font-size: 0.9em; background-color: #e9ecef; padding: 0.3em 0.6em; border-radius: 4px; }
+    
+    .commit-body { padding: 1.5em; }
+    h3 { font-size: 1.3em; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5em; margin-top: 1.5em; margin-bottom: 1em; }
+    h3:first-child { margin-top: 0; }
+    
+    .file-block { margin-top: 1.5em; }
+    .file-block-header { font-family: 'Fira Code', monospace; font-size: 0.9em; background-color: #3a404d; color: #f8f9fa; padding: 0.8em 1em; border-radius: 6px 6px 0 0; }
+    
+    pre[class*="language-"] {
+        padding: 1.5em !important;
+        margin: 0 !important;
+        border-radius: 0 0 6px 6px;
+        font-family: 'Fira Code', monospace !important;
+        font-size: 0.9em !important;
+        line-height: 1.5 !important;
+        border: 1px solid #3a404d;
+        border-top: none;
+    }
+    
+    .token.inserted-sign.inserted { background: rgba(40, 167, 69, 0.2); }
+    .token.deleted-sign.deleted { background: rgba(220, 53, 69, 0.2); }
+    
+    .analysis-comment {
+      display: block;
+      background-color: var(--analysis-bg);
+      border-left: 3px solid var(--analysis-border);
+      color: #0c5460;
+      padding: 0.8em 1.2em;
+      margin: 1em 0;
+      font-family: 'Inter', sans-serif;
+      font-style: italic;
+      font-size: 0.95em;
+      white-space: normal;
+    }
+
+    ul { padding-left: 20px; }
+    ul li { margin-bottom: 0.5em; }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+ <header class="main-header">
+      <h1>Release Notes: CONCENTRADOR v7.2.1</h1>
+      <p>Este documento detalla las nuevas funcionalidades, mejoras y correcciones de errores.</p>
+    </header>
+
+    <!-- COMMIT 1 CARD -->
+    <article class="commit-card">
+      <header class="commit-header">
+        <h2>Commit <code>86d61311</code></h2>
+      </header>
+      <div class="commit-body">
+        <h3>1. Análisis Funcional</h3>
+        <h4>Objetivo</h4>
+        <p>Automatizar la sincronización del estado de las tiendas en Rappi a una hora específica del día y ampliar los horarios de verificación para PedidosYa.</p>
+        
+        <h4>Nueva Funcionalidad (Rappi)</h4>
+        <p>Se introduce una nueva tarea programada (cron job) que se ejecuta una vez al día (a las 11:16 ART / 14:16 UTC). Esta tarea verifica el estado que deberían tener las tiendas de Rappi en Argentina y fuerza una actualización de estado en la plataforma. El propósito es actuar como un mecanismo de sincronización y corrección, asegurando que el estado de las tiendas en Rappi sea el correcto.</p>
+        
+        <h4>Mejora (PedidosYa)</h4>
+        <p>Se añade un nuevo horario (10:02 ART / 13:02 UTC) a la tarea programada existente que sincroniza el estado de las tiendas en PedidosYa, aumentando la cantidad de verificaciones diarias.</p>
+
+        <h4>Impacto</h4>
+        <ul>
+            <li><strong>Operativo:</strong> Reduce la necesidad de intervención manual para corregir el estado de las tiendas en Rappi.</li>
+            <li><strong>Comercial:</strong> Aumenta la confiabilidad del estado de las tiendas, minimizando la pérdida de ventas por locales que aparecen cerrados incorrectamente.</li>
+        </ul>
+
+        <h3>2. Análisis Técnico Detallado</h3>
+        <p><strong>Archivo Modificado:</strong> <code>api/src/controllers/branch.js</code></p>
+        
+        <div class="file-block">
+            <div class="file-block-header">Modificación de la Planificación de Tareas (cronPeya)</div>
+            <pre class="diff-highlight"><code class="language-diff-javascript">
+// @@ -650,9 +650,12 @@
+   cron.schedule(scheduleRappiOffline, async () => await checkOfflinePOSrappi());
+   cron.schedule(schedulePeyaReject, async () => await rejectOrdersPeya());
+   cron.schedule(scheduleOrderRejClosed, async () => await orderRejClosed());
+--  // 23:02 AR → 02:02 UTC // 10:30 AR → 13:32 UTC // 11:02 AR → 14:02 UTC // 11:30 AR → 14:32 UTC // 12:02 AR → 15:02 UTC
+--  cron.schedule('2 2,14,15 * * *', async () => await enviarEstadoPedidosYa());
++// Se añade la hora 13 UTC a la ejecución del cron de PedidosYa para una sincronización adicional.
+++  cron.schedule('2 2,13,14,15 * * *', async () => await enviarEstadoPedidosYa());
+   cron.schedule('32 13,14 * * *', async () => await enviarEstadoPedidosYa());
++// Se añade un nuevo cron job para la nueva función enviarEstadoRappi.
++// Se ejecutará todos los días a las 14:16 UTC (11:16 ART).
+++  cron.schedule('16 14 * * *', async () => await enviarEstadoRappi());
+ }
+            </code></pre>
+        </div>
+
+        <div class="file-block">
+            <div class="file-block-header">Nueva Función: enviarEstadoRappi()</div>
+            <pre><code class="language-javascript">
+// Agregado en api/src/controllers/branch.js
+
+// Declara una nueva función asíncrona para manejar la lógica de Rappi.
+async function enviarEstadoRappi() {
+  try {
+    // 1. Inicialización y obtención de datos de la plataforma.
+    let extraData = []; 
+    let rappi = await platforms.findOne({ name: 'Rappi' });
+
+    // 2. Definición de condiciones para la consulta a la base de datos.
+    const conditionalOR = [ { alreadyClosedRappi: { $eq: false } } ];
+    const conditionalOR2 = [ { alreadyClosedRappi: { $eq: true } } ];
+
+    // 3. Búsqueda de sucursales en Argentina para ABRIR.
+    let branchesToOpen = await model.find({
+      platforms: { $elemMatch: { platform: new mongoose.Types.ObjectId(rappi.id), isActive: true } },
+      "address.country": "Argentina",
+      $or: conditionalOR
+    });
+
+    // 4. Búsqueda de sucursales en Argentina para CERRAR.
+    let branchesToClose = await model.find(/* ... */);
+    
+    // 5. Configuración de la petición a la API de Rappi para Argentina.
+    let urlAr = baseUrlRappi["Argentina"] + '/api/v2/restaurants-integrations-public-api/availability/stores/enable';
+    const optionsAr = { headers: { /* ... */ } };
+
+    // 6. Mapeo y ejecución de promesas para CERRAR tiendas.
+    const closePromises = branchesToClose.map(async (branch) => {
+      // ... (lógica para enviar petición PUT a Rappi con is_enabled: false)
+    });
+
+    // 7. Mapeo y ejecución de promesas para ABRIR tiendas.
+    const openPromises = branchesToOpen.map(async (branch) => {
+      // ... (lógica para enviar petición PUT a Rappi con is_enabled: true)
+    });
+
+    // 8. Ejecución concurrente de todas las promesas.
+    await Promise.allSettled([...closePromises, ...openPromises]);
+
+    // 9. Creación de un log final con el resumen de toda la operación.
+    await openClosedLogModel.create({ /* ... */ });      
+  } catch (error) {
+    // 10. Manejo de errores globales.
+    Log.saveError(error, { message: 'Falló checkOfflinePOSrappi Rappi CRON', platform: 'Rappi-Concentrador' }); 
+  }
+}
+            </code></pre>
+        </div>
+      </div>
+    </article>
+
+    <!-- COMMIT 2 CARD -->
+    <article class="commit-card">
+      <header class="commit-header">
+        <h2>Commit <code>0932bb6b</code></h2>
+      </header>
+      <div class="commit-body">
+        <h3>1. Análisis Funcional</h3>
+        <h4>Objetivo</h4>
+        <p>Corregir un <strong>error crítico</strong> en el sistema de registro de errores (logging).</p>
+        
+        <h4>Problema</h4>
+        <p>En varias funciones automáticas ejecutadas por un cron job, se intentaba registrar el <code>req.body</code> de una solicitud HTTP. Sin embargo, al no ser iniciadas por una petición, estas funciones no tienen acceso a un objeto <code>req</code>, lo que causaba un error fatal (<code>ReferenceError</code>). Este error impedía que el log del problema original se guardara, resultando en <strong>"fallos silenciosos"</strong> imposibles de depurar.</p>
+        
+        <h4>Solución</h4>
+        <p>Se eliminó la referencia a <code>req.body</code> de las llamadas a <code>Log.saveError</code> en todos los contextos donde no está disponible.</p>
+
+        <h4>Impacto</h4>
+        <p>Aumenta drásticamente la fiabilidad del sistema. Ahora, si una tarea automática falla, se generará un log de error detallado y correcto, permitiendo al equipo técnico identificar y resolver el problema rápidamente.</p>
+
+        <h3>2. Análisis Técnico Detallado</h3>
+        <p><strong>Archivo Modificado:</strong> <code>api/src/controllers/branch.js</code></p>
+
+        <div class="file-block">
+            <div class="file-block-header">Corrección en las llamadas a Log.saveError</div>
+            <pre class="diff-highlight"><code class="language-diff-javascript">
+// @@ -582,8 +582,8 @@
+             branchName: remoteId,
+             type: "Closed",
+             result: false
+-          });    
+--          Log.saveError(error, { message: 'Falló checkOfflinePOS CLOSED', platform: 'PedidosYa-Concentrador', urlAvailability: urlAvailability, body: req.body, headersConfig3: headersConfig3 });                 
++          });
++// Se elimina 'body: req.body' porque 'req' no existe en el contexto de un cron job.
++// Intentar acceder a 'req.body' causaba un error que impedía guardar el log.
+++          Log.saveError(error, { message: 'Falló checkOfflinePOS CLOSED', platform: 'PedidosYa-Concentrador', urlAvailability: urlAvailability, headersConfig3: headersConfig3 });
+         }
+       }));
+       await model.findByIdAndUpdate(branch.id, { alreadyClosedPeya: true });
+// ... (se aplica la misma corrección en todas las funciones afectadas: checkOfflinePOSuber, checkOfflinePOSpeya, enviarEstadoPedidosYa)
+            </code></pre>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Scripts de Prism.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        function processCodeBlocks() {
+            document.querySelectorAll('pre > code').forEach(codeElement => {
+                const rawCode = codeElement.textContent;
+                const analysisBlocks = new Map();
+                let placeholderId = 0;
+
+                // 1. Reemplazar bloques de análisis con placeholders y guardarlos
+                const codeWithoutAnalysis = rawCode.replace(/(\/\/ .*)/g, (match) => {
+                    const id = `__ANALYSIS_PLACEHOLDER_${placeholderId++}__`;
+                    analysisBlocks.set(id, `<div class="analysis-comment">${match.trim().substring(2).trim()}</div>`);
+                    return id;
+                });
+
+                // 2. Asignar el código limpio (con placeholders) para que Prism lo resalte
+                codeElement.textContent = codeWithoutAnalysis;
+                Prism.highlightElement(codeElement);
+
+                // 3. Reemplazar los placeholders con los bloques de análisis HTML
+                let finalHtml = codeElement.innerHTML;
+                analysisBlocks.forEach((html, id) => {
+                    finalHtml = finalHtml.replace(id, html);
+                });
+
+                codeElement.innerHTML = finalHtml;
+            });
+        }
+        // Se ejecuta una vez que el DOM está listo
+        // processCodeBlocks(); // Descomentar si se usa el método de placeholders
+    });
+  </script>
+
+</body>
+</html>

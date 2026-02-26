@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Concentrador 8.0.1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 {
+            margin: 0 0 0.25em 0;
+            font-size: 2.2em;
+            color: var(--primary-color);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--text-muted-color);
+        }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #166534;
+        }
+
+        .deployment-info-box p {
+            margin: 0.5em 0 0 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+        }
+
+        .service-section {
+            margin-bottom: 3em;
+        }
+
+        .service-section>h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker {
+            display: none;
+        }
+
+        .component-header h3 {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2em;
+        }
+
+        .component-body {
+            padding: 1.5em;
+        }
+
+        .component-body h4 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.2em;
+            color: #343a40;
+        }
+
+        .component-body h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+
+        .analysis-box h4 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Concentrador 8.0.1</h1>
+            <p>Corrección de errores en la tarea de reenvío de confirmaciones de pedidos.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 8.0.1</p>
+            <p><b>Fecha de Despliegue:</b> 2025-09-15</p>
+            <p><b>Entorno:</b> Producción</p>
+            <p><b>AWS Task:</b> 207</p>
+            <p><b>Commit:</b> b10378db2fc614693020b13570a9a1a26ced2656</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General</h2>
+            <p>
+                Este release se enfoca en una corrección crítica en la tarea programada `rejectOrdersPeya`, responsable de re-procesar las confirmaciones de pedidos que han fallado. El cambio principal es una refactorización del bloque de manejo de errores (`try-catch`) para que se aplique a cada pedido individualmente. Esto evita que el fallo en un solo pedido detenga el proceso completo, mejorando significativamente la **robustez y resiliencia** de la tarea.
+            </p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/controllers/branch.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        Esta actualización, como parte de una **Corrección en Reenvío de Confirmaciones**, aborda un bug en la lógica de re-procesamiento de confirmaciones de pedidos fallidas (`rejectOrdersPeya`). El problema residía en el alcance del manejo de errores (`try-catch`), que provocaba que el proceso se detuviera por completo si una sola de las confirmaciones pendientes fallaba.
+                    </p>
+                    <p>
+                        El cambio consiste en una refactorización del bloque `try-catch` para que opere a nivel de cada ítem individual dentro del bucle, en lugar de envolver el bucle completo.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Refactorización del Bloque `try-catch`</h5>
+                    <p><b>Explicación:</b> Se ha modificado la posición del bloque `try-catch` dentro de la función `rejectOrdersPeya`. Anteriormente, el `try` comenzaba antes del bucle `for`, lo que significaba que cualquier excepción lanzada durante el procesamiento de un `reject` detendría la ejecución de todo el bucle. Ahora, el `try` se ha movido dentro del bucle `for`, envolviendo la lógica de cada iteración. Esto aísla los errores, permitiendo que el bucle continúe con el siguiente elemento incluso si el actual falla.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El try-catch envolvía todo el bucle. Si un 'reject' fallaba, el bucle se interrumpía.
+async function rejectOrdersPeya() {
+  try {
+    let rejects = await rejectPeyaModel.find({send: false});
+    for (const reject of rejects) {
+      // Lógica de switch para procesar cada 'reject'
+      switch (reject.platformId) {
+        // ...
+      }
+    }
+  } catch (error) {
+    // Un solo error aquí detenía todo el proceso.
+    console.log(error)
+    Log.saveError(error, { message: 'Falló reject order concentrador-P', platform: 'Concentrador', reject: reject });
+    await rejectPeyaModel.findOneAndUpdate({ _id: reject.id }, { send:true });
+  }
+}
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El try-catch se mueve dentro del bucle para aislar los errores.
+async function rejectOrdersPeya() {
+  let rejects = await rejectPeyaModel.find({send: false});
+  for (const reject of rejects) {
+    try{
+      // La lógica de switch ahora está envuelta individualmente.
+      switch (reject.platformId) {
+        // ...
+      }
+    } catch (error) {
+      // Si este 'reject' falla, se registra el error y se marca como procesado.
+      console.log(error)
+      Log.saveError(error, { message: 'Falló reject order concentrador-P', platform: 'Concentrador', reject: reject });
+      await rejectPeyaModel.findOneAndUpdate({ _id: reject.id }, { send:true });
+      // El bucle 'for' continuará con la siguiente iteración.
+    }
+  }
+}
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>
+                            Este cambio es una corrección que mejora el sistema de re-procesamiento de confirmaciones. **Resiliencia a Fallos:** El principal beneficio es que un error en un único pedido (por ejemplo, un problema temporal con la API de una plataforma para una orden específica) ya no detiene el procesamiento de todos los demás pedidos pendientes. **Procesamiento Completo:** Asegura que la tarea programada siempre intente procesar todos los elementos de la cola en cada ejecución, en lugar de detenerse en el primer error. **Integridad del Proceso:** Al aislar los errores, se garantiza que el sistema siga funcionando de manera predecible y no deje pedidos sin procesar debido a un fallo aislado.
+                        </p>
+                    </div>
+                </div>
+            </details>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+
+</html>

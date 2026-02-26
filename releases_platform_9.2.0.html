@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Platform 9.2.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 {
+            margin: 0 0 0.25em 0;
+            font-size: 2.2em;
+            color: var(--primary-color);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--text-muted-color);
+        }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #166534;
+        }
+
+        .deployment-info-box p {
+            margin: 0.5em 0 0 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+        }
+
+        .service-section {
+            margin-bottom: 3em;
+        }
+
+        .service-section>h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker {
+            display: none;
+        }
+
+        .component-header h3 {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2em;
+        }
+
+        .component-body {
+            padding: 1.5em;
+        }
+
+        .component-body h4 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.2em;
+            color: #343a40;
+        }
+
+        .component-body h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+
+        .analysis-box h4 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Platform 9.2.0</h1>
+            <p>Implementación de CanjeApp y mejora en el reprocesamiento de órdenes.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 9.2.0</p>
+            <p><b>Fecha de Despliegue:</b> 2025-10-01</p>
+            <p><b>Entorno:</b> Producción</p>
+            <p><b>AWS Task:</b> 176</p>
+            <p><b>Commit:</b> df12999beb01c16771eccffaf1e361d8ec24cbec</p>
+        </div>
+
+       <section id="summary" class="service-section">
+            <h2>Resumen General</h2>
+            <p>
+                Este commit introduce integración con CanjeApp para pedidos que involucran canje de puntos con SML.
+            </p>
+            <p>
+                El flujo implementado es el siguiente:
+            </p>
+            <ol>
+                <li>
+                    Identificación del pedido con canje: Se mapean y conservan datos específicos del canje (si existen), como número de tarjeta de Loyalty y puntos usados, para plataformas con `internalCode` 7 y 12.
+                </li>
+                <li>
+                    Notificación al confirmar: Para pedidos con canje aceptados, se llama a la API de SML con estado `1` (confirmado).
+                </li>
+                <li>
+                    Notificación al rechazar: Para pedidos con canje rechazados, se llama a la API de SML con estado `2` (rechazado).
+                </li>
+                <li>
+                    Centralización y duplicación: La lógica de comunicación con la API de SML se centraliza en `Platform.js` y se duplica en `rapiboy.js` y `thirdParty.js`.
+                </li>
+            </ol>
+            <p>
+                Los cambios afectan solo a plataformas con `internalCode` 7 y 12. Órdenes sin canje continúan procesándose normalmente.
+            </p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/assets/rejectedMessages.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        Este commit introduce un **nuevo tipo de motivo de rechazo** relacionado con la funcionalidad de "CanjeApp". Se crea una nueva categoría de rechazos (`exchanges`) para aislar este motivo, lo que sugiere que los rechazos por falta de puntos tienen un tratamiento o una lógica de negocio especial, separada de los motivos genéricos o los específicos de las APIs de las plataformas.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Creación de una Nueva Categoría de Rechazos</h5>
+                    <p><b>Explicación:</b> Se ha añadido un nuevo array exportado llamado `module.exports.exchanges`. Dentro de este array, se ha definido un único motivo de rechazo con `id: 400` y `name: 'Falta de puntos CanjeApp'`. La creación de una categoría separada en lugar de añadirlo a la lista `generic` indica que este motivo será cargado o utilizado en contextos específicos relacionados con el canje de puntos.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El archivo terminaba con la definición de 'mercadoPagoRejectsToSearch'.
+// ...
+    {
+      reason: "STORE_CLOSED",
+      message:"Orden rechazada por local cerrado"
+    },
+];
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: Se añade una nueva sección 'exchanges' con el nuevo motivo de rechazo.
+// ...
+    {
+      reason: "STORE_CLOSED",
+      message:"Orden rechazada por local cerrado"
+    },
+];
+
+module.exports.exchanges = [
+  {
+    id: 400,
+    name: 'Falta de puntos CanjeApp',
+    descriptionES: 'Falta de puntos CanjeApp',
+    descriptionPT: 'Falta de puntos CanjeApp',
+    forRestaurant: true,
+    forLogistics: true,
+    forPickup: true
+  }
+];
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <ul>
+                            <li>Se crea un identificador único (`id: 400`) para los rechazos por falta de puntos.</li>
+                            <li>Al colocar este motivo en su propia categoría (`exchanges`), se facilita su carga selectiva en los componentes del sistema que gestionan los canjes, sin afectar las listas de rechazos de las plataformas de delivery estándar.</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/controllers/thirdParty.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        Este commit introduce nueva lógica en el flujo de cancelación de órdenes. El sistema ahora notifica a SML cuando se cancela un pedido que involucraba un canje de puntos.
+                    </p>
+                    <p>
+                        El objetivo de este cambio es asegurar la **consistencia en el sistema de puntos**: si un pedido de canje se cancela, los puntos que el cliente había utilizado deben ser liberados o devueltos. Esta nueva funcionalidad se integra directamente en el endpoint de cancelación de órdenes genérico (`/thirdParties/orders/cancel`).
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Importación de Dependencias Adicionales</h5>
+                    <p><b>Explicación:</b> Se añade la importación del modelo `orderModel`. Esto es necesario para poder consultar la base de datos y obtener los detalles completos de la orden que se está cancelando, específicamente para acceder a los datos del canje de puntos.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ...
+import NewsTypeSingleton from '../utils/newsType';
+import { isArray } from 'lodash';
+import Log from '../utils/log';
+import logError from '../models/logError';
+// ...
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// ...
+import NewsTypeSingleton from '../utils/newsType';
+import { isArray } from 'lodash';
+import Log from '../utils/log';
+import orderModel from '../models/order'; // <-- DESPUÉS: Se importa el modelo de orden para buscar los detalles del canje.
+import logError from '../models/logError';
+// ...
+                    </code></pre>
+                    <h5>2. Nueva Lógica de Notificación a SmartLoyalty en `cancelOrder`</h5>
+                    <p><b>Explicación:</b> El método `cancelOrder` ha sido modificado. Después de procesar el rechazo interno (`SetNews`), ahora se añade un nuevo bloque de código que se ejecuta condicionalmente para notificar al servicio de lealtad si la orden contenía un canje.</p>
+                    <b>Código Nuevo (resumen de cambios):</b>
+                    <pre><code class="language-javascript">
+const cancelOrder = async (req, res) => {
+  try {
+    // ... (validación y proceso de rechazo interno)
+    const result = await setNews.setNews(newToSet, req.body.id);
+
+    // --- INICIO DE LA NUEVA LÓGICA ---
+    // DESPUÉS: Se busca la orden completa en la base de datos usando el ID original.
+    let fullOrder = await orderModel.findOne({ 'originalId': String(req.body.id) });
+    
+    // DESPUÉS: Se verifica si la orden contenía un canje de puntos.
+    if(fullOrder.order.user.contieneCanje) {
+      try {
+        // ... (lógica para obtener token para SML)
+        const bodySml= {
+          // ... (datos de la orden para la API de SML)
+          "StatusOrder": 2, // Se envía el estado '2' que significa CANCELADO.
+          "PlatformOrder":"I+D"
+        }
+        // DESPUÉS: Se realiza la llamada POST a la API de SML para notificar la cancelación.
+        axios.post(`${settings.smlParams.api}/api/Customer/UpdateCustomerOrder`, bodySml ,headerssml)
+      } catch (error) {
+        Log.saveError(error, { message: 'Falló peticion reject desde platform sml' + order.id, platform: 'SML' });
+        resolve(false);
+      }
+    }
+    // --- FIN DE LA NUEVA LÓGICA ---
+
+    res.status(200).send(result).end();
+  } catch (error) {
+    // ... (manejo de error)
+  }
+};
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <ul>
+                            <li>El sistema ahora es capaz de comunicarse con un servicio externo (SML) para notificar la cancelación de un pedido de canje.</li>
+                            <li>Esta notificación permite liberar los puntos que habían sido bloqueados cuando el cliente realizó el canje.</li>
+                            <li>La llamada a SML solo se realiza si la orden cancelada contenía un canje, evitando notificaciones innecesarias.</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/index.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        Este commit introduce una **nueva lógica de negocio** dentro del cron job que se encarga de reprocesar órdenes pendientes. Anteriormente, este cron solo manejaba un tipo de orden pendiente. Ahora, se ha dividido el flujo para manejar **dos tipos distintos de órdenes a reprocesar**.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Bifurcación en la Consulta de Órdenes Pendientes</h5>
+                    <p><b>Explicación:</b> La consulta a la colección `orderRejClosedModel` ha sido dividida en dos. La consulta original ahora excluye explícitamente los documentos que tengan el campo `type`, mientras que una nueva consulta busca específicamente los documentos con `type: "ordersToSendPOS"`. Esto permite un manejo diferenciado de los dos tipos de órdenes pendientes.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: Se realizaba una única consulta para obtener todas las órdenes pendientes de envío.
+// ...
+      const dateminutes = new Date(dateNow.getTime() - orderRejClosedTime.orderRejClosedTime * 60 * 1000);
+      const ordersRejClosed = await orderRejClosedModel.find({
+        send: false,
+        newId: { $exists: true },
+        createdAt: { $gte: dateminutes }         
+      });      
+// ...
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: La consulta original ahora excluye los nuevos tipos de órdenes.
+// ...
+      const dateminutes = new Date(dateNow.getTime() - orderRejClosedTime.orderRejClosedTime * 60 * 1000);
+      const ordersRejClosed = await orderRejClosedModel.find({
+        send: false,
+        newId: { $exists: true },
+        createdAt: { $gte: dateminutes },
+        type:  { $exists: false } // <-- DESPUÉS: Excluye documentos que tengan el campo 'type'.
+      });
+      
+      // DESPUÉS: Se añade una nueva consulta para obtener específicamente las órdenes a enviar al POS.
+      const ordersToSendPOS = await orderRejClosedModel.find({
+        send: false,
+        newId: { $exists: true },
+        type: "ordersToSendPOS"
+      });
+// ...
+                    </code></pre>
+                    <h5>2. Implementación del Nuevo Flujo de Procesamiento</h5>
+                    <p><b>Explicación:</b> Se ha añadido un nuevo bucle `for` para procesar las `ordersToSendPOS` encontradas. Dentro de este bucle, cada `news` correspondiente es modificada (se fuerza el `typeId` a `4` y se resetea el campo `viewed`) antes de ser reenviada a la cola SQS. Este proceso asegura que el POS reciba una notificación de rechazo de plataforma.</p>
+                    <b>Código Nuevo (resumen de cambios):</b>
+                    <pre><code class="language-javascript">
+// ...
+      for (const n of newsToSend) {
+        await aws.pushNewToQueue(n);
+      }
+
+      // --- INICIO DE LA NUEVA LÓGICA ---
+      for (const m of newsToSendPOS) {
+        // DESPUÉS: Se resetea el campo 'viewed'.
+        m['viewed'] = null;
+        // DESPUÉS: Se fuerza el 'typeId' a 4 ('platform_rej_ord').
+        m.typeId = 4;
+        // DESPUÉS: La novedad modificada se reencola en SQS.
+        await aws.pushNewToQueue(m);
+      }
+      // --- FIN DE LA NUEVA LÓGICA ---
+
+      await orderRejClosedModel.updateMany(
+        { newId: { $in: newsToSend.map(o => o._id) } },
+        { $set: { send: true, reSend: true } }
+      );
+      // DESPUÉS: Se añade un 'updateMany' para marcar los nuevos registros como procesados.
+      await orderRejClosedModel.updateMany(
+        { newId: { $in: newsToSendPOS.map(o => o._id) } },
+        { $set: { send: true, reSend: true } }
+      );
+// ...
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>
+                            Este cambio introduce una nueva capacidad en el sistema de reprocesamiento de órdenes, permitiendo un flujo específico para forzar el rechazo de ciertos pedidos.
+                        </p>
+                        <ul>
+                            <li><b>Flexibilidad en el Reprocesamiento:</b> El cron job ya no es monolítico. El sistema ahora puede manejar diferentes tipos de órdenes pendientes, cada uno con su propia lógica.</li>
+                            <li><b>Flujo de Rechazo Forzado:</b> La nueva lógica crea un mecanismo para tomar una orden en un estado inconsistente y forzar su transición a un estado final de "rechazado por plataforma", asegurando que el POS sea notificado correctamente.</li>
+                            <li><b>Reutilización de la Infraestructura:</b> Se reutiliza la infraestructura existente para implementar esta nueva funcionalidad, lo cual es una práctica eficiente.</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+              <details class="component-card">
+    <summary class="component-header">
+        <h3>api/src/models/orderRejClosed.js</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            Este commit realiza una modificación simple pero fundamental en el esquema de la base de datos para la colección `orderRejClosed`. Se añade un nuevo campo `type` que actúa como un **discriminador**, permitiendo que el sistema clasifique y maneje diferentes tipos de registros de reprocesamiento de órdenes.
+        </p>
+        <p>
+            Este cambio es el **habilitador estructural** para la nueva lógica de negocio implementada en `api/src/index.js`, donde el cron job ahora puede diferenciar entre órdenes pendientes genéricas y aquellas marcadas específicamente como `"ordersToSendPOS"`.
+        </p>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Adición del Campo `type`</h5>
+        <p><b>Explicación:</b> Se ha añadido un nuevo campo opcional llamado `type` de tipo `String` al `orderRejClosedSchema`. Este campo permitirá "etiquetar" los documentos en esta colección para que puedan ser procesados de manera diferente por el cron job.</p>
+        <b>Código Anterior:</b>
+        <pre><code class="language-javascript">
+// ANTES: El esquema solo contenía 'newId', 'timestamp', 'send' y 'reSend'.
+// ...
+const orderRejClosedSchema = new Schema({
+	newId: { type: Schema.Types.ObjectId, ref: newsSchema },
+	timestamp: {
+		type: Date,
+		default: Date.now
+	},
+	send:{
+        type: Boolean,
+        default: false,
+        required: false
+    },
+	reSend:{
+        type: Boolean,
+        default: false,
+        required: false
+    }
+}, {
+// ...
+        </code></pre>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: Se añade el nuevo campo 'type' al final del esquema.
+// ...
+const orderRejClosedSchema = new Schema({
+	newId: { type: Schema.Types.ObjectId, ref: newsSchema },
+	timestamp: {
+		type: Date,
+		default: Date.now
+	},
+	send:{
+        type: Boolean,
+        default: false,
+        required: false
+    },
+	reSend:{
+        type: Boolean,
+        default: false,
+        required: false
+    },
+    type: {
+        type: String,
+        required: false
+    }
+}, {
+// ...
+        </code></pre>
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <p>
+                La modificación en este modelo es la base sobre la cual se construye la nueva funcionalidad de reprocesamiento diferenciado.
+            </p>
+            <ul>
+                <li><b>Flexibilidad del Modelo:</b> Al añadir el campo `type`, el modelo `orderRejClosed` se vuelve más flexible y extensible. Ahora puede soportar no solo uno, sino múltiples flujos de reprocesamiento sin necesidad de crear nuevas colecciones.</li>
+                <li><b>Habilitador de Lógica de Negocio:</b> Este cambio estructural es lo que permite que la consulta en `api/src/index.js` pueda separar los registros (`.find({ type: "ordersToSendPOS" })`) y aplicarles una lógica de negocio específica (forzar el rechazo y reencolar).</li>
+                <li><b>Impacto Mínimo:</b> Al ser un campo opcional (`required: false`), esta modificación es retrocompatible y no afecta a los registros existentes en la colección que no tengan este campo.</li>
+            </ul>
+        </div>
+    </div>
+</details>
+              <details class="component-card">
+    <summary class="component-header">
+        <h3>api/src/platforms/interfaces/thirdParty.js</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            Este commit introduce una **lógica de mapeo condicional** en el parser genérico `thirdParty`. El objetivo es permitir que este parser, que sirve a múltiples plataformas (como PediGrido e I+D), pueda manejar atributos específicos de "CanjeApp" que solo son enviados por algunas de ellas.
+        </p>
+        <p>
+            El cambio es fundamental para la integración de la funcionalidad de canje de puntos, ya que permite que los datos de lealtad (`numeroTarjetaLoyalty`, `puntosCanjeados`, etc.) se procesen y almacenen correctamente en la `news` solo cuando provienen de las plataformas relevantes, sin afectar a las demás que utilizan este mismo parser.
+        </p>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Modificación de la Firma de `customerMapper` y `detailsMapper`</h5>
+        <p><b>Explicación:</b> Las firmas de las funciones internas `customerMapper` y `detailsMapper` han sido modificadas para aceptar un nuevo parámetro: `platform`. Esto es esencial para poder implementar la lógica condicional, ya que ahora estas funciones tienen acceso a la información de la plataforma que originó el pedido (específicamente, su `internalCode`).</p>
+        <b>Código Anterior:</b>
+        <pre><code class="language-javascript">
+// ANTES: Las funciones de mapeo solo recibían el objeto de la orden.
+// ...
+        const customerMapper = (order) => {
+          // ...
+        };
+
+        const detailsMapper = (order) => {
+          // ...
+        };
+// ...
+        </code></pre>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: Ambas funciones ahora aceptan el objeto 'platform' para poder tomar decisiones basadas en él.
+// ...
+        const customerMapper = (order, platform) => {
+          // ...
+        };
+
+        const detailsMapper = (order,platform) => {
+          // ...
+        };
+// ...
+        </code></pre>
+
+        <h5>2. Mapeo Condicional de Atributos de Canje en `customerMapper`</h5>
+        <p><b>Explicación:</b> Dentro de `customerMapper`, se ha añadido un bloque `if` que comprueba si el `platform.internalCode` es `7` (PediGrido) o `12` (I+D). Solo si esta condición es verdadera, se mapean los campos relacionados con el canje de puntos (`tipoIdentificacion`, `numeroTarjetaLoyalty`, etc.) al objeto `customer` de la `news`.</p>
+        <b>Código Anterior:</b>
+        <pre><code class="language-javascript">
+// ANTES: El objeto 'customer' mapeado no incluía ningún campo relacionado con el canje de puntos.
+// ...
+                customer.dni = order.user.dni;
+                customer.email = order.user.email;
+                return customer;
+// ...
+        </code></pre>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: Se añade un bloque condicional para mapear los datos de canje solo para las plataformas relevantes.
+// ...
+                customer.dni = order.user.dni;
+                if(platform.internalCode === 7 || platform.internalCode === 12){
+                  customer.tipoIdentificacion = order.user.tipoIdentificacion;
+                  customer.numeroTarjetaLoyalty = order.user.numeroTarjetaLoyalty;
+                  customer.contieneCanje = order.user.contieneCanje;
+                  customer.puntosCanjeados = order.user.puntosCanjeados;
+                }
+                customer.email = order.user.email;
+                return customer;
+// ...
+        </code></pre>
+
+        <h5>3. Mapeo Condicional del Atributo `canje` en `detailsMapper`</h5>
+        <p><b>Explicación:</b> De manera similar, en `detailsMapper`, el campo `canje` de cada ítem del pedido ahora se mapea condicionalmente. Si la plataforma es PediGrido o I+D, se toma el valor `canje` que viene en el pedido. Para cualquier otra plataforma que use este parser, se asigna un valor por defecto de `0`, manteniendo el comportamiento anterior.</p>
+        <b>Código Anterior:</b>
+        <pre><code class="language-javascript">
+// ANTES: El campo 'canje' siempre se asignaba con un valor fijo de 0.
+// ...
+                  det.promotion = false;
+                  det.groupId = 0;
+                  det.canje =  0;
+                  if (
+                    detail.promotion &&
+// ...
+        </code></pre>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: El valor de 'canje' ahora depende de la plataforma de origen.
+// ...
+                  det.promotion = false;
+                  det.groupId = 0;
+                  if(platform.internalCode === 7 || platform.internalCode === 12) {
+                    det.canje =  detail.canje;
+                  }
+                  else
+                    det.canje = 0;
+                  
+                  if (
+// ...
+        </code></pre>
+        <h5>4. Actualización de las Invocaciones a los Mappers</h5>
+        <p><b>Explicación:</b> Finalmente, las líneas que invocan a `customerMapper` y `detailsMapper` dentro de `newsFromOrders` se actualizan para pasarles el nuevo parámetro `platform`.</p>
+        <b>Código Anterior:</b>
+        <pre><code class="language-javascript">
+// ANTES: Las llamadas a los mappers no incluían el objeto 'platform'.
+// ...
+          news.order = orderMapper(data, platform, tenant);
+          news.order.customer = customerMapper(data.order);
+          news.order.details = detailsMapper(data.order);
+          news.order.payment = paymentenMapper(data.order.payment[0]);
+// ...
+        </code></pre>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: Las llamadas ahora pasan el objeto 'platform' a los mappers.
+// ...
+          news.order = orderMapper(data, platform, tenant);
+          news.order.customer = customerMapper(data.order, platform);
+          news.order.details = detailsMapper(data.order, platform);
+          news.order.payment = paymentenMapper(data.order.payment[0]);
+// ...
+        </code></pre>
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <p>
+                Este cambio hace que el parser genérico `thirdParty` sea más inteligente y flexible:
+            </p>
+            <ul>
+                <li><b>Soporte para CanjeApp:</b> El sistema ahora es capaz de procesar y almacenar correctamente los datos de canje de puntos que son específicos de ciertas plataformas (PediGrido, I+D), en lugar de ignorarlos.</li>
+                <li><b>Mapeo Condicional:</b> La introducción de la lógica `if(platform.internalCode === ...)` permite que un mismo parser sirva a múltiples plataformas, aplicando lógicas de mapeo específicas solo cuando es necesario.</li>
+                <li><b>Retrocompatibilidad:</b> Las plataformas que utilizan este parser pero no envían datos de canje (o no deben procesarlos) no se ven afectadas, ya que la lógica condicional asegura que el comportamiento para ellas siga siendo el mismo.</li>
+            </ul>
+        </div>
+    </div>
+</details>
+              
+              <details class="component-card">
+    <summary class="component-header">
+        <h3>api/src/platforms/management/platform.js</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            Este commit introduce funcionalidad en la clase base `Platform`. Se implementa la lógica para notificar a SML cuando se cancela un pedido que involucra un canje de puntos.
+        </p>
+        <p>
+            Al añadir esta lógica en los métodos `rejectPlatformOrder` y `branchRejectOrder` de la clase `Platform`, cualquier plataforma que utilice estos métodos para procesar un rechazo notificará la anulación del canje.
+        </p>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Nuevas Dependencias y Variables Globales</h5>
+        <p><b>Explicación:</b> Se añade la importación de `settings` y se declaran dos variables globales (`tokenSMLDef`, `expires_inDef`) para cachear el token de autenticación del servicio SML y su tiempo de expiración. Esto permite una gestión centralizada y eficiente del token.</p>
+        <b>Código Anterior:</b>
+        <pre><code class="language-javascript">
+// ANTES: No había referencias a 'settings' ni variables para el token de SML.
+// ...
+import orderRejClosedModel from '../../models/orderRejClosed';
+import Log from '../../utils/log';
+let plarforms22 = [1, 2, 4, 7, 11, 12];
+const tenants = [ /* ... */ ]
+class Platform {
+// ...
+        </code></pre>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: Se importa 'settings' para acceder a las credenciales de SML y se declaran las variables de caché del token.
+// ...
+import orderRejClosedModel from '../../models/orderRejClosed';
+import Log from '../../utils/log';
+import settings from '../../config/settings';
+let plarforms22 = [1, 2, 4, 7, 11, 12];
+let tokenSMLDef = '';
+let expires_inDef ='';
+const tenants = [ /* ... */ ]
+class Platform {
+// ...
+        </code></pre>
+        <h5>2. Nuevas Funciones de Autenticación para SML</h5>
+        <p><b>Explicación:</b> Se añaden dos nuevos métodos a la clase `Platform`: `SMLLogin` y `checkAndRenewToken`. Estos se encargan de obtener y gestionar de forma centralizada un token de autenticación para la API de SML. El método `checkAndRenewToken` es crucial, ya que asegura que siempre se use un token válido antes de realizar una llamada a la API.</p>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// ...
+      }
+
+  // DESPUÉS: Nuevo método para verificar la validez del token y renovarlo si es necesario.
+  async checkAndRenewToken() {
+    const tiempoRestante = (expires_inDef - Date.now()) / 1000;
+    if (!tokenSMLDef || tiempoRestante <= 200) {
+      await this.SMLLogin();
+    }
+  }
+
+  // DESPUÉS: Nuevo método para realizar la autenticación con la API de SML y guardar el token en caché.
+  async SMLLogin() {
+      try {
+        const body = { /* ... */ }
+        await axios.post(`${settings.smlParams.url}`, body).then(r => {
+          tokenSMLDef = r.data.access_token;
+          expires_inDef = Date.now() + (r.data.expires_in * 1000);
+        });
+      }
+      catch (error) {
+        Log.saveError(error, { message: 'Falló SMLLogin DEF', platform: 'rapiboy' });
+      }
+    }
+
+      /**
+// ...
+        </code></pre>
+        <h5>3. Integración de la Notificación a SML en los Métodos de Rechazo</h5>
+        <p><b>Explicación:</b> Los métodos `rejectPlatformOrder` y `branchRejectOrder` han sido modificados para incluir la nueva lógica de notificación. Ahora, después de actualizar el estado interno de la orden a "rechazada", el sistema busca la orden completa, verifica si contenía un canje y, de ser así, se comunica con la API de SML para notificar la anulación.</p>
+        <b>Código Nuevo (Ejemplo en `rejectPlatformOrder`):</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: Se añade la lógica para notificar a SML si la orden rechazada era de canje.
+// ...
+      rejectPlatformOrder(orderId) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const state = NewsStateSingleton.stateByCod('rej');
+            try {
+              this.updateLastContact();
+              await this.updateOrderState({ originalId: orderId }, state);
+              // DESPUÉS: Se busca la orden completa para acceder a los datos del canje.
+              let fullOrder = await orderModel.findOne({
+                'order.id': orderId
+              });
+              // DESPUÉS: Se verifica si la orden contenía un canje.
+              if(fullOrder.order.user.contieneCanje)
+              try {
+                // DESPUÉS: Se asegura de tener un token válido.
+                await this.checkAndRenewToken();
+                const headerssml = { /* ... */ };
+                // DESPUÉS: Se construye el cuerpo de la petición para la API de SML.
+                const bodySml= { /* ... */ }
+                // DESPUÉS: Se realiza la llamada POST a la API de SML.
+                axios.post(`${settings.smlParams.api}/api/Customer/UpdateCustomerOrder`, bodySml ,headerssml)
+              } catch (error) {
+                Log.saveError(error, { message: 'Falló peticion reject sml DEF' + orderId, platform: 'SML' });
+                resolve(false);
+              }
+              resolve({
+                id: orderId,
+                state
+              });
+// ...
+        </code></pre>
+        (Nota: Esta misma lógica se replica en el método `branchRejectOrder`).
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <ul>
+                <li>En lugar de duplicar la lógica de notificación a SML en varios lugares, se ha movido a la clase `Platform`. Esto asegura que cualquier plataforma que rechace un pedido con canje de puntos lo notifique correctamente al sistema de lealtad.</li>
+                <li>La clase `Platform` ahora es responsable de gestionar el ciclo de vida del token de SML, simplificando las clases hijas.</li>
+                <li>Al centralizar esta funcionalidad, se garantiza un comportamiento consistente en todo el sistema.</li>
+            </ul>
+        </div>
+    </div>
+</details>
+                
+                <details class="component-card">
+    <summary class="component-header">
+        <h3>api/src/platforms/management/platform/rapiboy.js</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            Este commit integra la lógica de notificación a SML en la clase `Rapiboy`.
+        </p>
+        <p>
+            Se notifica a SML en la aceptación y rechazo de órdenes de PediGrido que contengan canje de puntos.
+        </p>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Nuevas Dependencias y Propiedades</h5>
+        <p><b>Explicación:</b> Se añaden importaciones para `orderModel` y `settings`, y nuevas propiedades de clase (`tokenSML`, `expires_in`) para gestionar el estado de autenticación con el servicio SML.</p>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// ...
+import rejectPeyaModel from '../../../models/rejectPeya';
+import orderModel from '../../../models/order'; // <-- DESPUÉS: Se importa para buscar los detalles de la orden.
+import settings from '../../../config/settings'; // <-- DESPUÉS: Se importa para acceder a las credenciales de SML.
+import branchModel from '../../../models/branch';
+
+class Rapiboy extends Platform {
+  constructor(platform) {
+    super(platform);
+    // ...
+    this.urlDeliveryTime = 'TiemposEntrega';
+    this.tokenSML = ''; // <-- DESPUÉS: Propiedad para cachear el token de SML.
+    this.expires_in = ''; // <-- DESPUÉS: Propiedad para gestionar la expiración del token.
+    this.init();
+    // ...
+  }
+// ...
+        </code></pre>
+
+        <h5>2. Duplicación de la Lógica de Autenticación SML</h5>
+        <p><b>Explicación:</b> Se han añadido los métodos `SMLLogin` y `checkAndRenewToken` directamente en esta clase. Esta es una **duplicación** de la misma lógica que se introdujo en la clase base `Platform`. Se invoca `SMLLogin()` en el `init()` para asegurar que la plataforma tenga un token válido al arrancar.</p>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// ...
+      this.statusResponse = this._platform.statusResponse;
+      this.SMLLogin(); // <-- DESPUÉS: Se llama al login de SML durante la inicialización.
+      console.log(`${this._platform.name}.\t Inicializated.`);
+    }
+  }
+
+  // DESPUÉS: Se añade el método para realizar la autenticación con la API de SML.
+  async SMLLogin() {
+    try { /* ... */ }
+    catch (error) { /* ... */ }
+  }
+
+  // DESPUÉS: Se añade el método para verificar y renovar el token de SML.
+  async checkAndRenewToken() {
+    const tiempoRestante = (this.expires_in - Date.now()) / 1000;
+    if (!this.tokenSML || tiempoRestante <= 200) {
+      await this.SMLLogin();
+    }
+  }
+// ...
+        </code></pre>
+
+        <h5>3. Notificación a SML en la Aceptación de la Orden (`receiveOrder`)</h5>
+        <p><b>Explicación:</b> Dentro del flujo de aceptación automática (`receiveOrder`), después de confirmar exitosamente la orden en la API de PediGrido, se ha añadido una nueva lógica. El sistema ahora busca la orden completa, verifica si contiene un canje y, de ser así, notifica a SML con `StatusOrder: 1` (RECIBIDO).</p>
+        <b>Código Nuevo (resumen de cambios):</b>
+        <pre><code class="language-javascript">
+// ...
+              try {
+                await axios.put(url, body, headers);
+                
+                // --- INICIO DE LA NUEVA LÓGICA ---
+                let fullOrder = await orderModel.findOne({ /* ... */ });
+                if(fullOrder.order.user.contieneCanje)
+                try {
+                  await this.checkAndRenewToken();
+                  const headerssml = { /* ... */ };
+                  const bodySml= {
+                    // ...
+                    "StatusOrder": 1, // Se notifica el estado '1' (RECIBIDO).
+                    "PlatformOrder":"PG"
+                  }
+                  axios.post(`${settings.smlParams.api}/api/Customer/UpdateCustomerOrder`, bodySml ,headerssml)
+                } catch (error) { /* ... */ }
+                // --- FIN DE LA NUEVA LÓGICA ---
+                resolve(true); 
+              } catch (error) {
+// ...
+        </code></pre>
+
+        <h5>4. Notificación a SML en el Rechazo de la Orden (`branchRejectOrder`)</h5>
+        <p><b>Explicación:</b> De manera similar, en el método `branchRejectOrder`, después de notificar el rechazo a la API de PediGrido, se ha añadido la lógica para notificar también a SML, pero esta vez con `StatusOrder: 2` (CANCELADO).</p>
+        <b>Código Nuevo (resumen de cambios):</b>
+        <pre><code class="language-javascript">
+// ...
+              const url = `${this.baseUrl}${this.urlRejected}`;
+              await axios.put(url, body, headers);
+
+              // --- INICIO DE LA NUEVA LÓGICA ---
+              let fullOrder = await orderModel.findOne({ /* ... */ });
+              if(fullOrder.order.user.contieneCanje)
+              try {
+                await this.checkAndRenewToken();
+                const headerssml = { /* ... */ };
+                const bodySml= {
+                  // ...
+                  "StatusOrder": 2, // Se notifica el estado '2' (CANCELADO).
+                  "PlatformOrder":"PG"
+                }
+                axios.post(`${settings.smlParams.api}/api/Customer/UpdateCustomerOrder`, bodySml ,headerssml)
+              } catch (error) { /* ... */ }
+              // --- FIN DE LA NUEVA LÓGICA ---
+              resolve(true);
+            } else resolve(false);
+// ...
+        </code></pre>
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <ul>
+                <li>Se implementa la notificación a SML tanto para la aceptación como para el rechazo de órdenes de canje.</li>
+                <li>La adición de `SMLLogin` y `checkAndRenewToken` en esta clase es una redundancia, ya que estos métodos ya existen en la clase `Platform`.</li>
+                <li>El valor `PlatformOrder: "PG"` está fijo en el código.</li>
+            </ul>
+        </div>
+    </div>
+</details>
+
+<details class="component-card">
+    <summary class="component-header">
+        <h3>api/src/platforms/management/platform/thirdParty.js</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            Este commit extiende la funcionalidad de notificación a SML a la clase genérica `ThirdParty` de manera condicional. La autenticación y notificaciones a SML se activan solo para plataformas con `internalCode === 12` (I+D).
+        </p>
+        <p>
+        </p>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Nuevas Dependencias y Propiedades</h5>
+        <p><b>Explicación:</b> Se añaden importaciones para `settings` y `orderModel`, y nuevas propiedades de clase (`tokenSML`, `expires_in`) para gestionar el estado de autenticación con el servicio SML.</p>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// ...
+import branchModel from '../../../models/branch';
+import Log from '../../../utils/log';
+import settings from '../../../config/settings'; // <-- DESPUÉS: Se importa para acceder a las credenciales de SML.
+import orderModel from '../../../models/order'; // <-- DESPUÉS: Se importa para buscar los detalles de la orden.
+class ThirdParty extends Platform {
+  constructor(platform) {
+    super(platform);
+    // ...
+    this.urlDeliveryTime = 'TiemposEntrega';
+    this.tokenSML = ''; // <-- DESPUÉS: Propiedad para cachear el token de SML.
+    this.expires_in = ''; // <-- DESPUÉS: Propiedad para gestionar la expiración del token.
+    this.init();
+    // ...
+  }
+// ...
+        </code></pre>
+
+        <h5>2. Inicialización y Autenticación Condicional para SML</h5>
+        <p><b>Explicación:</b> Se añade una comprobación en el método `init()`. La lógica de autenticación con SML (`SMLLogin`) solo se activa si la plataforma que se está inicializando tiene el `internalCode` 12 (I+D). Además, se duplican los métodos `SMLLogin` y `checkAndRenewToken` que ya habíamos visto en otras clases.</p>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// ...
+  async init() {
+    // ... (lógica de inicialización existente)
+          this.autoReply = this._platform.autoReply;
+          // DESPUÉS: Se añade una condición para activar la autenticación con SML solo para la plataforma I+D.
+          if(this._platform.internalCode === 12 ){
+            this.SMLLogin();
+          }
+          console.log(`${this._platform.name}.\t\t Inicializated.`);
+    // ...
+  }
+
+  // DESPUÉS: Se duplica el método para realizar la autenticación con la API de SML.
+  async SMLLogin() { /* ... */ }
+
+  // DESPUÉS: Se duplica el método para verificar y renovar el token de SML.
+  async checkAndRenewToken() { /* ... */ }
+// ...
+        </code></pre>
+
+        <h5>3. Notificación a SML en la Aceptación de la Orden (`receiveOrder`)</h5>
+        <p><b>Explicación:</b> Dentro del flujo de aceptación automática (`receiveOrder`), después de confirmar exitosamente la orden en la API externa, se ha añadido la lógica condicional para notificar a SML con `StatusOrder: 1` (RECIBIDO) si la orden contiene un canje.</p>
+        <b>Código Nuevo (resumen de cambios):</b>
+        <pre><code class="language-javascript">
+// ...
+              try {
+                await axios.post(url, body, headers);
+                
+                // --- INICIO DE LA NUEVA LÓGICA ---
+                let fullOrder = await orderModel.findOne({
+                 'originalId': String(order.id)
+                });
+                // DESPUÉS: Se verifica si la orden contenía un canje.
+                if(fullOrder.order.user.contieneCanje)
+                try {
+                  // DESPUÉS: Se asegura de tener un token válido y se notifica a SML.
+                  await this.checkAndRenewToken();
+                  const headerssml = { /* ... */ };
+                  const bodySml= {
+                    // ...
+                    "StatusOrder": 1,
+                    "PlatformOrder":"I+D" // NOTA: El valor "I+D" está hardcodeado.
+                  }
+                  axios.post(`${settings.smlParams.api}/api/Customer/UpdateCustomerOrder`, bodySml ,headerssml)
+                } catch (error) { /* ... */ }
+                // --- FIN DE LA NUEVA LÓGICA ---
+                resolve(true);
+              } catch (error) {
+                // ... (manejo de error y registro para reintento)
+                resolve(false);
+              }
+// ...
+        </code></pre>
+
+        <h5>4. Notificación a SML en el Rechazo de la Orden (`branchRejectOrder`)</h5>
+        <p><b>Explicación:</b> De manera similar, en el método `branchRejectOrder`, después de notificar el rechazo a la API externa, se ha añadido la lógica para notificar también a SML, pero esta vez con `StatusOrder: 2` (CANCELADO).</p>
+        <b>Código Nuevo (resumen de cambios):</b>
+        <pre><code class="language-javascript">
+// ...
+              const url = `${this.baseUrl}${this.urlRejected}`;
+              await axios.post(url, body, headers);
+
+              // --- INICIO DE LA NUEVA LÓGICA ---
+              let fullOrder = await orderModel.findOne({
+                'originalId': String(order.id)
+              });
+              if(fullOrder.order.user.contieneCanje)
+              try {
+                await this.checkAndRenewToken();
+                const headerssml = { /* ... */ };
+                const bodySml= {
+                  // ...
+                  "StatusOrder": 2,
+                  "PlatformOrder":"I+D"
+                }
+                axios.post(`${settings.smlParams.api}/api/Customer/UpdateCustomerOrder`, bodySml ,headerssml)
+              } catch (error) { /* ... */ }
+              // --- FIN DE LA NUEVA LÓGICA ---
+              resolve(true);
+// ...
+        </code></pre>
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <ul>
+                <li>La lógica de autenticación y notificación a SML solo se activa si la plataforma tiene el `internalCode` 12. Esto permite que, de todas las plataformas que usan esta clase genérica, solo I+D se integre con el sistema de lealtad.</li>
+                <li>Se han copiado y pegado los métodos `SMLLogin` y `checkAndRenewToken` en esta clase, a pesar de que ya existen en la clase base `Platform` y en `rapiboy.js`.</li>
+                <li>El valor `PlatformOrder: "I+D"` está fijo en el código.</li>
+            </ul>
+        </div>
+    </div>
+</details>
+                
+                
+              
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+
+</html>

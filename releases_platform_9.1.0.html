@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Platform 9.1.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 {
+            margin: 0 0 0.25em 0;
+            font-size: 2.2em;
+            color: var(--primary-color);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--text-muted-color);
+        }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #166534;
+        }
+
+        .deployment-info-box p {
+            margin: 0.5em 0 0 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+        }
+
+        .service-section {
+            margin-bottom: 3em;
+        }
+
+        .service-section>h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker {
+            display: none;
+        }
+
+        .component-header h3 {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2em;
+        }
+
+        .component-body {
+            padding: 1.5em;
+        }
+
+        .component-body h4 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.2em;
+            color: #343a40;
+        }
+
+        .component-body h5 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+
+        .analysis-box h4 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Platform 9.1.0</h1>
+            <p>Mejoras de resiliencia y reintentos para la integración con MercadoPago.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 9.1.0</p>
+            <p><b>Fecha de Despliegue:</b> 2025-09-18</p>
+            <p><b>Entorno:</b> Producción</p>
+            <p><b>AWS Task:</b> 175</p>
+            <p><b>Commit:</b> ab2859932985b4aab96378a8d1f43043006d0fba</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General</h2>
+            <p>
+                Este release introduce una mejora la integración con **MercadoPago**. El cambio principal es la implementación de registro de reintentos para las notificaciones que fallan al intentar confirmar o rechazar una orden. Ahora, si una llamada a la API de MercadoPago falla, la información de la orden se guarda en una base de datos para ser re-procesada más tarde. Adicionalmente, se han realizado mejoras en la calidad del código, como el uso de *optional chaining* para prevenir errores de tipo.
+            </p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/platforms/management/platform/mercadoPago.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        Este commit introduce una mejora en la robustez del sistema al implementar umecanismo de registro para reintentos en las notificaciones a la API de MercadoPago. Además, se realizan varias mejoras de calidad de código, como la adición de "optional chaining" para prevenir errores y la limpieza de logs.
+                    </p>
+                    <p>
+                        El cambio principal es que, ahora, cuando una llamada a la API de MercadoPago para aceptar o rechazar una orden falla, el sistema no solo registra el error, sino que también guarda la petición fallida en una colección de reintentos (`rejectPeyaModel`). Esto habilita un proceso secundario (probablemente un cron job) para que pueda reintentar enviar estas notificaciones más tarde, asegurando que el estado de la orden se sincronice eventualmente con la plataforma externa.
+                    </p>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Implementación del Registro para Reintentos</h5>
+                    <p><b>Explicación:</b> Se ha añadido la lógica para crear un registro en la colección `rejectPeyaModel` cada vez que una llamada `axios` a la API de MercadoPago falla. Este registro contiene toda la información necesaria para reconstruir y reenviar la petición más tarde.</p>
+                    <b>Código Anterior (Ejemplo en `receiveOrder`):</b>
+                    <pre><code class="language-javascript">
+// ANTES: Si la llamada a la API fallaba, solo se registraba el error y se resolvía la promesa con 'false'.
+// ...
+              try {
+                await axios.put(url, body, headersConfig);
+                //Log.saveError(null, { message: 'receiveOrder passed MercadoPago', platform: 'MercadoPago' });
+                resolve(true);
+              } catch (error) {
+                Log.saveError(error, { message: 'Falló petición confirmación orden', url: url, body: body, headersConfig: headersConfig, platform: 'MercadoPago' });
+                resolve(false);
+              }
+// ...
+                    </code></pre>
+                    <b>Código Nuevo (Ejemplo en `receiveOrder`):</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: Si la llamada falla, además de registrar el error, se crea un registro en 'rejectPeyaModel'.
+// ...
+              try {
+                await axios.put(url, body, headersConfig);
+                Log.saveError(null, { message: 'receiveOrder passed MercadoPago', platform: 'MercadoPago' });
+                resolve(true);
+              } catch (error) {
+                Log.saveError(error, { message: 'Falló petición confirmación orden', url: url, body: body, headersConfig: headersConfig, platform: 'MercadoPago' });
+                // DESPUÉS: Se guarda la petición fallida para un futuro reintento.
+                await rejectPeyaModel.create({
+                  url: url,
+                  platformId: 8, // ID de MercadoPago
+                  orderId: order.id,
+                  'extraData.user_id': user_id,
+                });
+                resolve(false);
+              }
+// ...
+                    </code></pre>
+                    <p>
+                        (Nota: Esta misma lógica de <code>await rejectPeyaModel.create</code> se ha replicado en todos los puntos de fallo de notificaciones a la API de MercadoPago, como en los métodos <code>branchRejectOrder</code> y <code>branchConfirmOrder</code>).
+                    </p>
+                    <h5>2. Mejoras de Robustez y Calidad de Código</h5>
+                    <p><b>Explicación:</b> Se han aplicado varias mejoras menores pero importantes para hacer el código más seguro y legible.</p>
+                    <ul>
+                        <li><b>Optional Chaining:</b> Se utiliza `?.` para acceder a propiedades anidadas de forma segura, evitando errores `TypeError` si un objeto intermedio es nulo o indefinido.</li>
+                        <li><b>Activación de Logs:</b> Se descomentó un log de éxito (`receiveOrder passed MercadoPago`) que proporciona visibilidad sobre las operaciones correctas.</li>
+                        <li><b>Limpieza y Comentarios:</b> Se han añadido comentarios para clarificar los pasos del flujo y se ha limpiado la sintaxis (ej. `let` a `const` donde corresponde).</li>
+                    </ul>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: El acceso a propiedades anidadas era directo, lo que podría causar errores.
+const branchPlatform = currentBranch.platforms.find( /* ... */ );
+const chainRule = currentBranch.chain.platformRules.find( /* ... */ );
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: El uso de 'optional chaining' (?.) hace que el código sea más resiliente.
+const branchPlatform = currentBranch?.platforms?.find( /* ... */ );
+const chainRule = currentBranch?.chain?.platformRules?.find( /* ... */ );
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del análisis</h4>
+                        <p>
+                            Este commit es fundamental para la fiabilidad de la integración con MercadoPago.
+                        </p>
+                        <ul>
+                            <li><b>Habilitación del Sistema de Reintentos:</b> Al guardar las peticiones fallidas en `rejectPeyaModel`,cambio para el proceso de reintento que se describe en el ticket.</li>
+                            <li><b>Resiliencia:</b> El sistema ahora puede recuperarse de fallos de comunicación temporales con la API de MercadoPago.</li>
+                            <li><b>Mejora Continua:</b> Las mejoras en logs, validaciones y sintaxis.</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+
+</html>

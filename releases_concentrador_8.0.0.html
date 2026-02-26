@@ -1,0 +1,757 @@
+   <h1>Notas de Release: Concentrador 8.0.0</h1>
+            <p>Implementación de reglas de plataforma a nivel de sucursal y mejoras en la lógica de negocio.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 8.0.0</p>
+            <p><b>Fecha de Despliegue:</b> 2025-09-10</p>
+            <p><b>Entorno:</b> Producción</p>
+            <p><b>AWS Task:</b> 206</p>
+            <p><b>Commits:</b> 70cf953cbafd91900115596ab93e4f10a19a7561, 96919ecad2afc0f93df403dd847e12f47b9e65f8, 7074da5a54b0ea3c88acf02c81a95fa38ef73449</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General</h2>
+            <p>
+                Este release se enfoca en la implementación de **reglas de plataforma a nivel de sucursal** como parte de la iniciativa TENANT. Los cambios introducen una nueva funcionalidad para gestionar de forma granular la configuración de cada sucursal, como los tiempos de preparación y la auto-aceptación de pedidos. Además, se mejora la robustez del controlador para evitar la pérdida de datos de estas nuevas reglas y se refactoriza la lógica de confirmación de pedidos para utilizar datos dinámicos.
+            </p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+            <details class="component-card">
+                <summary class="component-header">
+                    <h3>api/src/controllers/branch.js</h3>
+                </summary>
+                <div class="component-body">
+                    <h4>Análisis General</h4>
+                    <p>
+                        Esta actualización, como parte de la iniciativa **TENANT**, introduce cambios significativos en el controlador de sucursales. El propósito principal es evolucionar el sistema para permitir una configuración más granular y centralizada, introduciendo el concepto de "Reglas de Plataforma", y al mismo tiempo, mejorar la robustez y precisión de la lógica de negocio existente.
+                    </p>
+                    <p>Los cambios clave incluyen:</p>
+                    <ul>
+                        <li>**Nueva Funcionalidad de "Reglas de Plataforma":** Se introduce un nuevo endpoint y la lógica de negocio (`updatePlatformsRule`) para gestionar reglas específicas a nivel de sucursal y plataforma (inicialmente, tiempos de preparación y auto-aceptación).</li>
+                        <li>**Mejora de Robustez en Actualizaciones:** Se ha modificado la función `updateOne` para prevenir la pérdida de datos de las nuevas "Reglas de Plataforma" durante actualizaciones generales de una sucursal.</li>
+                        <li>**Refactorización de la Lógica de Confirmación de Pedidos:** La función `rejectOrdersPeya` ha sido mejorada para utilizar datos dinámicos en lugar de valores fijos, haciendo el proceso más preciso y flexible.</li>
+                    </ul>
+                    <h4>Cambios Detallados</h4>
+                    <h5>1. Nueva Funcionalidad de Actualización de Reglas (`updatePlatformsRule`)</h5>
+                    <p><b>Explicación:</b> Se ha introducido una nueva función y su correspondiente endpoint para permitir la gestión de reglas a nivel de sucursal-plataforma. Esta característica permite actualizar de forma aislada las "reglas" de una plataforma para una sucursal (tiempo de preparación, aceptación automática, etc.). La lógica primero limpia todas las reglas existentes para la sucursal y luego aplica las nuevas reglas enviadas en la solicitud, asegurando que solo la configuración más reciente persista.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: No existía una función para esta lógica. El export del módulo no la incluía.
+module.exports = {
+  // ...
+  getStatus
+};
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: Se añade una nueva función para manejar la lógica de actualización de reglas.
+const updatePlatformsRule = async (req, res) => {
+  try {
+    // Busca la sucursal por su ID para asegurar que existe.
+    const currentBranch = await model.findOne({ _id: req.params.id, deletedAt: null });
+    if (!currentBranch) {
+      return res.status(404).json({ error: "Branch not found" });
+    }
+
+    // Limpia las reglas existentes para asegurar que solo se apliquen las nuevas.
+    for (const platform of currentBranch.platforms) {
+      platform.rules = null;
+    }
+
+    // Itera sobre las reglas recibidas en el body y las asigna a la plataforma correspondiente.
+    for (const element of req.body) {      
+      const platform = currentBranch.platforms.find(p => p.platform.toString() === element.platformObjectId);
+      if (platform) {
+        platform.rules = {
+          preparationTime: element.selected,
+          autoAccept: true,
+          internalCode: element.internalCode
+        };
+      }
+    }
+
+    // Persiste el objeto 'platforms' actualizado en la base de datos.
+    await model.updateOne(
+      { _id: req.params.id, deletedAt: null },
+      { $set: { platforms: currentBranch.platforms } }
+    );
+
+    return res.status(200).json({}).end();
+  } catch (error) { /* ... */ }
+};
+
+// ... en module.exports se añade la nueva función
+module.exports = {
+  // ...
+  getStatus,
+  updatePlatformsRule // Se exporta para que la ruta pueda usarla.
+};
+                    </code></pre>
+                    <h5>2. Mejora en la Actualización de Sucursales (`updateOne`)</h5>
+                    <p><b>Explicación:</b> Se ha añadido un bloque de código crucial a la función `updateOne` para prevenir la pérdida de datos. Antes de este cambio, si se actualizaba cualquier información de una plataforma (como su ID de referencia), el objeto `rules` asociado se borraba. La nueva lógica se asegura de que, al actualizar las plataformas de una sucursal, las reglas existentes se preserven y se copien al nuevo objeto, manteniendo la integridad de la configuración.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: La actualización de 'params' no consideraba preservar sub-documentos existentes como 'rules'.
+const updateOne = async (req, res) => {
+  try {
+    // ...
+    let rappiActiveBak = params.rappiActive;     
+    delete params.rappiActive;  
+    let branchActual = await model.findOneAndUpdate({ _id: req.params.id, deletedAt: null }, params, { returnDocument: "after" });
+    // ...
+  } catch (error) { /* ... */ }
+};
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: Se añade un bloque para preservar las reglas existentes durante una actualización.
+const updateOne = async (req, res) => {
+  try {
+    // ... (código de validación existente)
+    
+    let rappiActiveBak = params.rappiActive;     
+    delete params.rappiActive;  
+
+    // Se añade este bloque para preservar las reglas existentes al actualizar una sucursal.
+    if (params.platforms) {
+      // Itera sobre las plataformas que vienen en la solicitud de actualización.
+      params.platforms = params.platforms.map(p => {
+        // Busca la configuración de la plataforma existente en la base de datos.
+        const existing = currentBranch.platforms.find(ep => ep.platform.toString() === p.platform);
+        // Retorna el objeto de la plataforma de la solicitud, pero asegurándose de copiar las 'rules' que ya existían.
+        return { ...p, rules: existing?.rules };
+      });
+    }
+
+    let branchActual = await model.findOneAndUpdate({ _id: req.params.id, deletedAt: null }, params, { returnDocument: "after" });
+    // ... (resto de la función)
+  } catch (error) { /* ... */ }
+};
+                    </code></pre>
+                    <h5>3. Refactorización de la Lógica de Confirmación (`rejectOrdersPeya`)</h5>
+                    <p><b>Explicación:</b> La función `rejectOrdersPeya` (que re-procesa confirmaciones) ha sido mejorada para utilizar datos dinámicos en lugar de valores fijos. Ahora, los tiempos de preparación (`acceptanceTime`, `ready_for_pickup_time`) y la demora (`Demora`) se obtienen del objeto `reject.extraData`, lo que hace que el proceso sea más preciso y adaptable a la información específica de cada pedido fallido. Adicionalmente, se han realizado limpiezas menores en el código para mejorar la legibilidad.</p>
+                    <b>Código Anterior:</b>
+                    <pre><code class="language-javascript">
+// ANTES: Se usaban valores fijos (null, 1) para los tiempos de preparación y demora.
+async function rejectOrdersPeya() {
+  // ...
+  for (const reject of rejects) {
+    try {
+      switch (reject.platformId) {
+        case 1: // PEDIDOSYA
+          let bodyConfirm = { acceptanceTime: null, /* ... */ };
+          // ...
+        case 4: // UBEREATS
+          let body = { "ready_for_pickup_time": null, /* ... */ };
+          // ...
+        case 7: // RAPIBOY
+          const body = { Demora: 1, /* ... */ };
+          // ...
+      }
+    } catch (error) { /* ... */ }
+  }
+}
+                    </code></pre>
+                    <b>Código Nuevo:</b>
+                    <pre><code class="language-javascript">
+// DESPUÉS: Se usan datos dinámicos provenientes del objeto 'reject'.
+async function rejectOrdersPeya() {
+  // ...
+  for (const reject of rejects) {
+    try {
+      switch (reject.platformId) {
+        case 1: { // PEDIDOSYA
+          let bodyConfirm = {
+            // Utiliza el tiempo de preparación dinámico guardado en extraData.
+            acceptanceTime: reject.extraData.readyForPickup,
+            remoteOrderId: reject.orderId,
+            status: 'order_accepted'
+          };
+          // ...
+          break;
+        }
+        case 4: { // UBEREATS
+          let body = {
+            // Utiliza el tiempo de preparación dinámico.
+            "ready_for_pickup_time": reject.extraData.readyForPickup,
+            "external_id": "external_id",
+            "accepted_by": "Grido"
+          };
+          // ...
+          break;
+        }
+        case 7: { // RAPIBOY
+          const body = {
+            Token: tokenPedigrido,
+            IdPedido: reject.orderId,
+            // Utiliza la demora dinámica.
+            Demora: reject.extraData.Demora
+          };
+          // ...
+          break;
+        }
+      }
+    } catch (error) { /* ... */ }
+  }
+}
+                    </code></pre>
+                    <div class="analysis-box">
+                        <h4>Conclusión del Análisis</h4>
+                        <p>
+                            Esta actualización introduce **Gestión de Reglas**: La nueva función `updatePlatformsRule` y la mejora en `updateOne` establecen una base  para la **configuración** de las plataformas a nivel de sucursal. La refactorización de `rejectOrdersPeya` asegura que las confirmaciones de pedidos se procesen con la información **correcta y específica** de cada orden, en lugar de depender de valores fijos.
+                        </p>
+                    </div>
+                </div>
+            </details>
+
+     <details class="component-card">
+  <summary class="component-header">
+    <h3>api/src/controllers/delivery.js</h3>
+  </summary>
+  <div class="component-body">
+      <h4>Análisis General</h4>
+      <p>
+        Esta actualización, como parte de la iniciativa <b>TENANT</b>, introduce una nueva capacidad de consulta de datos en el controlador de <code>delivery</code>. El propósito principal de este cambio es crear un endpoint que proporcione una vista agregada y estructurada de todos los "tiempos de entrega" activos, agrupados por plataforma.
+      </p>
+      <p>
+        La nueva función <code>findTimesAll</code> utiliza el pipeline de agregación de MongoDB para transformar los datos crudos en un formato optimizado para el consumo de interfaces de usuario. Esta funcionalidad es un componente clave para la nueva pantalla de configuración de "Reglas de Plataforma", ya que le proporciona las opciones de tiempos de preparación que un usuario puede seleccionar para cada plataforma de manera centralizada.
+      </p>
+      
+      <h4>Cambios Detallados</h4>
+
+      <h5>1. Creación de la Función Agregada <code>findTimesAll</code></h5>
+      <p><b>Explicación:</b> Se ha añadido una nueva función asíncrona, <code>findTimesAll</code>, diseñada para devolver una lista completa y estructurada de todos los "tiempos de entrega" activos. A diferencia de la función <code>findTimes</code> existente (que busca por un ID de plataforma específico), esta nueva función utiliza una consulta de agregación compleja en MongoDB para obtener todos los tiempos, unirlos con la información de su plataforma correspondiente, y agruparlos para que el frontend pueda renderizar fácilmente las opciones de configuración por plataforma.</p>
+      <b>Código Anterior:</b>
+      <pre><code class="language-javascript">
+// ANTES: No existía una función para obtener todos los tiempos de entrega de forma agregada.
+// El export del módulo solo contenía las funciones CRUD básicas y findTimes.
+module.exports = {
+  findAll,
+  findById,
+  saveOne,
+  updateOne,
+  deleteOne,
+  findTimes
+};
+      </code></pre>
+      <b>Código Nuevo:</b>
+      <pre><code class="language-javascript">
+// DESPUÉS: Se añade la nueva función 'findTimesAll' y se exporta.
+const findTimesAll = async (req, res) => {
+  try {
+    // Utiliza el pipeline de agregación de MongoDB para transformar los datos.
+    const result = await modelTimes.aggregate([
+      // 1. Etapa de Filtrado: Selecciona solo los documentos de tiempos de entrega que están activos.
+      { $match: { isActive: true } },
+      // 2. Etapa de Unión (JOIN): Une los documentos con la colección 'platforms'.
+      {
+        $lookup: {
+          from: "platforms", // La colección con la que se va a unir.
+          localField: "platformId", // El campo en la colección 'deliveryTime'.
+          foreignField: "internalCode", // El campo en la colección 'platforms'.
+          as: "platformData" // El nombre del nuevo array que contendrá los datos unidos.
+        }
+      },
+      // 3. Etapa de Descompresión: Deconstruye el array 'platformData' para tener un documento por cada plataforma unida.
+      { $unwind: "$platformData" },
+      // 4. Etapa de Agrupación: Agrupa todos los documentos por el ID de la plataforma.
+      {
+        $group: {
+          _id: "$platformId", // Agrupa por el ID de la plataforma.
+          internalCode: { $first: "$platformId" },
+          platformName: { $first: "$platformData.name" }, // Obtiene el nombre de la plataforma.
+          platformObjectId: { $first: "$platformData._id" }, // Obtiene el ObjectId de la plataforma.
+          // 5. Crea un array 'messages' con todos los tiempos de entrega para esa plataforma.
+          messages: {
+            $push: {
+              id: "$id",
+              description: "$description"
+            }
+          },
+          // 6. Añade campos por defecto para la UI, como 'active' y 'selected'.
+          active: { $first: { $literal: false } },
+          selected: { $first: { $literal: 0 } }
+        }
+      },
+      // 7. Etapa de Proyección: Elimina el campo '_id' generado por $group para limpiar la salida.
+      { $project: { _id: 0 } },
+      // 8. Etapa de Ordenamiento: Ordena los resultados alfabéticamente por el nombre de la plataforma.
+      { $sort: { platformName: 1 } }
+    ]);
+    return res.status(200).json(result).end();
+  } catch (error) {
+    return res.status(400).json({ error: msg }).end();
+  }
+};
+
+// ...
+
+module.exports = {
+  findAll,
+  findById,
+  saveOne,
+  updateOne,
+  deleteOne,
+  findTimes,
+  findTimesAll // Se exporta la nueva función para que pueda ser utilizada por una ruta de la API.
+};
+      </code></pre>
+
+    <div class="analysis-box">
+      <h4>Conclusión del análisis</h4>
+      <p>La adición de la función <code>findTimesAll</code> en <code>api/src/controllers/delivery.js</code> es una mejora estratégica que habilita la nueva funcionalidad de gestión de reglas.</p>
+      <ul>
+          <li><b>Optimización para el Frontend:</b> Proporciona los datos en un formato pre-procesado y agrupado, lo que simplifica significativamente la lógica requerida en la interfaz de usuario para construir la pantalla de configuración de reglas de plataforma.</li>
+          <li><b>Eficiencia:</b> Realiza una única consulta compleja a la base de datos en lugar de múltiples consultas simples, lo cual es más eficiente.</li>
+          <li><b>Escalabilidad:</b> La consulta está diseñada para escalar a medida que se añadan más plataformas y tiempos de entrega, proporcionando siempre una vista agregada y ordenada.</li>
+      </ul>
+    </div>
+  </div>
+</details>
+      
+      <details class="component-card">
+  <summary class="component-header">
+    <h3>api/src/controllers/news.js</h3>
+  </summary>
+  <div class="component-body">
+      <h4>Análisis General</h4>
+      <p>
+        Esta actualización, como parte de la iniciativa <b>TENANT</b>, mejora la funcionalidad de búsqueda de "novedades" (órdenes y eventos) dentro del sistema. El cambio principal es la adición de un nuevo criterio de filtro por <b>Cadena</b> (<code>chain</code>).
+      </p>
+      <p>
+        Este ajuste es fundamental para una arquitectura <b>multi-tenant</b>, ya que permite a los usuarios del sistema (por ejemplo, operadores de una cadena específica) visualizar únicamente la información relevante para su propia cadena. Al filtrar las novedades por <code>chain</code>, se aísla la información y se proporciona una vista de datos contextualizada, mejorando la usabilidad y la seguridad de la información.
+      </p>
+      
+      <h4>Cambios Detallados</h4>
+
+      <h5>1. Adición de Filtro por Cadena (Chain) en la Búsqueda</h5>
+      <p><b>Explicación:</b> Se ha modificado la función <code>search</code> para que acepte y procese un nuevo parámetro, <code>chain</code>, desde el cuerpo de la solicitud. Si se proporciona un valor para <code>chain</code> (diferente de "0", que se usa como valor por defecto para "todos"), se añade una nueva condición al objeto de consulta de MongoDB. Esta condición filtra los documentos de la colección <code>news</code> para que solo se devuelvan aquellos cuyo campo <code>extraData.chain</code> coincida con el valor proporcionado.</p>
+      <b>Código Anterior:</b>
+      <pre><code class="language-javascript">
+// ANTES: La función de búsqueda no incluía un filtro por 'chain'.
+const search = async (req, res) => {
+  const search = req.body.search;
+  const country = req.body.country;
+  const platform = parseInt(req.body.platform);
+  const order = parseInt(req.body.order);
+  // ...
+  const data = {
+    ...(search != ''
+      ? { /* ... */ }
+      : {}),
+    ...(platform != '' ? { 'order.platformId': platform } : {}),
+    ...(status != '' ? { /* ... */ } : {}),
+    // ...
+  };
+  // ...
+};
+      </code></pre>
+      <b>Código Nuevo:</b>
+      <pre><code class="language-javascript">
+// DESPUÉS: Se añade la lógica para procesar y aplicar el filtro por 'chain'.
+const search = async (req, res) => {
+  const search = req.body.search;
+  const country = req.body.country;
+  const platform = parseInt(req.body.platform);
+  // 1. Se lee el nuevo parámetro 'chain' del cuerpo de la solicitud y se convierte a string.
+  const chain = req.body.chain.toString();
+  const order = parseInt(req.body.order);
+  // ...
+  const data = {
+    ...(search != ''
+      ? { /* ... */ }
+      : {}),
+    ...(platform != '' ? { 'order.platformId': platform } : {}),
+    // 2. Se añade una nueva condición de filtro al objeto de consulta de MongoDB.
+    //    Si 'chain' es diferente de '0', se aplica el filtro por 'extraData.chain'.
+    ...(chain != '0' ? { 'extraData.chain': chain } : {}),
+    ...(status != '' ? { /* ... */ } : {}),
+    // ...
+  };
+  // ...
+};
+      </code></pre>
+
+    <div class="analysis-box">
+      <h4>Conclusión del análisis</h4>
+      <p>La modificación en <code>api/src/controllers/news.js</code> es un paso clave hacia la implementación de una arquitectura <b>TENANT</b>.</p>
+      <ul>
+          <li><b>Aislamiento de Datos:</b> Permite segmentar la visualización de novedades por cadena, lo cual es esencial para que los distintos clientes (tenants) solo vean la información que les pertenece.</li>
+          <li><b>Mejora de Usabilidad:</b> Facilita a los usuarios la tarea de encontrar información relevante al permitirles acotar las búsquedas a su propio entorno operativo.</li>
+          <li><b>Impacto Mínimo y Controlado:</b> El cambio se ha implementado de forma aditiva y no afecta las búsquedas existentes que no utilicen el nuevo filtro.</li>
+      </ul>
+    </div>
+  </div>
+</details>
+      
+      <details class="component-card">
+  <summary class="component-header">
+    <h3>api/src/models/branch.js</h3>
+  </summary>
+  <div class="component-body">
+      <h4>Análisis General</h4>
+      <p>
+        Esta actualización, como parte de la iniciativa <b>TENANT</b>, modifica el esquema de la base de datos para las sucursales (<code>branchSchema</code>). El cambio consiste en añadir un nuevo campo, <code>rules</code>, a la configuración de cada plataforma asociada a una sucursal.
+      </p>
+      <p>
+        Este ajuste en el modelo de datos es un prerrequisito fundamental para la nueva funcionalidad de "Reglas de Plataforma". Al proporcionar un lugar en la base de datos para almacenar estas configuraciones, se habilita la capacidad de que cada sucursal anule o personalice las reglas operativas (como tiempos de preparación) que podrían ser heredadas de la "Cadena" (tenant). Esto permite una gestión mucho más granular y flexible de las operaciones de cada tienda.
+      </p>
+      
+      <h4>Cambios Detallados</h4>
+
+      <h5>1. Adición del Campo 'rules' al Esquema</h5>
+      <p><b>Explicación:</b> Se ha añadido un nuevo campo llamado <code>rules</code> de tipo <code>Object</code> al sub-documento dentro del array <code>platforms</code>. Este campo está diseñado para almacenar un objeto de configuración con las reglas específicas que una sucursal aplicará para una plataforma determinada, permitiendo anular cualquier configuración por defecto que provenga de la Cadena.</p>
+      <b>Código Anterior:</b>
+      <pre><code class="language-javascript">
+// ANTES: La configuración de cada plataforma para una sucursal no tenía un campo para reglas personalizadas.
+// ...
+    platforms: [
+      {
+        platform: { type: Schema.Types.ObjectId, ref: platformSchema },
+        branchReference: { type: Object },
+        branchIdReference: { type: String },
+        StateAPI: { type: Boolean },
+        branchName: { type: Object },
+        progClosed: [{ close: Date, open: Date, description: String }],
+        isActive: { type: Boolean, default: true }
+      }
+    ],
+// ...
+      </code></pre>
+      <b>Código Nuevo:</b>
+      <pre><code class="language-javascript">
+// DESPUÉS: Se añade el campo 'rules' para almacenar configuraciones a nivel de sucursal-plataforma.
+// ...
+    platforms: [
+      {
+        platform: { type: Schema.Types.ObjectId, ref: platformSchema },
+        branchReference: { type: Object },
+        branchIdReference: { type: String },
+        StateAPI: { type: Boolean },
+        branchName: { type: Object },
+        progClosed: [{ close: Date, open: Date, description: String }],
+        isActive: { type: Boolean, default: true },
+        // Se añade un nuevo campo 'rules' de tipo Objeto.
+        // Este campo contendrá las configuraciones específicas como 'preparationTime'.
+        rules: { type: Object }
+      }
+    ],
+// ...
+      </code></pre>
+
+    <div class="analysis-box">
+      <h4>Conclusión del análisis</h4>
+      <p>La modificación en el esquema <code>branchSchema</code> es un cambio estructural clave que habilita la nueva funcionalidad de gestión de reglas.</p>
+      <ul>
+          <li><b>Persistencia de Datos:</b> Proporciona el soporte en la base de datos necesario para almacenar la nueva capa de configuración introducida en el controlador <code>branch.js</code> (<code>updatePlatformsRule</code>).</li>
+          <li><b>Flexibilidad:</b> Permite que cada sucursal tenga configuraciones distintas para la misma plataforma, lo cual es esencial para operaciones que varían según la ubicación o capacidad del local.</li>
+          <li><b>Base para TENANT:</b> Este cambio es un paso crucial para el modelo <b>TENANT</b>, ya que establece la estructura que permitirá a las sucursales anular las reglas por defecto definidas a nivel de <code>Chain</code>.</li>
+      </ul>
+    </div>
+  </div>
+</details>
+      
+      <details class="component-card">
+  <summary class="component-header">
+    <h3>api/src/models/chain.js</h3>
+  </summary>
+  <div class="component-body">
+      <h4>Análisis General</h4>
+      <p>
+        Esta actualización, como parte de la iniciativa <b>TENANT</b>, modifica el esquema de la base de datos para las cadenas (<code>chainSchema</code>). El cambio consiste en añadir un nuevo campo, <code>platformRules</code>, diseñado para almacenar configuraciones por defecto a nivel de la cadena completa.
+      </p>
+      <p>
+        Este ajuste en el modelo de datos es el complemento directo a la modificación realizada en <code>branch.js</code>. Establece la estructura jerárquica de la configuración: las reglas se pueden definir a nivel de "tenant" (la Cadena) y luego ser anuladas o personalizadas a nivel de "unidad" (la Sucursal). Esta capacidad de establecer configuraciones por defecto a un nivel superior es un pilar fundamental para una gestión eficiente y centralizada en un entorno multi-tenant.
+      </p>
+      
+      <h4>Cambios Detallados</h4>
+
+      <h5>1. Adición del Campo 'platformRules' al Esquema</h5>
+      <p><b>Explicación:</b> Se ha añadido un nuevo campo llamado <code>platformRules</code> de tipo <code>Object</code> al esquema <code>chainSchema</code>. Este campo está diseñado para almacenar un objeto que contendrá las reglas de configuración por defecto para las diferentes plataformas de delivery, aplicables a todas las sucursales que pertenezcan a esta cadena.</p>
+      <b>Código Anterior:</b>
+      <pre><code class="language-javascript">
+// ANTES: El esquema de la cadena no tenía un campo para almacenar reglas de plataforma por defecto.
+const chainSchema = new Schema({
+    chain: {
+        type: String,
+        maxlength: 100,
+        required: true
+    },
+    // ... (otros campos)
+    avatar: {
+        type: String
+    }
+}, {
+    strict: false,
+    timestamps: true
+});
+      </code></pre>
+      <b>Código Nuevo:</b>
+      <pre><code class="language-javascript">
+// DESPUÉS: Se añade el campo 'platformRules' para establecer configuraciones a nivel de tenant.
+const chainSchema = new Schema({
+    chain: {
+        type: String,
+        maxlength: 100,
+        required: true
+    },
+    // ... (otros campos)
+    avatar: {
+        type: String
+    },
+    // Se añade un nuevo campo 'platformRules' de tipo Objeto.
+    // Su valor por defecto es un array vacío (aunque podría ser un objeto {}).
+    // Almacenará las reglas por defecto para las plataformas de esta cadena.
+    platformRules: {
+        type: Object,
+        default: []
+    },
+}, {
+    strict: false,
+    timestamps: true
+});
+      </code></pre>
+
+    <div class="analysis-box">
+      <h4>Conclusión del análisis</h4>
+      <p>La modificación en el esquema <code>chainSchema</code> es esencial para completar la arquitectura de configuración jerárquica de la iniciativa <b>TENANT</b>.</p>
+      <ul>
+          <li><b>Centralización de la Configuración:</b> Permite a los administradores definir reglas operativas (como tiempos de preparación) una sola vez a nivel de cadena, en lugar de tener que replicarlas en cada sucursal.</li>
+          <li><b>Herencia de Configuración:</b> Establece el nivel superior de la jerarquía de reglas. Las sucursales ahora pueden heredar estas configuraciones por defecto, y solo necesitan definir sus propias <code>rules</code> si requieren una excepción.</li>
+          <li><b>Eficiencia Operativa:</b> Simplifica drásticamente la incorporación y gestión de nuevas sucursales, ya que heredarán automáticamente las políticas operativas de su cadena matriz.</li>
+      </ul>
+    </div>
+  </div>
+</details>
+      
+
+<details class="component-card">
+  <summary class="component-header">
+    <h3>api/src/routes/branches.js</h3>
+  </summary>
+  <div class="component-body">
+      <h4>Análisis General</h4>
+      <p>
+        Esta actualización, como parte de la iniciativa <b>TENANT</b>, expone la nueva lógica de negocio para la gestión de reglas de plataforma a través de un nuevo endpoint de API. El cambio en este archivo es la adición de una nueva ruta, <code>PUT /branches/updatePlatformsRule/:id</code>, que sirve como punto de entrada para que los sistemas externos (como un panel de administración) puedan interactuar con la nueva funcionalidad.
+      </p>
+      <p>
+        La creación de esta ruta es el paso final para hacer accesible la gestión de reglas de plataforma. Se ha incluido una documentación completa en formato Swagger, lo cual es una buena práctica que asegura que el nuevo endpoint sea fácilmente descubrible y utilizable por los desarrolladores que consumen la API.
+      </p>
+      
+      <h4>Cambios Detallados</h4>
+
+      <h5>1. Adición de Ruta para Actualizar Reglas de Plataforma</h5>
+      <p><b>Explicación:</b> Se ha añadido una nueva definición de ruta que responde al método <code>PUT</code> en la URL <code>/branches/updatePlatformsRule/:id</code>. Esta ruta está directamente asociada a la función <code>updatePlatformsRule</code> que fue implementada en el controlador <code>branch.js</code>. Esto permite que una aplicación cliente envíe una solicitud HTTP para actualizar las reglas de una sucursal específica, identificada por su <code>id</code> en la URL.</p>
+      <b>Código Anterior:</b>
+      <pre><code class="language-javascript">
+// ANTES: El archivo de rutas terminaba con la definición de la ruta genérica '/:id'.
+// ...
+router
+.route("/:id")
+.get(controller.findById)
+.put(controller.updateOne)
+.delete(controller.deleteOne);
+
+module.exports = router;
+      </code></pre>
+      <b>Código Nuevo:</b>
+      <pre><code class="language-javascript">
+// DESPUÉS: Se añade la nueva ruta y su documentación Swagger.
+// ...
+router
+  .route("/:id")
+  .get(controller.findById)
+  .put(controller.updateOne)
+  .delete(controller.deleteOne);
+  
+/**
+ * @swagger
+ * /branches/updatePlatformsRule/{id}:
+ * put:
+ * parameters:
+ * - in: path
+ * name: id 
+ * schema:
+ * type: string  
+ * description: El ObjectID de branch.
+ * requestBody:
+ * content:
+ * application/json:
+ * schema:
+ * $ref: '#/components/schemas/ReqBranch'
+ * summary: Busca y actualiza rules.
+ * tags:
+ * - Branches
+ * security:
+ * - bearerAuth: []
+ * responses:
+ * 200:
+ * description: Respuesta exitosa
+ */
+// 1. Se define una nueva ruta que escucha en el path "/updatePlatformsRule/:id".
+router
+  .route("/updatePlatformsRule/:id")
+  // 2. Se asocia el método HTTP PUT a la función 'updatePlatformsRule' del controlador.
+  .put(controller.updatePlatformsRule)
+
+module.exports = router;
+      </code></pre>
+
+    <div class="analysis-box">
+      <h4>Conclusión del análisis</h4>
+      <p>La modificación en <code>api/src/routes/branches.js</code> completa el ciclo de desarrollo de la nueva funcionalidad de gestión de reglas.</p>
+      <ul>
+          <li><b>Exposición de la Funcionalidad:</b> Hace que la lógica de negocio implementada en el controlador sea accesible desde el exterior a través de una API RESTful bien definida.</li>
+          <li><b>Documentación Clara:</b> La inclusión de la documentación Swagger asegura que el nuevo endpoint esté claramente definido para los consumidores de la API, detallando su propósito, parámetros, y el formato esperado para las solicitudes y respuestas.</li>
+          <li><b>Habilitador para el Frontend:</b> Este cambio es el habilitador directo para que se pueda construir una interfaz de usuario que permita a los operadores gestionar las reglas de plataforma de manera centralizada.</li>
+      </ul>
+    </div>
+  </div>
+</details>
+
+      <details class="component-card">
+  <summary class="component-header">
+    <h3>api/src/routes/delivery.js</h3>
+  </summary>
+  <div class="component-body">
+      <h4>Análisis General</h4>
+      <p>
+        Esta actualización, como parte de la iniciativa <b>TENANT</b>, expone la nueva lógica de negocio para la consulta agregada de tiempos de entrega a través de un nuevo endpoint de API. El cambio en este archivo es la adición de una nueva ruta, <code>GET /delivery/timesall</code>, que sirve como punto de entrada para que los sistemas externos puedan consumir los datos estructurados que proporciona la función <code>findTimesAll</code>.
+      </p>
+      <p>
+        La creación de esta ruta es el paso final para habilitar la nueva pantalla de configuración de "Reglas de Plataforma", ya que proporciona a la interfaz de usuario los datos necesarios (todos los tiempos de entrega disponibles, agrupados por plataforma) para renderizar las opciones de selección para el usuario.
+      </p>
+      
+      <h4>Cambios Detallados</h4>
+
+      <h5>1. Adición de Ruta para Obtener Todos los Tiempos de Entrega</h5>
+      <p><b>Explicación:</b> Se ha añadido una nueva definición de ruta que responde al método <code>GET</code> en la URL <code>/delivery/timesall</code>. Esta ruta está directamente asociada a la función <code>findTimesAll</code> que fue implementada en el controlador <code>delivery.js</code>. Esto permite que una aplicación cliente envíe una solicitud HTTP para obtener la lista completa y agrupada de todos los tiempos de entrega activos en el sistema.</p>
+      <b>Código Anterior:</b>
+      <pre><code class="language-javascript">
+// ANTES: Solo existía una ruta para obtener tiempos de entrega por un ID de plataforma específico.
+// ...
+/**
+* @swagger
+* /delivery/times/{platformId}:
+* get:
+* // ...
+*/
+router.route("/times/:id").get(controller.findTimes);
+
+/**
+* @swagger
+* /delivery/{id}:
+* get:
+* // ...
+*/
+// ...
+      </code></pre>
+      <b>Código Nuevo:</b>
+      <pre><code class="language-javascript">
+// DESPUÉS: Se añade la nueva ruta y su documentación Swagger para obtener todos los tiempos.
+// ...
+/**
+* @swagger
+* /delivery/times/{platformId}:
+* get:
+* // ...
+*/
+router.route("/times/:id").get(controller.findTimes);
+
+/**
+* @swagger
+* /delivery/timesall:
+* get:
+* summary: Retorna tiempos de envio.
+* tags:
+* - Delivery
+* security:
+* - bearerAuth: []
+* responses:
+* 200:
+* description: Respuesta exitosa
+* content:
+* application/json:
+* schema:
+* type: array
+* items:
+* $ref: '#/components/schemas/DeliveryTime'
+*/
+// 1. Se define una nueva ruta que escucha en el path "/timesall".
+router.route("/timesall").get(controller.findTimesAll);
+
+/**
+* @swagger
+* /delivery/{id}:
+* get:
+* // ...
+*/
+// ...
+      </code></pre>
+
+    <div class="analysis-box">
+      <h4>Conclusión del análisis</h4>
+      <p>La modificación en <code>api/src/routes/delivery.js</code> completa el ciclo de desarrollo de la nueva funcionalidad de consulta agregada de tiempos de entrega.</p>
+      <ul>
+          <li><b>Exposición de la Funcionalidad:</b> Hace que la lógica de negocio implementada en el controlador (<code>findTimesAll</code>) sea accesible desde el exterior a través de una API RESTful.</li>
+          <li><b>Documentación Clara:</b> La inclusión de la documentación Swagger asegura que el nuevo endpoint esté claramente definido para los consumidores de la API.</li>
+          <li><b>Habilitador para el Frontend:</b> Este cambio es el habilitador directo para que la interfaz de usuario de "Reglas de Plataforma" pueda obtener y mostrar las opciones de tiempos de preparación disponibles para cada plataforma, permitiendo al usuario final realizar la configuración deseada.</li>
+      </ul>
+    </div>
+  </div>
+</details>
+          
+          
+          <details class="component-card">
+    <summary class="component-header">
+        <h3>api/src/controllers/branch.js commit 96919ecad2afc0f93df403dd847e12f47b9e65f8</h3>
+    </summary>
+    <div class="component-body">
+        <h4>Análisis General</h4>
+        <p>
+            Esta actualización, como parte de un **Ajuste de Tareas Programadas**, consiste en una modificación de configuración menor pero específica dentro del controlador de sucursales. El único cambio realizado es el reajuste del horario de ejecución de la tarea programada (cron job) `syncCheckUTC`.
+        </p>
+        <p>
+            El propósito de este cambio es puramente operativo: adelantar la hora en que se realiza la verificación diaria de las zonas horarias (UTC). Funcionalmente, el sistema sigue realizando la misma comprobación, pero ahora tres horas antes. Esta modificación busca probablemente alinear la ejecución de la tarea con un momento más oportuno del día, como puede ser antes del inicio de las horas pico de operación o para evitar solapamientos con otros procesos automáticos.
+        </p>
+        <h4>Cambios Detallados</h4>
+        <h5>1. Reajuste de la Tarea Programada (`syncCheckUTC`)</h5>
+        <p><b>Explicación:</b> Se ha modificado la expresión de cron que define el horario de ejecución para la función `syncCheckUTC`. El horario se ha cambiado de las 15:00 UTC a las 12:00 UTC. Esto significa que la tarea diaria que invoca a `checkUTC.checkUTC()` ahora se ejecutará tres horas antes de lo que lo hacía previamente.</p>
+        <b>Código Anterior:</b>
+        <pre><code class="language-javascript">
+// ANTES: La tarea estaba programada para ejecutarse todos los días a las 15:00 UTC.
+async function syncCheckUTC() {
+  const schedule = '0 15 * * *';
+  cron.schedule(schedule, async () => await checkUTC.checkUTC());
+}
+        </code></pre>
+        <b>Código Nuevo:</b>
+        <pre><code class="language-javascript">
+// DESPUÉS: La tarea se adelanta para ejecutarse todos los días a las 12:00 UTC.
+async function syncCheckUTC() {
+  // Se cambia la hora de ejecución de 15 a 12.
+  const schedule = '0 12 * * *';
+  cron.schedule(schedule, async () => await checkUTC.checkUTC());
+}
+        </code></pre>
+        <div class="analysis-box">
+            <h4>Conclusión del análisis</h4>
+            <p>
+                El cambio en este commit es una simple pero deliberada reconfiguración de una tarea programada. **Ajuste Operativo**: La funcionalidad de `checkUTC` no cambia, pero su ejecución se adelanta tres horas. **Impacto Nulo en la Lógica**: No hay ninguna alteración en la lógica de negocio del controlador; es un cambio puramente de planificación. **Objetivo**: El objetivo es optimizar el momento en que se realiza esta verificación diaria para alinearla mejor con las necesidades operativas del negocio.
+            </p>
+        </div>
+    </div>
+</details>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+
+</html>

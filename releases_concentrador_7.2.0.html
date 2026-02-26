@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Release Técnico: Refactorización DLQ</title>
+  
+  <!-- Carga de la librería Prism.js para resaltado de sintaxis -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+    :root {
+      --bg-color: #f4f7f9;
+      --card-bg-color: #ffffff;
+      --text-color: #212529;
+      --text-muted-color: #6c757d;
+      --border-color: #dee2e6;
+      --primary-color: #0056b3;
+      --analysis-bg: #e6f7ff;
+      --analysis-border: #91d5ff;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2em;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    
+    .main-header {
+      background-color: var(--card-bg-color);
+      padding: 2em;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 2em;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    .main-header h1 {
+      margin: 0 0 0.25em 0;
+      font-size: 2.2em;
+      color: var(--primary-color);
+    }
+    
+    .main-header p {
+      margin: 0;
+      font-size: 1.1em;
+      color: var(--text-muted-color);
+    }
+    
+    .component-card {
+      background-color: var(--card-bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 2em;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    
+    .component-header {
+      padding: 1em 1.5em;
+      background-color: var(--bg-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .component-header h2 {
+      margin: 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 1.2em;
+    }
+
+    .component-body {
+      padding: 1.5em;
+    }
+    
+    .analysis-box {
+      background-color: var(--analysis-bg);
+      border-left: 4px solid var(--analysis-border);
+      padding: 1em 1.5em;
+      margin-top: 1.5em;
+      border-radius: 4px;
+    }
+    
+    .analysis-box h3 {
+      margin-top: 0;
+      font-size: 1.1em;
+      color: var(--primary-color);
+    }
+
+    /* Estilos para el bloque de código con Prism */
+    pre[class*="language-"] {
+      padding: 1.5em !important;
+      margin: 0 !important;
+      border-radius: 6px;
+      font-family: 'Fira Code', monospace !important;
+      font-size: 0.9em !important;
+      line-height: 1.5 !important;
+    }
+    
+    /* Colores del diff si estuvieran presentes */
+    .token.inserted { background: rgba(40, 167, 69, 0.15); }
+    .token.deleted { background: rgba(220, 53, 69, 0.15); }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <header class="main-header">
+      <h1>Notas de Release: Concentrador v7.2.0</h1>
+      <p>Refactorización del Manejo de Dead Letter Queue (DLQ)</p>
+    </header>
+
+    <section id="summary">
+        <h2>1. Resumen General</h2>
+        <p>El propósito principal de esta actualización es refactorizar la gestión de los mensajes de la cola de Dead Letter Queue - DLQ de AWS SQS. La necesidad de este cambio se determina en terminar con el procesamiento automatico de lectura de AWS DeadLetter para evitar que los graficos de informacion utilizados en Grafana no mostraran movimientos ya que todos los mensajes eran consumidos por el concentrador en el momento. El cambio fundamental es la transición de un sistema de procesamiento automático y continuo a un modelo de consumo controlado y a pedido en donde desde el Backoffice se podra activar o desactivar.</p>
+        <p>Para lograr esto, se ha introducido una nueva configuración en la base de datos que actúa como un interruptor para el proceso. Adicionalmente, se ha desarrollado un nuevo conjunto de endpoints de API (<code>/monitoring</code>) para:</p>
+        <ul>
+            <li>Exponer y consultar los mensajes de la DLQ que han sido persistidos en la base de datos, con datos relacionales para facilitar su análisis.</li>
+            <li>Controlar (activar/desactivar) el proceso de consumo de mensajes de la DLQ.</li>
+        </ul>
+        <p>Esta actualización otorga un control operativo mejorado, permitiendo activar el proceso, revisar los mensajes fallidos a través de una interfaz, en lugar de depender de un proceso automático que impide la vision de Graficos en Grafana.</p>
+    </section>
+
+    <section id="components">
+      <h2>2. Análisis Técnico Detallado por Componente</h2>
+
+      <!-- Componente 1: configs.js -->
+      <article class="component-card">
+        <header class="component-header">
+          <h2>api/src/models/configs.js</h2>
+        </header>
+        <div class="component-body">
+          <p>Se ha extendido el esquema de configuración para incluir el nuevo interruptor de control.</p>
+          <pre><code class="language-javascript">
+// --- a/api/src/models/configs.js
+// +++ b/api/src/models/configs.js
+// @@ -4,6 +4,9 @@
+ const configsSchema = new Schema({
+ 	orderRejClosedTime: {
+ 		type: Number
+ 	},
++	// Se añade un nuevo campo booleano para actuar como interruptor (flag).
++	// Si es true, el proceso de la DLQ se ejecuta. Si es false, se detiene.
++	saveDeadLetterbol: {
++		type: Boolean
++	}
+ }, {
+ 	strict: false,
+          </code></pre>
+          <div class="analysis-box">
+            <h3>Objetivo del Cambio</h3>
+            <p>Introducir un campo <code>saveDeadLetterbol</code> de tipo <code>Boolean</code> en la colección de configuraciones. Este campo es la pieza central del nuevo sistema de control, permitiendo habilitar o deshabilitar el consumo de mensajes de la DLQ a nivel de aplicación sin necesidad de un redespliegue.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Componente 2: aws.js -->
+      <article class="component-card">
+        <header class="component-header">
+          <h2>api/src/provider/aws.js</h2>
+        </header>
+        <div class="component-body">
+          <p>Este archivo contiene los cambios más significativos, implementando la lógica para el consumo condicional de mensajes de la DLQ.</p>
+          <pre><code class="language-javascript">
+// 1. Se importa el modelo de configuraciones para acceder al nuevo flag.
+import configsModel from '../models/configs';
+
+class Aws {
+  // ... (código existente omitido por brevedad)
+
+  // 2. Se crea una nueva función estática para encapsular la lógica de procesamiento de mensajes.
+  //    Esto evita la duplicación de código en deadLetterSave y mejora la legibilidad.
+  static async processMessages(sqs, messages, messagesMain) {
+      const deadLetterQueueUrl = config.AWS.SQS.deadLetter.NAME;
+      const MaindeadLetterQueueUrl = config.AWS.SQS.mainDeadLetter.NAME;
+
+    // Itera sobre los mensajes de la cola 'order' (DLQ principal)
+    for (const msg of messages) {
+      try {
+        const mensajeCompleto = {
+          messageId: msg.MessageId,
+          type: "order",
+          // ... (resto de los campos del mensaje)
+        };
+        // Guarda el mensaje formateado en la base de datos.
+        await deadLetterModel.create(mensajeCompleto);
+        // Elimina el mensaje de la cola SQS para no volver a procesarlo.
+        await deleteMessage(sqs, deadLetterQueueUrl, msg.ReceiptHandle);
+      } catch (e) { /* ... manejo de error ... */ }
+    }
+
+    // ... (iteración similar para messagesMain)
+  }
+
+  // 3. La función deadLetterSave es modificada para ser controlable.
+  static async deadLetterSave() {
+    try { 
+      // 3a. Obtiene la configuración desde la base de datos.
+      let saveDeadLetterbol = await configsModel.findOne({});
+      
+      // 3b. Si el flag 'saveDeadLetterbol' es falso, la función termina inmediatamente.
+      //     ESTA ES LA LÓGICA CLAVE: el consumo de mensajes ahora es condicional.
+      if(!saveDeadLetterbol.saveDeadLetterbol)
+        return;
+
+      // ... (configuración de SQS y parámetros de receiveMessage)
+
+      // 3c. Se realizan tres intentos consecutivos de leer y procesar mensajes.
+      const data1 = await sqs.receiveMessage(params1).promise();
+      const data2 = await sqs.receiveMessage(params2).promise();  
+      let messages = data1.Messages || [];
+      let messagesMain = data2.Messages || [];
+      
+      // 3d. Llama a la nueva función centralizada para procesar los mensajes.
+      await this.processMessages(sqs, messages, messagesMain);
+
+      // ... (dos intentos más)
+    } catch (e) {   
+      console.log(e);
+      Log.saveError(e, { message: 'Error deadLetterSave SQS', platform: 'aws' });
+    }  
+  }
+}
+          </code></pre>
+          <div class="analysis-box">
+            <h3>Objetivo de los Cambios</h3>
+            <p><strong>Resumen:</strong> La modificación principal en <code>deadLetterSave</code> es la verificación del flag <code>saveDeadLetterbol</code>. Esto transforma un proceso que antes estaba constantemente en funcionamiento por uno que solo se ejecuta si está explícitamente habilitado.</p>
+            <p><strong>Mejorar la Estructura:</strong> Se ha creado una nueva función estática <code>processMessages</code> para encapsular la lógica de procesamiento de los mensajes de SQS.
+          Esta función itera sobre los mensajes recibidos de las colas, los formatea en un objeto mensajeCompleto, los guarda en la base de
+         datos usando <code>deadLetterModel.create()</code>, y finalmente los elimina de la cola de SQS para evitar que se procesen de nuevo.</p>
+            <p><strong>Control del proceso:</strong> La función <code>processMessages</code> ahora consulta la base de datos para obtener el valor de <code>saveDeadLetterbol</code>. Si es false, la función termina inmediatamente (<code>return;</code>), impidiendo que se lean los mensajes de la cola SQS. Esto transforma el proceso de ser automático a ser "a pedido" (controlado por el valor de este flag).</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Componente 3: monitoring.js controller -->
+      <article class="component-card">
+        <header class="component-header">
+          <h2>api/src/controllers/monitoring.js</h2>
+        </header>
+        <div class="component-body">
+          <p>Este es un controlador completamente nuevo, creado para exponer la funcionalidad de la DLQ a través de la API.</p>
+          <pre><code class="language-javascript">
+import deadLetterModel from '../models/deadLetter';
+import configsModel from '../models/configs';
+import Log from '../utils/log';
+
+// Función para obtener los mensajes de la DLQ guardados en la base de datos.
+const getDeadLetter = async (req, res) => {
+  try {
+    // Utiliza el pipeline de agregación de MongoDB para enriquecer los datos.
+    let deadLettersOrder = await deadLetterModel.aggregate([
+      { $match: { type: { $ne: 'main' } } }, // Filtra por tipo de mensaje.
+      // Usa $lookup (similar a un JOIN) para obtener el nombre del tipo de novedad.
+      { $lookup: { from: 'newsTypes', /* ... */ as: 'typeName' } },
+      // Usa $lookup para obtener el nombre de la plataforma.
+      { $lookup: { from: 'platforms', /* ... */ as: 'platformName' } },
+      // Reemplaza los IDs con los nombres obtenidos para una mejor visualización.
+      { $addFields: { /* ... */ } },
+      { $sort: { fechaGuardado: -1 } } // Ordena los mensajes, los más nuevos primero.
+    ]);
+
+    // ... (proceso similar para los mensajes de tipo 'main')
+
+    // Combina y ordena los resultados antes de enviarlos.
+    let allDeadLetters = [...mainDeadLetters, ...deadLettersOrder];
+    allDeadLetters.sort((a, b) => new Date(b.fechaGuardado) - new Date(a.fechaGuardado));
+
+    // Devuelve la lista completa como respuesta JSON para ser consumida por un frontend.
+    return res.status(200).json(allDeadLetters).end();
+  } catch (error) { /* ... logging de error ... */ }
+};
+
+// Función para obtener el estado actual del flag 'saveDeadLetterbol'.
+const getSaveDeadLetterbol = async (req, res) => { /* ... */ };
+
+// Función para actualizar el valor del flag 'saveDeadLetterbol'.
+const saveDeadLetterbol = async (req, res) => { /* ... */ };
+
+module.exports = { /* ... */ };
+          </code></pre>
+          <div class="analysis-box">
+            <h3>Objetivo de la Creación</h3>
+            <p>Crear una capa de API dedicada a la monitorización.</p>
+            <ul>
+              <li><code>getDeadLetter</code>: Proporciona los datos necesarios para que un frontend pueda visualizar los mensajes fallidos de una manera clara y enriquecida.</li>
+              <li><code>getSaveDeadLetterbol</code> y <code>saveDeadLetterbol</code>: Exponen el control del interruptor <code>saveDeadLetterbol</code>, permitiendo que un operador active o desactive el proceso de consumo de la DLQ desde una interfaz de usuario.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- Componente 4: monitoring.js routes -->
+      <article class="component-card">
+        <header class="component-header">
+          <h2>api/src/routes/monitoring.js</h2>
+        </header>
+        <div class="component-body">
+          <p>Este nuevo archivo define las rutas de la API y las asocia con las funciones del controlador de monitorización.</p>
+          <pre><code class="language-javascript">
+const express = require('express');
+const router = express.Router();
+import controller from '../controllers/monitoring';
+
+/**
+ * @swagger
+ * /monitoring/getDeadLetter:
+ *   get:
+ *     summary: Busca y retorna todos los mensajes de la deadletter.
+ *     // ... (documentación de Swagger)
+ */
+// Define el endpoint para obtener los mensajes de la DLQ.
+// Un frontend llamará a GET /api/monitoring/getDeadLetter
+router.route('/getDeadLetter')
+  .get(controller.getDeadLetter);
+
+/**
+ * @swagger
+ * /monitoring/getSaveDeadLetterbol:
+ *   get:
+ *     summary: Retorna el valor booleano que indica si el proceso de la DLQ está activo.
+ */
+// Define el endpoint para consultar el estado del flag.
+router.route('/getSaveDeadLetterbol')
+  .get(controller.getSaveDeadLetterbol);
+
+/**
+ * @swagger
+ * /monitoring/saveDeadLetterbol:
+ *   put:
+ *     summary: Actualiza el valor booleano para activar/desactivar el proceso de la DLQ.
+ */
+// Define el endpoint para activar o desactivar el proceso.
+// Un frontend llamará a PUT /api/monitoring/saveDeadLetterbol con { "saveDeadLetterbol": true }
+router.route('/saveDeadLetterbol')
+  .put(controller.saveDeadLetterbol);
+
+module.exports = router;
+          </code></pre>
+          <div class="analysis-box">
+            <h3>Objetivo de la Creación</h3>
+            <p>Exponer formalmente la nueva funcionalidad a través de una API REST bien definida, documentada con Swagger para facilitar su integración con sistemas de frontend u otros servicios.</p>
+          </div>
+        </div>
+      </article>
+
+    </section>
+  </div>
+
+
+
+  <!-- Scripts de Prism.js al final del body para un mejor rendimiento -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+</html>

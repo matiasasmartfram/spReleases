@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Release Notes: Platform v8.0.1</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --primary-color: #0d6efd;
+      --success-color: #198754;
+      --danger-color: #dc3545;
+      --bg-color: #f8f9fa;
+      --text-color: #212529;
+      --text-muted-color: #6c757d;
+      --border-color: #dee2e6;
+      --code-bg: #22272e;
+      --diff-add-bg: rgba(46, 160, 67, 0.15);
+      --diff-add-text: #7ee787;
+      --diff-del-bg: rgba(248, 81, 73, 0.15);
+      --diff-del-text: #ffa198;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2em;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    header {
+      padding: 2em;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; }
+    header .release-summary { margin: 0; color: var(--text-muted-color); font-size: 1.1em; }
+    
+    main { padding: 2em; }
+    
+    .deployment-info {
+      background-color: #e7f1ff;
+      border: 1px solid #b3d1ff;
+      border-radius: 6px;
+      padding: 1.5em;
+      margin-bottom: 2.5em;
+    }
+    
+    .deployment-info h2 {
+      margin-top: 0;
+      margin-bottom: 0.8em;
+      color: var(--primary-color);
+      font-size: 1.4em;
+    }
+    
+    .deployment-info table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .deployment-info td { padding: 0.5em 0; }
+    .deployment-info td:first-child { font-weight: 500; width: 30%; color: #333; }
+    
+    .commit-section { margin-bottom: 3em; }
+    .commit-section h3 { font-size: 1.5em; margin-bottom: 0.5em; }
+    .commit-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--bg-color);
+      padding: 0.5em 1em;
+      border-radius: 4px;
+      margin-bottom: 1em;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+    }
+    .commit-meta code {
+      background-color: #d0d7de;
+      padding: 0.2em 0.5em;
+      border-radius: 3px;
+    }
+    
+    .copy-btn {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8em;
+      transition: background-color 0.2s;
+    }
+    .copy-btn:hover { background-color: #f0f0f0; }
+    .copy-btn.copied { background-color: var(--success-color); color: white; border-color: var(--success-color); }
+    
+    .analysis-block { margin-bottom: 1.5em; }
+    .analysis-block p { margin-top: 0; }
+    
+    .code-changes h4 {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+        font-size: 1.1em;
+        font-weight: 500;
+    }
+
+    details {
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        margin-bottom: 1em;
+        background-color: #fff;
+    }
+
+    summary {
+        padding: 0.8em 1.2em;
+        cursor: pointer;
+        font-weight: 500;
+        background-color: var(--bg-color);
+        border-radius: 6px 6px 0 0;
+    }
+    summary:hover { background-color: #e9ecef; }
+    
+    pre {
+      margin: 0;
+      padding: 1em;
+      background-color: var(--code-bg);
+      color: #adbac7;
+      white-space: pre-wrap;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85em;
+      overflow-x: auto;
+      border-radius: 0 0 6px 6px;
+    }
+    .diff-line { display: block; }
+    .diff-add { background-color: var(--diff-add-bg); color: var(--diff-add-text); }
+    .diff-del { background-color: var(--diff-del-bg); color: var(--diff-del-text); }
+    .diff-context { color: #768390; }
+    .diff-header { color: #e5b389; }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Notas de Release: Platform v8.0.1</h1>
+      <p class="release-summary">
+        Esta versión introduce mejoras clave en la lógica para PedidosYa y Rappi, y una corrección en la autenticación de webhooks de MercadoPago.
+      </p>
+    </header>
+
+    <main>
+      <section class="deployment-info">
+        <h2>Información de Despliegue</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td>Versión:</td>
+              <td><strong>8.0.1</strong></td>
+            </tr>
+            <tr>
+              <td>Fecha de Despliegue:</td>
+              <td>10 de julio de 2025</td>
+            </tr>
+            <tr>
+              <td>Entorno:</td>
+              <td>Producción</td>
+            </tr>
+            <tr>
+              <td>Referencia de Despliegue:</td>
+              <td><strong>AWS Task 159</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <h2>Cambios Detallados por Commit</h2>
+
+      <!-- Commit 1: Cash Collector / Rappi Own Delivery -->
+      <section class="commit-section">
+        <h3>Mejora: Lógica de "Cash Collection" y Delivery Propio Rappi</h3>
+        <div class="commit-meta">
+          <strong>Commit:</strong> <code>f2b31a7</code> <button class="copy-btn" data-hash="f2b31a7ef744d5c45f5fd42cb08cdbba6bb5c531">Copiar Hash</button>
+        </div>
+        <div class="analysis-block">
+          <p>Este commit introduce lógica de negocio clave en los parsers de PedidosYa y Rappi para manejar correctamente dos escenarios específicos:</p>
+          <ul>
+            <li><strong>PedidosYa (Cash Collection):</strong> Se distingue si un pago en efectivo es cobrado por la plataforma (Peya) o por el delivery propio de la sucursal. Si Peya cobra, la observación del pedido se modifica a "Cash Collection" para que la sucursal sepa que no debe gestionar ese cobro.</li>
+            <li><strong>Rappi (Delivery Propio):</strong> Se implementa la lógica para identificar si un pedido utiliza la logística propia del restaurante, interpretando el campo <code>delivery_method</code> del payload.</li>
+          </ul>
+        </div>
+        <div class="code-changes">
+          <h4>Cambios en el Código:</h4>
+          <details>
+            <summary>api/src/platforms/interfaces/pedidosYa.js</summary>
+            <pre><code><span class="diff-header">@@ -366,6 +366,16 @@</span>
+               data.order.price,
+               data.order.localInfo
+             );
+<span class="diff-add">+            // ---- INICIO DE LA MODIFICACIÓN ----</span>
+<span class="diff-add">+            // Se añade lógica para diferenciar cobro en efectivo por la plataforma vs. por la sucursal.</span>
+<span class="diff-add">+            // Condición: Si la observación indica pago en 'Efectivo' Y la plataforma (no el restaurante) cobra.</span>
+<span class="diff-add">+            if(news.order.observations.includes('Efectivo') && data.order.price.payRestaurant === "0")</span>
+<span class="diff-add">+              // Si NO es un delivery propio de la sucursal (es decir, lo entrega el rider de Peya).</span>
+<span class="diff-add">+              if(!news.order.ownDelivery){</span>
+<span class="diff-add">+                // Se reemplaza 'Efectivo' por 'Cash Collection' para indicar que el rider de Peya cobra.</span>
+<span class="diff-add">+                news.order.observations = news.order.observations.replace('Efectivo', "Cash Collection")</span>
+<span class="diff-add">+              } else {</span>
+<span class="diff-add">+                // Si es delivery propio, la sucursal cobra, por lo que se ajusta el tipo de pago interno.</span>
+<span class="diff-add">+                news.order.payment.online = false;</span>
+<span class="diff-add">+                news.order.payment.typeId = paymentType.Efectivo.paymentId;</span>
+<span class="diff-add">+              }</span>
+<span class="diff-add">+            // ---- FIN DE LA MODIFICACIÓN ----</span>
+<span class="diff-line"> </span>
+             news.order.driver = driverMapper(data.order.delivery);
+             news.extraData = extraDataMapper(branch, platform);
+             let total = parseFloat(data.order.price.grandTotal);
+</code></pre>
+          </details>
+          <details>
+            <summary>api/src/platforms/interfaces/rappi.js</summary>
+            <pre><code><span class="diff-header">@@ -283,7 +283,8 @@</span>
+             order.pickupDateOnShop = null;
+             order.preOrder = false;
+             order.observations = '';
+-            order.ownDelivery = false;
+-            // Se asigna el flag 'ownDelivery' interpretando el campo 'delivery_method' de Rappi.
+-            // 'marketplace' en Rappi significa que el restaurante realiza su propia entrega.
+<span class="diff-add">+            // ---- INICIO DE LA MODIFICACIÓN ----</span>
+<span class="diff-add">+            // Se asigna correctamente el flag 'ownDelivery' basado en la terminología de Rappi.</span>
+<span class="diff-add">+            order.ownDelivery = data.order.order_detail.delivery_method && data.order.order_detail.delivery_method === "marketplace";</span>
+<span class="diff-add">+            // ---- FIN DE LA MODIFICACIÓN ----</span>
+             order.delivery_operation_type = delivery_operation_type ?? "regular"
+             return order;
+           } catch (error) {</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- Commit 2: MercadoPago Auth -->
+      <section class="commit-section">
+        <h3>Corrección Crítica: Autenticación de Webhooks de MercadoPago</h3>
+        <div class="commit-meta">
+          <strong>Commit:</strong> <code>4f5bcb9</code> <button class="copy-btn" data-hash="4f5bcb9fd71a50fcee1f759686277f1886e6eef8">Copiar Hash</button>
+        </div>
+        <div class="analysis-block">
+          <p>Este commit refactoriza y corrige la lógica de autenticación para las notificaciones (webhooks) de MercadoPago. Anteriormente, el token de autorización se obtenía del documento de la sucursal.</p>
+          <p>El cambio asegura que el token se obtenga del modelo <code>mercadoPagoClient</code>, usando el <code>user_id</code> que viene en el propio webhook.</p>
+        </div>
+        <div class="code-changes">
+          <h4>Cambios en el Código:</h4>
+          <details>
+            <summary>api/src/controllers/mercadoPago.js</summary>
+            <pre><code><span class="diff-header">@@ -4,11 +4,11 @@</span>
+ import PlatformModel from '../models/platform';
+ import Log from '../utils/log';
+ import branchModel from '../models/branch';
+<span class="diff-add">+// Se importa el modelo 'mercadoPagoClient' para buscar el token por usuario.</span>
+<span class="diff-add">+import mercadoPagoClientModel from '../models/mercadoPagoClient';</span>
+ import mongoose from 'mongoose';
+<span class="diff-del">-import config from '../config/settings';</span>
+ import config from '../config/settings';
+ 
+ const mercadoPagoNotification = async (req, res) => {
+   try {
+     const data = req.body;
+<span class="diff-del">-</span>
+     const VALID_TOKEN = config.MERCADOPAGO_DELIVERY_TOKEN
+ 
+     const { token } = req.query;
+@@ -17,7 +17,8 @@
+       res.status(401).send({ message: 'Missing or invalid token' });
+     }
+ 
+<span class="diff-del">-    Log.saveError(null, { message: 'Webhook recibió Mercado Pago Delivery', data: req.body, platform: 'MercadoPago' });</span>
+<span class="diff-add">+    // ---- INICIO DE LA MODIFICACIÓN ----</span>
+<span class="diff-add">+    // Se busca el cliente/token de MercadoPago usando el 'user_id' que viene en el webhook.</span>
+<span class="diff-add">+    let mercadoPagoClient = await mercadoPagoClientModel.findOne({user_id : req.body.user_id })</span>
+ 
+     const shipment_id = data.resource;
+     const orderId = shipment_id.split('/').pop();
+<span class="diff-header">@@ -30,15 +31,15 @@</span>
+     let mercadoPago = await PlatformModel.findOne({ name: 'MercadoPago' });
+ 
+     let urlAvailability = `${mercadoPago.credentials.data.baseUrl}/proximity-integration/v1/orders/${orderId}`;
+<span class="diff-del">-</span>
+     let MercadoPagoOrder = await axios.get(urlAvailability, headersConfig);
+     let order = MercadoPagoOrder.data;
+     let currentBranch = await branchModel.findOne({ 'platforms.platform': mongoose.Types.ObjectId(mercadoPago.id), 'platforms.branchReference': order.extension.store.brandId });
+     order.branchId = currentBranch.branchId;
+<span class="diff-del">-    order.state = "PENDING";</span>
+<span class="diff-add">+    order.state = "PENDING";</span>
+<span class="diff-add">+</span>
+     const headersConfig = {
+       headers: {
+<span class="diff-del">-        'Authorization': `Bearer ${currentBranch.mercadoPago.token}`</span>
+<span class="diff-add">+        // Se utiliza el token del 'mercadoPagoClient' encontrado, en lugar del token del branch.</span>
+<span class="diff-add">+        'Authorization': `Bearer ${mercadoPagoClient.token}`</span>
+       }
+     };
+</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- Commit 3: Merges -->
+      <section class="commit-section">
+        <h3>Commits de Integración (Merges)</h3>
+        <div class="analysis-block">
+          <p>Los siguientes commits son operaciones de merge que no introducen cambios de código nuevos, sino que integran el trabajo de otras ramas para mantener la base de código principal actualizada.</p>
+          <ul>
+              <li><code>a58b19e</code></li>
+              <li><code>c0f66ce</code></li>
+              <li><code>57d6abc</code></li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const hashToCopy = button.dataset.hash;
+          navigator.clipboard.writeText(hashToCopy).then(() => {
+            const originalText = button.innerText;
+            button.innerText = 'Copiado!';
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+              button.innerText = originalText;
+              button.classList.remove('copied');
+            }, 2000);
+          }).catch(err => {
+            console.error('Error al copiar el hash: ', err);
+          });
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

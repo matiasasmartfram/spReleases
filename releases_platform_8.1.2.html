@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Release Notes: Platform v8.1.2</title>
+  
+  <!-- Estilos de la librería Prism.js para resaltado de sintaxis -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --primary-color: #0d6efd;
+      --success-color: #198754;
+      --danger-color: #dc3545;
+      --bg-color: #f8f9fa;
+      --text-color: #212529;
+      --text-muted-color: #6c757d;
+      --border-color: #dee2e6;
+      --code-bg: #22272e;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2em;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    header {
+      padding: 2em;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; }
+    header .release-summary { margin: 0; color: var(--text-muted-color); font-size: 1.1em; }
+    
+    main { padding: 2em; }
+    
+    .deployment-info {
+      background-color: #e7f1ff;
+      border: 1px solid #b3d1ff;
+      border-radius: 6px;
+      padding: 1.5em;
+      margin-bottom: 2.5em;
+    }
+    
+    .deployment-info h2 {
+      margin-top: 0;
+      margin-bottom: 0.8em;
+      color: var(--primary-color);
+      font-size: 1.4em;
+    }
+    
+    .deployment-info table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .deployment-info td { padding: 0.5em 0; }
+    .deployment-info td:first-child { font-weight: 500; width: 30%; color: #333; }
+    
+    .commit-section { margin-bottom: 3em; }
+    .commit-section h3 { font-size: 1.5em; margin-bottom: 0.5em; }
+    .commit-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--bg-color);
+      padding: 0.5em 1em;
+      border-radius: 4px;
+      margin-bottom: 1em;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+    }
+    .commit-meta code {
+      background-color: #d0d7de;
+      padding: 0.2em 0.5em;
+      border-radius: 3px;
+    }
+    
+    .copy-btn {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8em;
+      transition: background-color 0.2s;
+    }
+    .copy-btn:hover { background-color: #f0f0f0; }
+    .copy-btn.copied { background-color: var(--success-color); color: white; border-color: var(--success-color); }
+    
+    .analysis-block { margin-bottom: 1.5em; }
+    .analysis-block h4 { font-size: 1.2em; color: var(--primary-color); margin-top: 1.5em; margin-bottom: 1em; }
+    .analysis-block p { margin-top: 0; }
+    
+    .code-changes h4 {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+        font-size: 1.1em;
+        font-weight: 500;
+    }
+
+    details {
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        margin-bottom: 1em;
+        background-color: #fff;
+    }
+
+    summary {
+        padding: 0.8em 1.2em;
+        cursor: pointer;
+        font-weight: 500;
+        background-color: var(--bg-color);
+        border-radius: 6px 6px 0 0;
+    }
+    summary:hover { background-color: #e9ecef; }
+    
+    pre {
+      margin: 0;
+      padding: 1.5em;
+      background-color: var(--code-bg);
+      color: #adbac7;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+      overflow-x: hidden;
+      border-radius: 0 0 6px 6px;
+    }
+    
+    ul { padding-left: 20px; }
+    ul li { margin-bottom: 0.5em; }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Notas de Release: Platform v8.1.2</h1>
+      <p class="release-summary">
+        Esta versión corrige un bug en el procesamiento de productos sustitutos de Rappi, asegurando que su información se muestre siempre al final de la descripción del pedido.
+      </p>
+    </header>
+
+    <main>
+      <section class="deployment-info">
+        <h2>Información de Despliegue</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td>Versión:</td>
+              <td><strong>8.1.2</strong></td>
+            </tr>
+            <tr>
+              <td>Fecha de Despliegue:</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Entorno:</td>
+              <td>Producción</td>
+            </tr>
+            <tr>
+              <td>Referencia de Despliegue:</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <h2>Cambios Detallados por Commit</h2>
+
+      <!-- Commit 1: Rappi Substitutes -->
+      <section class="commit-section">
+        <h3>Corrección: Posicionamiento de Productos Sustitutos en Rappi</h3>
+        <div class="commit-meta">
+          <strong>Commit:</strong> <code>7fea565e</code> <button class="copy-btn" data-hash="7fea565e1239">Copiar Hash</button>
+        </div>
+        <div class="analysis-block">
+          <h4>Objetivo del Cambio</h4>
+          <p>El objetivo de este commit es corregir un error en el procesamiento de órdenes de Rappi donde los productos marcados como "Sustituto" se mostraban en una posición incorrecta dentro del texto de la orden. El cambio asegura que la información del sustituto siempre aparezca <strong>al final</strong> de la lista de modificadores o toppings.</p>
+        </div>
+        <div class="code-changes">
+          <details>
+            <summary>api/src/platforms/interfaces/rappi.js</summary>
+            
+            <div class="analysis-block" style="margin: 1em;">
+                <h4>1. El Problema en el Código Antiguo</h4>
+                <p>El código original recorría cada subitem y, si encontraba uno marcado como sustituto, añadía inmediatamente el texto a la cadena <code>optionalText</code>, interrumpiendo el orden de los demás toppings.</p>
+                <pre><code class="language-javascript">
+// --- CÓDIGO ANTIGUO (Fragmento relevante dentro del bucle 'for') ---
+
+let isSubstitute = product.categoryDescription && product.categoryDescription.toLowerCase().includes('sustituto');
+let nameSubstitute = product.name.trim();
+
+// ... (lógica para procesar toppings normales)
+
+if (isSubstitute) {
+  // ERROR: Esto se ejecuta en medio del bucle, no al final.
+  det.optionalText += ` || SUSTITUTO: ${nameSubstitute}`;
+}
+                </code></pre>
+            </div>
+
+            <div class="analysis-block" style="margin: 1em;">
+                <h4>2. La Solución en el Código Nuevo</h4>
+                <p>El nuevo código modifica esta lógica para "recordar" el nombre del sustituto y añadirlo únicamente <strong>después</strong> de que todos los demás subitems hayan sido procesados.</p>
+                <pre><code class="language-javascript">
+// +++ CÓDIGO NUEVO (Fragmento relevante) +++
+
+// 1. Se introduce una variable para almacenar el sustituto
+let substituteName = '';
+
+// 2. Comienza el bucle para recorrer los subitems
+for (let product of detail.subitems) {
+    let isSubstitute = product.categoryDescription && product.categoryDescription.toLowerCase().includes('sustituto');
+
+    // 3. Si es un sustituto, se guarda y se salta a la siguiente iteración
+    if(isSubstitute){
+      substituteName = product.name.trim();
+      continue; // <-- Punto clave: no procesa el sustituto como un topping normal
+    }
+
+    // ... (aquí sigue la misma lógica para procesar toppings normales)
+}
+
+// 4. Después de que el bucle termina, se añade el sustituto al final
+if (substituteName) {
+    det.optionalText += ` || SUSTITUTO: ${substituteName}`;
+}
+                </code></pre>
+            </div>
+            
+            <div class="analysis-block" style="margin: 1em;">
+                <h4>Conclusión del Impacto</h4>
+                <p>Este cambio resuelve el problema de forma definitiva. Al separar la identificación del sustituto de la acción de añadirlo al texto, se asegura el orden correcto.</p>
+                <ul>
+                    <li><strong>Resultado Anterior (Incorrecto):</strong> "Capuccino Granizado || SUSTITUTO: Dulce de Leche Granizado, Chocolate con Almendras..."</li>
+                    <li><strong>Resultado con el Cambio (Correcto):</strong> "Capuccino Granizado, Chocolate con Almendras... || SUSTITUTO: Dulce de Leche Granizado"</li>
+                </ul>
+                <p>El código ahora cumple con el criterio de aceptación, mejorando la claridad de la información en el POS y evitando posibles confusiones.</p>
+            </div>
+
+          </details>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts para funcionalidad (botón de copiar y resaltado de sintaxis) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Activar el resaltado de sintaxis de Prism
+      Prism.highlightAll();
+
+      // Funcionalidad del botón de copiar
+      document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const hashToCopy = button.dataset.hash;
+          navigator.clipboard.writeText(hashToCopy).then(() => {
+            const originalText = button.innerText;
+            button.innerText = 'Copiado!';
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+              button.innerText = 'Copiar Hash';
+              button.classList.remove('copied');
+            }, 2000);
+          }).catch(err => {
+            console.error('Error al copiar el hash: ', err);
+          });
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
