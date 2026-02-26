@@ -1,0 +1,39 @@
+# Concentrador - Notas del Release v8.6.3
+
+| Clave | Valor |
+| :--- | :--- |
+| **Versión** | `v8.6.3` |
+| **Fecha de Despliegue** | `2026-02-25` |
+| **Servicios Afectados** | `CONCENTRADOR` |
+| **Tipo de Release** | `Patch` |
+| **Estado** | `Desplegado` |
+| **Jira Release** | [Pendiente] |
+
+---
+
+### **Resumen Ejecutivo**
+
+Este release activa formalmente la automatización de PediGrido en el Concentrador, habilitando el monitoreo automático de locales y la sincronización periódica de datos. Además, mejora la estabilidad de las tareas programadas para evitar sobrecargas en procesos de sincronización forzada.
+
+---
+
+### **Nuevas Funcionalidades**
+* **Activación del Módulo PediGrido (OpenClosePG)**
+    * **Descripción:** Se pusieron en marcha los crons automáticos para el control de apertura/cierre y la obtención diaria de información de sucursales de PediGrido.
+    * **Servicio(s) Afectado(s):** `CONCENTRADOR`
+
+---
+
+### **Mejoras**
+* **Optimización de Tareas Programadas (Crons)**
+    * **Descripción:** Se reordenó la lógica en la gestión de horarios forzados para resetear la señal de ejecución antes de iniciar el proceso, previniendo bucles o ejecuciones concurrentes innecesarias.
+    * **Servicio(s) Afectado(s):** `CONCENTRADOR`
+
+---
+
+### **Detalles Técnicos (Para Audiencia Técnica)**
+* **Tarea de Despliegue:** `AWS-TASK-272`
+* **Commit(s):** `235488607b5841a592907f7c050df651d8442b95`
+* **Descripción Técnica General:** Activación de crons OpenClosePG y refactorización de `checkforcedCronHorarios` para mejorar la gestión de estados en `configsModel`.
+* **Cambios por Componente:**
+    * **`api/src/controllers/branch.js`**: Descomentado de `cron.schedule` y reordenamiento de llamadas asíncronas para priorizar el reseteo de la flag `forcedCronHorarios`.

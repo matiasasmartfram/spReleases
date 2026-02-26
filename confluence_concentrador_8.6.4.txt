@@ -1,0 +1,36 @@
+# Concentrador - Notas del Release v8.6.4
+
+| Clave | Valor |
+| :--- | :--- |
+| **Versión** | `v8.6.4` |
+| **Fecha de Despliegue** | `2026-02-26` |
+| **Servicios Afectados** | `CONCENTRADOR` |
+| **Tipo de Release** | `Patch` |
+| **Estado** | `Desplegado` |
+| **Jira Release** | [Pendiente] |
+
+---
+
+### **Resumen Ejecutivo**
+
+Este release realiza un ajuste preventivo en la automatización de la integración con PediGrido, pausando temporalmente la sincronización automática para garantizar la estabilidad del servicio. Adicionalmente, se integra formalmente el control de versiones en la API para mejorar la trazabilidad de los despliegues.
+
+---
+
+### **Mejoras**
+* **Estabilización de Procesos Críticos**
+    * **Descripción:** Se suspendieron temporalmente las tareas programadas de sincronización de sucursales para asegurar un entorno operativo más estable durante el periodo de monitoreo.
+    * **Servicio(s) Afectado(s):** `CONCENTRADOR`
+* **Implementación de Versionado Oficial**
+    * **Descripción:** Se introdujo el archivo de versión oficial en la API para facilitar la auditoría y el seguimiento de despliegues en producción.
+    * **Servicio(s) Afectado(s):** `CONCENTRADOR`
+
+---
+
+### **Detalles Técnicos (Para Audiencia Técnica)**
+* **Tarea de Despliegue:** `AWS-TASK-275`
+* **Commit(s):** `b55b2a7ea2bfcce25f4c59ddd25844cc95a2ed02`
+* **Descripción Técnica General:** Suspensión selectiva de crons mediante comentarios y adición de archivo de metadatos de versión.
+* **Cambios por Componente:**
+    * **`api/src/controllers/branch.js`**: Comentado de `scheduleGetInfoBranchesGrido` y `scheduleforcedCronHorarios` marcados con el tag `[OpenClosePG]`.
+    * **`api/version`**: Creación del archivo con el string `8.6.4`.
