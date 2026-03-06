@@ -1,0 +1,32 @@
+# Concentrador - Notas del Release v8.6.5
+
+| Clave | Valor |
+| :--- | :--- |
+| **Versión** | `v8.6.5` |
+| **Fecha de Despliegue** | `2026-03-04` |
+| **Servicios Afectados** | `CONCENTRADOR` |
+| **Tipo de Release** | `Patch` |
+| **Estado** | `Desplegado` |
+| **Jira Release** | [Task 278] |
+
+---
+
+### **Resumen Ejecutivo**
+
+Este release restaura capacidades de automatización fundamentales para la gestión operativa. Se han reactivado procesos programados que permiten al sistema gestionar de forma autónoma la apertura, el cierre y la actualización de información de las sucursales, reduciendo la necesidad de intervención manual y garantizando que la disponibilidad de los locales en las plataformas de pedidos sea siempre precisa.
+
+---
+
+### **Mejoras**
+* **Automatización de Gestión Operativa**
+    * **Descripción:** Se habilitaron crons para la actualización diaria de datos de sucursales y el monitoreo en tiempo real de horarios de apertura/cierre.
+    * **Servicio(s) Afectado(s):** `CONCENTRADOR`
+
+---
+
+### **Detalles Técnicos (Para Audiencia Técnica)**
+* **Tarea de Despliegue:** `278`
+* **Commit(s):** `5f6f3ff490bee1bed42a4b639ba18a8d8f4a3aee`
+* **Descripción Técnica General:** Reactivación de lógica de negocio bajo el flag `[OpenClosePG]`. Se configuran tareas programadas con `node-cron` para sincronización de estados.
+* **Cambios por Componente:**
+    * **`api/src/controllers/branch.js`**: Descomentado de configuración de horarios y activación de los métodos `getInfoBranchesGrido` (06:30 AM) y `checkforcedCronHorarios` (cada 5 segundos) en el controlador de crons.
