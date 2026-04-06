@@ -1,0 +1,59 @@
+# Concentrador - Notas del Release v8.6.6
+
+| Clave | Valor |
+| :--- | :--- |
+| **Versión** | `v8.6.6` |
+| **Fecha de Despliegue** | `2026-04-06` |
+| **Servicios Afectados** | `CONCENTRADOR` |
+| **Tipo de Release** | `Patch` |
+| **Estado** | `Desplegado` |
+| **Jira Release** | `AWS TASK 282` |
+
+---
+
+### **Resumen Ejecutivo**
+
+Esta versión introduce la infraestructura necesaria para gestionar automáticamente la disponibilidad de las sucursales en MercadoPago, permitiendo cierres automáticos ante desconexiones del sistema de ventas. Aunque la funcionalidad se encuentra actualmente inactivada de forma preventiva mediante configuración, el release asegura la estabilidad del servicio mediante una carga de credenciales más robusta y la corrección de endpoints críticos en el entorno de pruebas.
+
+---
+
+### **Nuevas Funcionalidades**
+* **Gestión Automática de Disponibilidad para MercadoPago**
+    * **Descripción:** Implementación de procesos en segundo plano (cron jobs) para verificar la conexión de los puntos de venta y actualizar el estado de las tiendas en la plataforma externa de pagos.
+    * **Servicio(s) Afectado(s):** `API Concentrador`
+
+---
+
+### **Mejoras**
+* **Priorización de Carga de Tokens y Credenciales**
+    * **Descripción:** Se optimizó el flujo de arranque del sistema para garantizar que todas las llaves de seguridad y tokens estén disponibles en memoria antes de intentar la conexión con servicios de terceros (PedidosYa, Rappi, etc.).
+    * **Servicio(s) Afectado(s):** `API Concentrador`
+* **Transparencia en Log de Errores**
+    * **Descripción:** Mejora en la captura de detalles técnicos durante fallos de comunicación con MercadoPago, facilitando diagnósticos rápidos por parte del equipo de soporte.
+    * **Servicio(s) Afectado(s):** `API Concentrador`
+
+---
+
+### **Correcciones**
+* **Alineación de Infraestructura en Staging**
+    * **Descripción:** Corrección de la URL de autenticación para el entorno de pruebas, migrando al nuevo subdominio estándar definido por DevOps.
+    * **Servicio(s) Afectado(s):** `Configuración de Entorno`
+
+---
+
+### **Detalles Técnicos (Para Audiencia Técnica)**
+* **Tarea de Despliegue:** `AWS TASK 282`
+* **Commit(s):** `6e8d351e55194b8724c7da8ccbb2ccb1c69d3086`
+* **Descripción Técnica General:** El release se centra en la integración con MercadoPago "Open/Close" logic. Se añadieron campos de persistencia en el modelo de sucursales y se implementaron controladores de cierre automático. Debido a inestabilidades detectadas o cambios de prioridad, se procedió a comentar las líneas de ejecución de los jobs y el descifrado de tokens al final del ciclo de desarrollo.
+* **Cambios por Componente:**
+    * **`api/src/controllers/branch.js`**: Implementación de `scheduleGetInfoBranchesMercadoPago` (cron job).
+    * **`api/src/models/branch.js`**: Inclusión del campo `alreadyClosedMercadoPago` (Boolean).
+    * **`api/src/controllers/branch.js`**: Corrección de `branchReferenceId` a `store_id`.
+    * **`api/src/controllers/branch.js`**: Eliminación de logs inactivos o de error genérico de platform (Rappi).
+    * **`api/src/controllers/branch.js`**: Priorización de `tokensLoad()` en top-level de inicialización.
+    * **`api/src/controllers/branch.js`**: Refactorización técnica al quitar variables temporales `branchesToOpen` en query.
+    * **`api/src/config/env/staging.js`**: Actualización de endpoint a `stg-api.smartfran.com`.
+    * **`api/src/controllers/branch.js`**: Pase explícito del error completo (`err`) a `Log.saveError()`.
+    * **`api/src/controllers/branch.js`**: Corrección de scoping: `reject` frente a modelo base en el sub-bucle.
+    * **`api/src/controllers/branch.js`**: Se comenta bloque criptográfico de tokenizado Mercado Pago.
+    * **`api/src/controllers/branch.js`**: Se comenta la inicialización del cron temporalmente.
