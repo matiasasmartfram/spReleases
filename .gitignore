@@ -1,3 +1,30 @@
-﻿.agents/
-confluence_platform_*.txt
+# ============================================
+# REGLA: Este repositorio es PÚBLICO.
+# Solo se suben archivos .html (releases e index)
+# ============================================
+
+# Directorio de agentes/skills (PRIVADO)
+.agents/
+
+# Archivos de configuración de agente (PRIVADO)
+AGENTS.md
+AGENTSconcentrador.md
+PromptReleases.txt
 skills-lock.json
+
+# Archivos de análisis intermedios (PRIVADO)
+analisis_*.md
+releaseResume.md
+releaseplatform.txt
+
+# Archivos de Confluence generados (PRIVADO)
+confluence_*.txt
+
+# Cualquier otro .md que no sea parte del release público
+*.md
+
+# Cualquier otro .txt de trabajo
+*.txt
+
+# Gemini / IDE metadata
+.gemini/
