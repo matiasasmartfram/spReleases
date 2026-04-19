@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Release Notes - Concentrador 8.7.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #38bdf8;
+            --accent-secondary: #818cf8;
+            --code-bg: #000000;
+            --border-color: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metadata {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-item {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            margin: 3rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--accent-primary);
+        }
+
+        .commit-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .commit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .commit-hash {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-secondary);
+            background: rgba(129, 140, 248, 0.1);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+        }
+
+        .file-path {
+            font-family: 'Fira Code', monospace;
+            font-weight: 500;
+            color: var(--accent-primary);
+            margin: 1.5rem 0 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(56, 189, 248, 0.05);
+            border-left: 3px solid var(--accent-primary);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .modification-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .modification-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .modification-item h4 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modification-item p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .code-container {
+            margin: 1.5rem 0;
+        }
+
+        .code-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .label-before { color: var(--danger); }
+        .label-after { color: var(--success); }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 1.25rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            max-height: 500px;
+        }
+
+        .conclusion-box {
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .conclusion-box h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .general-conclusion {
+            background: linear-gradient(135deg, var(--card-bg), #1e1b4b);
+            border: 1px solid var(--accent-secondary);
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin-top: 4rem;
+        }
+
+        .general-conclusion h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-primary);
+        }
+
+        .general-conclusion ul {
+            margin-left: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .general-conclusion li {
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .general-conclusion li strong {
+            color: var(--text-primary);
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            h1 { font-size: 2rem; }
+            .commit-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Concentrador 8.7.0</h1>
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">Release Técnico — Activación Operativa MercadoPago</p>
+            
+            <div class="metadata">
+                <div class="meta-item">
+                    <span class="meta-label">Versión</span>
+                    <span class="meta-value">8.7.0</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">AWS Task ID</span>
+                    <span class="meta-value">283</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Fecha</span>
+                    <span class="meta-value">08/04/2026</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Proyecto</span>
+                    <span class="meta-value">Concentrador</span>
+                </div>
+            </div>
+        </header>
+
+        <h2 class="section-title">Commits en este Release</h2>
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem;">
+            <div style="background: var(--card-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem;">
+                <span class="commit-hash">1442365...1baf781c9bf</span>
+                <span style="color: var(--text-primary)">feat: open close</span>
+            </div>
+            <div style="background: var(--card-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem;">
+                <span class="commit-hash">1161045...feaf356e</span>
+                <span style="color: var(--text-primary)">Merge pull request #34 (merge mejoras logs y openclose MP)</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">Análisis de Cambios</h2>
+
+        <!-- COMMIT 1 -->
+        <div class="commit-card">
+            <div class="commit-header">
+                <h3 style="font-size: 1.25rem;">Commit: 14423656...</h3>
+                <span class="commit-hash">14423656789f049fc4359265622da1baf781c9bf</span>
+            </div>
+
+            <div class="file-path">api/src/controllers/branch.js</div>
+
+            <div class="modification-list">
+                <div class="modification-item">
+                    <h4>1. Importación del Modelo de Cadena (chainModel)</h4>
+                    <p>Se añade la importación de chainModel a nivel global, eliminando requires dinámicos internos y mejorando la estructuración de dependencias.</p>
+                </div>
+                <div class="modification-item">
+                    <h4>2. Activación de ckeckOfflinePOSmercadopago</h4>
+                    <p>Activación completa de la lógica de apertura/cierre automático para MercadoPago. Se implementa un flujo robusto de obtención de tokens con metadatos detallados en caso de error.</p>
+                </div>
+                <div class="modification-item">
+                    <h4>3. Activación de Cron Jobs</h4>
+                    <p>Habilitación de las tareas programadas que ejecutan el monitoreo de MercadoPago cada minuto.</p>
+                </div>
+                <div class="modification-item">
+                    <h4>4. Estandarización de Observabilidad</h4>
+                    <p>Mejora masiva en el sistema de logs. Se introducen prefijos estandarizados (SmartCloud Communication Error, Platform Validation Error) y se incluyen metadatos como branchId, user_id y detalles de la petición HTTP en todos los fallos críticos.</p>
+                </div>
+            </div>
+
+            <div class="code-container">
+                <div class="code-label label-before">Código ANTES</div>
+                <pre><code>import DeliveryTimeModel from '../models/deliveryTime';
+import model from '../models/branch';
+import orderModel from '../models/order';
+import rejectPeyaModel from '../models/rejectPeya';
+
+// [OpenCloseMercadoPago]
+// async function ckeckOfflinePOSmercadopago() {
+//   try {
+//     console.log('ckeckOfflinePOSmercadopago function');
+//     let extraData = [];
+//     const dateNow = new Date();
+//     const dateMinuteLess = new Date(dateNow.getTime() - (1 * 60 * 1000)); // 1 minute less
+
+//     let branchesToClose = await model.find({
+//       platforms: {
+//         $elemMatch: {
+//           platform: new mongoose.Types.ObjectId(mercadopagoId),
+//           isActive: true
+//         }
+//       },
+//       lastGetNews: { $lt: dateMinuteLess },
+//       alreadyClosedMercadoPago: { $in: [null, false] }
+//     }).populate("chain");
+//     console.log('branchesToClose');
+
+//     let branchesToOpen = await model.find({
+//       platforms: {
+//         $elemMatch: {
+//           platform: new mongoose.Types.ObjectId(mercadopagoId),
+//           isActive: true
+//         }
+//       },
+//       lastGetNews: { $gt: dateMinuteLess },
+//       alreadyClosedMercadoPago: { $in: [null, true] }
+//     }).populate("chain");
+
+//     const tokenAPICloud = await Token.getToken();
+//     if (!tokenAPICloud) {
+//       Log.saveError(null, { message: 'Failed to get token from Cloud',  platform: 'MercadoPago' });
+//       throw new Error('Failed to get token from Cloud');
+//     }
+
+//     for(let tenant of tenants){
+//       console.log(`for of tenat: ${tenant.name}`);
+//       let branchesToClose2 = branchesToClose.filter( r => r.chain?.chain.trim().toLowerCase() === tenant.name.trim().toLocaleLowerCase());
+//       let branchesToOpen2  = branchesToOpen.filter( r => r.chain?.chain.trim().toLowerCase() === tenant.name.trim().toLocaleLowerCase());
+
+//       if (branchesToClose2.length === 0 && branchesToOpen2.length === 0) {
+//         console.log('Continue tenant', tenant.name, 'matches close', branchesToClose2.length, 'open', branchesToOpen2.length);
+//         continue;
+//       }
+
+//       const closePromises = branchesToClose2.map(async (branch) => {
+//         const branchId = branch.branchId;
+//         const branchData = { branchId, results: [] };
+//         const branchReference = branch.platforms.find(pm => pm.platform == mercadopagoId).branchReference;
+//         const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+
+//         const mercadoPagoPlatform = branch.platforms?.find(p => p.platform?.toString() === mercadopagoId?.toString());
+//         console.log(`closePromises mercadoPagoPlatform ${mercadoPagoPlatform}`);
+//         let user_id = mercadoPagoPlatform?.mercadoPagoUserId;
+
+//         if (!user_id) {
+//           Log.saveError(null, { message: 'Failed get user id order on resend confirm order', platform: 'MercadoPago' });
+//           throw new Error('Failed get user id order on resend confirm order');
+//         }
+
+//         const headersToken = {
+//           headers: {
+//             'Authorization': `Bearer ${tokenAPICloud}`,
+//             'TraceKey': '1234',
+//             'TenantId': tenant.tenantId
+//           }
+//         }
+
+//         let urlTokenMercadoPagoCloud = `${mercadoPagoGetToken_uri}${user_id}`;
+
+//         if (!urlTokenMercadoPagoCloud) {
+//           Log.saveError(null, { message: 'Missing MercadoPago token URL in platform credentials',  platform: 'MercadoPago' });
+//           throw new Error('Missing MercadoPago token URL in platform credentials');
+//         }
+
+//         let tokenMercadoPagoCloud;
+//         try {
+//           tokenMercadoPagoCloud = await axios.get(urlTokenMercadoPagoCloud, headersToken);
+//         } catch (err) {
+//           Log.saveError(null, { message: 'Error fetching token from Cloud',  platform: 'MercadoPago' });
+//           throw new Error('Error fetching token from Cloud');
+//         }
+
+//         if (!tokenMercadoPagoCloud) {
+//           Log.saveError(null, { message: 'Failed to get MercadoPago token from Cloud',  platform: 'MercadoPago' });
+//           throw new Error('Failed to get MercadoPago token from Cloud');
+//         }
+
+//         let decryptedTokenMercadoPagoCloud;
+//         try {
+//           decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.data?.token);
+//         } catch (error) {
+//           Log.saveError(null, { message: 'Error decrypt token',  platform: 'MercadoPago' });
+//           throw new Error('Error decrypt token');
+//         }
+
+//         if (!decryptedTokenMercadoPagoCloud) {
+//           Log.saveError(null, { message: 'Failed to decrypt MercadoPago token from Cloud',  platform: 'MercadoPago' });
+//           throw new Error('Failed to decrypt MercadoPago token from Cloud');
+//         }
+
+//         const headersConfig = {
+//           headers: {
+//             'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+//           }
+//         }
+
+//         await Promise.allSettled(branchReferences.map(async (store_id) => {
+//           let body = {
+//             "status": "paused"
+//           };
+
+//           const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+
+//           try {
+//             console.log(`
+//               urlAvailability: ${urlAvailability}
+//               body: ${body}
+//               headersConfig: ${headersConfig}
+//               `);
+//             await axios.put(urlAvailability, body, headersConfig);
+//             branchData.results.push({
+//               branchReference: store_id,
+//               type: "Closed",
+//               result: true
+//             });
+//           } catch (error) {
+//             console.log(error);
+//             branchData.results.push({
+//               branchReference: store_id,
+//               type: "Closed",
+//               result: false
+//             });
+//             Log.saveError(error, { 
+//             message: `Branch OpenClose Error: MercadoPago checkOfflinePOSmercadopago CLOSE ${branchId}`, 
+//             action: 'checkOfflinePOSmercadopago',
+//             platformId: 8,
+//             operation: 'CLOSE',
+//             branch: {
+//                 branchReferenceId: store_id,
+//                 user_id: user_id,
+//                 branchId: branchId
+//             },
+//             request: {
+//                 url: urlAvailability,
+//                 method: 'POST',
+//                 body: body,
+//                 header: headersConfig
+//             },
+//             response: {
+//                 status: error?.response?.status,
+//                 data: error?.response?.data
+//             }
+//             });
+
+//           }
+//         }));
+//         await model.findByIdAndUpdate(branch.id, { alreadyClosedMercadoPago: true });
+//         console.log('alreadyClosedMercadoPago: true updated');
+//         extraData.push(branchData);
+//       });
+
+//       const openPromises = branchesToOpen2.map(async (branch) => {
+//         const branchId = branch.branchId;
+//         const branchData = { branchId, results: [] };
+//         const branchReference = branch.platforms.find(pm => pm.platform == mercadopagoId).branchReference;
+//         const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+
+//         const mercadoPagoPlatform = branch.platforms?.find(p => p.platform?.toString() === mercadopagoId?.toString());
+//         console.log(`openPromises mercadoPagoPlatform ${mercadoPagoPlatform}`);
+//         let user_id = mercadoPagoPlatform?.mercadoPagoUserId;
+
+//         if (!user_id) {
+//           Log.saveError(null, { message: 'Failed get user id order on resend confirm order', platform: 'MercadoPago' });
+//           throw new Error('Failed get user id order on resend confirm order');
+//         }
+
+//         const headersToken = {
+//           headers: {
+//             'Authorization': `Bearer ${tokenAPICloud}`,
+//             'TraceKey': '1234',
+//             'TenantId': tenant.tenantId
+//           }
+//         }
+
+//         let urlTokenMercadoPagoCloud = `${mercadoPagoGetToken_uri}${user_id}`;
+
+//         if (!urlTokenMercadoPagoCloud) {
+//           Log.saveError(null, { message: 'Missing MercadoPago token URL in platform credentials',  platform: 'MercadoPago' });
+//           throw new Error('Missing MercadoPago token URL in platform credentials');
+//         }
+
+//         let tokenMercadoPagoCloud;
+//         try {
+//           tokenMercadoPagoCloud = await axios.get(urlTokenMercadoPagoCloud, headersToken);
+//         } catch (err) {
+//           Log.saveError(null, { message: 'Error fetching token from Cloud',  platform: 'MercadoPago' });
+//           throw new Error('Error fetching token from Cloud');
+//         }
+
+//         if (!tokenMercadoPagoCloud) {
+//           Log.saveError(null, { message: 'Failed to get MercadoPago token from Cloud',  platform: 'MercadoPago' });
+//           throw new Error('Failed to get MercadoPago token from Cloud');
+//         }
+
+//         let decryptedTokenMercadoPagoCloud;
+//         try {
+//           decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.data?.token);
+//         } catch (error) {
+//           Log.saveError(null, { message: 'Error decrypt token',  platform: 'MercadoPago' });
+//           throw new Error('Error decrypt token');
+//         }
+
+//         if (!decryptedTokenMercadoPagoCloud) {
+//           Log.saveError(null, { message: 'Failed to decrypt MercadoPago token from Cloud',  platform: 'MercadoPago' });
+//           throw new Error('Failed to decrypt MercadoPago token from Cloud');
+//         }
+
+//         const headersConfig = {
+//           headers: {
+//             'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+//           }
+//         }
+
+//         await Promise.allSettled(branchReferences.map(async (store_id) => {
+//           let body = {
+//             "status": "enabled"
+//           };
+
+//           const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+//           try {
+//               console.log(`
+//               urlAvailability: ${urlAvailability}
+//               body: ${body}
+//               headersConfig: ${headersConfig}
+//               `);
+//             await axios.put(urlAvailability, body, headersConfig);
+
+//             branchData.results.push({
+//               branchReference: store_id,
+//               type: "Open",
+//               result: true
+//             });
+//           } catch (error) {
+//             branchData.results.push({
+//               branchReference: store_id,
+//               type: "Open",
+//               result: false
+//             });
+//             Log.saveError(error, { 
+//             message: `Branch OpenClose Error: MercadoPago checkOfflinePOSmercadopago OPEN ${branchId}`, 
+//             action: 'checkOfflinePOSmercadopago',
+//             platformId: 8,
+//             operation: 'OPEN',
+//             branch: {
+//                 branchReferenceId: store_id,
+//                 user_id: user_id,
+//                 branchId: branchId
+//             },
+//             request: {
+//                 url: urlAvailability,
+//                 method: 'POST',
+//                 body: body,
+//                 header: headersConfig
+//             },
+//             response: {
+//                 status: error?.response?.status,
+//                 data: error?.response?.data
+//             }
+//             });
+//           }
+//         }));
+//         await model.findByIdAndUpdate(branch.id, { alreadyClosedMercadoPago: false });
+//         console.log('alreadyClosedMercadoPago: false updated')
+//         extraData.push(branchData);
+//       });
+
+//       await Promise.allSettled([...closePromises, ...openPromises]);
+//     }
+
+//     if (extraData.length > 0)
+//       await openClosedLogModel.create({
+//         result: !extraData.some(branch =>
+//           branch.results.some(r => r.result === false)
+//         ),
+//         Ident: "MercadoPago",
+//         extraData,
+//         platformId: 8,
+//         type: "Special"
+//       });
+//   } catch (error) {
+//     Log.saveError(error, { 
+//       message: `Branch OpenClose Error: MercadoPago checkOfflinePOSmercadopago GENERAL`, 
+//       action: 'checkOfflinePOSmercadopago',
+//       platformId: 8,
+//       operation: 'GENERAL'
+//     });
+//   }
+// }
+
+  // [OpenCloseMercadoPago] const scheduleMercadoPagoOffline = '*/1 * * * *';
+
+  // [OpenCloseMercadoPago] const scheduleMercadoPago = '*/20 * * * * *'
+
+  // [OpenCloseMercadoPago] cron.schedule(scheduleMercadoPagoOffline, async () => await ckeckOfflinePOSmercadopago());
+
+  // [OpenCloseMercadoPago]cron.schedule(scheduleMercadoPago, async () => await ckeckOfflinePOSmercadopago())
+
+          Log.saveError(null, { message: 'Failed to get token from Cloud',  platform: 'MercadoPago' });
+
+          Log.saveError(null, { message: 'Failed get user id order on resend confirm order', platform: 'MercadoPago' });
+
+          Log.saveError(null, { message: 'Missing MercadoPago token URL in platform credentials', platform: 'MercadoPago' });
+
+          tokenMercadoPagoCloud = await axios.get(urlTokenMercadoPagoCloud, headersToken);
+          } catch (err) {
+          Log.saveError(null, { message: 'Error fetching token from Cloud', platform: 'MercadoPago' });
+
+          Log.saveError(null, { message: 'Failed to get MercadoPago token from Cloud', platform: 'MercadoPago' });
+
+          Log.saveError(null, { message: 'Error decrypt token', platform: 'MercadoPago' });
+
+          Log.saveError(null, { message: 'Failed to decrypt MercadoPago token from Cloud', platform: 'MercadoPago' });
+          throw 'Failed to decrypt MercadoPago token from Cloud'
+
+            Log.saveError(null, { message: 'Failed to get token from Cloud', platform: 'MercadoPago' });
+
+            Log.saveError(null, { message: 'Failed get user id order on resend confirm order', platform: 'MercadoPago' });
+
+            Log.saveError(null, { message: 'Missing MercadoPago token URL in platform credentials', platform: 'MercadoPago' });
+
+            Log.saveError(null, { message: 'Failed to get MercadoPago token from Cloud', platform: 'MercadoPago' });
+
+            Log.saveError(null, { message: 'Error decrypt token', platform: 'MercadoPago' });
+
+            Log.saveError(null, { message: 'Failed to decrypt MercadoPago token from Cloud', platform: 'MercadoPago' });
+
+              result.push({ platform: 1, closed: false });
+
+              result.push({ platform: 4, closed: false })//poner online offline
+
+          // Obtener el nombre de la cadena usando el ObjectId
+          const chainModel = require('../models/chain');</code></pre>
+            </div>
+
+            <div class="code-container">
+                <div class="code-label label-after">Código DESPUÉS</div>
+                <pre><code>import DeliveryTimeModel from '../models/deliveryTime';
+import model from '../models/branch';
+import orderModel from '../models/order';
+import chainModel from '../models/chain';
+import rejectPeyaModel from '../models/rejectPeya';
+
+async function ckeckOfflinePOSmercadopago() {
+  try {
+    let extraData = [];
+    const dateNow = new Date();
+    const dateMinuteLess = new Date(dateNow.getTime() - (1 * 60 * 1000)); // 1 minute less
+
+    let branchesToClose = await model.find({
+      platforms: {
+        $elemMatch: {
+          platform: new mongoose.Types.ObjectId(mercadopagoId),
+          isActive: true
+        }
+      },
+      lastGetNews: { $lt: dateMinuteLess },
+      alreadyClosedMercadoPago: { $in: [null, false] }
+    }).populate("chain");
+    let branchesToOpen = await model.find({
+      platforms: {
+        $elemMatch: {
+          platform: new mongoose.Types.ObjectId(mercadopagoId),
+          isActive: true
+        }
+      },
+      lastGetNews: { $gt: dateMinuteLess },
+      alreadyClosedMercadoPago: { $in: [null, true] }
+    }).populate("chain");
+
+    const tokenAPICloud = await Token.getToken();
+    if (!tokenAPICloud) {
+      Log.saveError(null, { message: 'SmartCloud Communication Error: MercadoPago -C Failed to get token from Cloud', platform: 'MercadoPago' });
+      throw new Error('Failed to get token from Cloud');
+    }
+     
+    for(let tenant of tenants){
+      console.log(`for of tenat: ${tenant.name}`);
+      let branchesToClose2 = branchesToClose.filter( r => r.chain?.chain.trim().toLowerCase() === tenant.name.trim().toLocaleLowerCase());
+      let branchesToOpen2  = branchesToOpen.filter( r => r.chain?.chain.trim().toLowerCase() === tenant.name.trim().toLocaleLowerCase());
+
+      if (branchesToClose2.length === 0 && branchesToOpen2.length === 0) {
+        console.log('Continue tenant', tenant.name, 'matches close', branchesToClose2.length, 'open', branchesToOpen2.length);
+        continue;
+      }
+
+      const closePromises = branchesToClose2.map(async (branch) => {
+        const branchId = branch.branchId;
+        const branchData = { branchId, results: [] };
+        const branchReference = branch.platforms.find(pm => pm.platform == mercadopagoId).branchReference;
+        const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+   
+        const mercadoPagoPlatform = branch.platforms?.find(p => p.platform?.toString() === mercadopagoId?.toString());
+ 
+        let user_id = mercadoPagoPlatform?.mercadoPagoUserId;
+        const headersToken = {
+          headers: {
+            'Authorization': `Bearer ${tokenAPICloud}`,
+            'TraceKey': '1234',
+            'TenantId': tenant.tenantId
+          }
+        }
+ 
+        let urlTokenMercadoPagoCloud = `${mercadoPagoGetToken_uri}${user_id}`;    
+        let tokenMercadoPagoCloud;
+        let decryptedTokenMercadoPagoCloud;
+        try {
+          tokenMercadoPagoCloud = await axios.get(urlTokenMercadoPagoCloud, headersToken);
+          if (tokenMercadoPagoCloud?.status === 204) {
+            Log.saveError(null, { 
+              message: `SmartCloud Communication Error: MercadoPago -C No Content (204) fetching token from Cloud [branchId: ${branchId}] [user_id: ${user_id}]`,  
+              error: {
+                message: 'No Content (204)',
+                customDataAfter: {
+                  action: 'getCloudToken',
+                  platformId: 8,
+                  branch: {
+                    branchId: branchId,
+                    user_id: user_id
+                  },
+                  request: {
+                    url: urlTokenMercadoPagoCloud,
+                    method: 'GET'
+                  },
+                  response: {
+                    status: 204,
+                    data: null
+                  }
+                }
+              },
+              platform: 'MercadoPago' 
+            });            
+          }
+          decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.data?.token);
+        } catch (err) {
+          Log.saveError(err, { 
+            message: `SmartCloud Communication Error: MercadoPago -C Error fetching token from Cloud [branchId: ${branchId}] [user_id: ${user_id}]`,  
+            error: {
+              message: err?.message,
+              customDataAfter: {
+                action: 'getCloudToken',
+                platformId: 8,
+                branch: {
+                  branchId: branchId,
+                  user_id: user_id
+                },
+                request: {
+                  url: urlTokenMercadoPagoCloud,
+                  method: 'GET'
+                },
+                response: {
+                  status: err?.response?.status,
+                  data: err?.response?.data
+                }
+              }
+            },
+            platform: 'MercadoPago' 
+          });
+        }       
+        const headersConfig = {
+          headers: {
+            'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+          }
+        }
+
+        await Promise.allSettled(branchReferences.map(async (store_id) => {
+          let body = {
+            "status": "paused"
+          };
+   
+          const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+   
+          try {
+            await axios.put(urlAvailability, body, headersConfig);
+            branchData.results.push({
+              branchReference: store_id,
+              type: "Closed",
+              result: true
+            });
+          } catch (error) {
+            console.log(error);
+            branchData.results.push({
+              branchReference: store_id,
+              type: "Closed",
+              result: false
+            });
+            Log.saveError(error, { 
+            message: `Branch OpenClose Error: MercadoPago checkOfflinePOSmercadopago CLOSE ${branchId}`, 
+            action: 'checkOfflinePOSmercadopago',
+            platformId: 8,
+            operation: 'CLOSE',
+            branch: {
+                branchReferenceId: store_id,
+                user_id: user_id,
+                branchId: branchId
+            },
+            request: {
+                url: urlAvailability,
+                method: 'POST',
+                body: body,
+                header: headersConfig
+            },
+            response: {
+                status: error?.response?.status,
+                data: error?.response?.data
+            }
+            });
+   
+          }
+        }));
+        await model.findByIdAndUpdate(branch.id, { alreadyClosedMercadoPago: true });
+        console.log('alreadyClosedMercadoPago: true updated');
+        extraData.push(branchData);
+      });
+   
+      const openPromises = branchesToOpen2.map(async (branch) => {
+        const branchId = branch.branchId;
+        const branchData = { branchId, results: [] };
+        const branchReference = branch.platforms.find(pm => pm.platform == mercadopagoId).branchReference;
+        const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+        const mercadoPagoPlatform = branch.platforms?.find(p => p.platform?.toString() === mercadopagoId?.toString());    
+        let user_id = mercadoPagoPlatform?.mercadoPagoUserId;
+        const headersToken = {
+          headers: {
+            'Authorization': `Bearer ${tokenAPICloud}`,
+            'TraceKey': '1234',
+            'TenantId': tenant.tenantId
+          }
+        }
+        let urlTokenMercadoPagoCloud = `${mercadoPagoGetToken_uri}${user_id}`;    
+        let tokenMercadoPagoCloud;
+        let decryptedTokenMercadoPagoCloud;
+        try {
+          tokenMercadoPagoCloud = await axios.get(urlTokenMercadoPagoCloud, headersToken);
+          if (tokenMercadoPagoCloud?.status === 204) {
+            Log.saveError(null, { 
+              message: `SmartCloud Communication Error: MercadoPago -C No Content (204) fetching token from Cloud [branchId: ${branchId}] [user_id: ${user_id}]`,  
+              error: {
+                message: 'No Content (204)',
+                customDataAfter: {
+                  action: 'getCloudToken',
+                  platformId: 8,
+                  branch: {
+                    branchId: branchId,
+                    user_id: user_id
+                  },
+                  request: {
+                    url: urlTokenMercadoPagoCloud,
+                    method: 'GET'
+                  },
+                  response: {
+                    status: 204,
+                    data: null
+                  }
+                }
+              },
+              platform: 'MercadoPago' 
+            });            
+          }
+          decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.data?.token);
+        } catch (err) {
+          Log.saveError(err, { 
+            message: `SmartCloud Communication Error: MercadoPago -C Error fetching token from Cloud [branchId: ${branchId}] [user_id: ${user_id}]`,  
+            error: {
+              message: err?.message,
+              customDataAfter: {
+                action: 'getCloudToken',
+                platformId: 8,
+                branch: {
+                  branchId: branchId,
+                  user_id: user_id
+                },
+                request: {
+                  url: urlTokenMercadoPagoCloud,
+                  method: 'GET'
+                },
+                response: {
+                  status: err?.response?.status,
+                  data: err?.response?.data
+                }
+              }
+            },
+            platform: 'MercadoPago' 
+          });
+        }
+     
+        if (!decryptedTokenMercadoPagoCloud) {
+          Log.saveError(null, { message: `Platform Validation Error: MercadoPago -C Failed to decrypt MercadoPago token from Cloud [branchId: ${branchId}] [user_id: ${user_id}]`, platform: 'MercadoPago' });
+        }
+     
+        const headersConfig = {
+          headers: {
+            'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+          }
+        }
+
+        await Promise.allSettled(branchReferences.map(async (store_id) => {
+          let body = {
+            "status": "enabled"
+          };
+   
+          const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+          try {
+            await axios.put(urlAvailability, body, headersConfig);  
+            branchData.results.push({
+              branchReference: store_id,
+              type: "Open",
+              result: true
+            });
+          } catch (error) {
+            branchData.results.push({
+              branchReference: store_id,
+              type: "Open",
+              result: false
+            });
+            Log.saveError(error, { 
+            message: `Branch OpenClose Error: MercadoPago checkOfflinePOSmercadopago OPEN ${branchId}`, 
+            action: 'checkOfflinePOSmercadopago',
+            platformId: 8,
+            operation: 'OPEN',
+            branch: {
+                branchReferenceId: store_id,
+                user_id: user_id,
+                branchId: branchId
+            },
+            request: {
+                url: urlAvailability,
+                method: 'POST',
+                body: body,
+                header: headersConfig
+            },
+            response: {
+                status: error?.response?.status,
+                data: error?.response?.data
+            }
+            });
+          }
+        }));
+        await model.findByIdAndUpdate(branch.id, { alreadyClosedMercadoPago: false });
+        extraData.push(branchData);
+      });
+
+      await Promise.allSettled([...closePromises, ...openPromises]);
+    }
+
+    if (extraData.length > 0)
+      await openClosedLogModel.create({
+        result: !extraData.some(branch =>
+          branch.results.some(r => r.result === false)
+        ),
+        Ident: "MercadoPago",
+        extraData,
+        platformId: 8,
+        type: "Special"
+      });
+  } catch (error) {
+    Log.saveError(error, { 
+      message: `Branch OpenClose Error: MercadoPago checkOfflinePOSmercadopago GENERAL`, 
+      action: 'checkOfflinePOSmercadopago',
+      platformId: 8,
+      operation: 'GENERAL'
+    });
+  }
+}
+
+  const scheduleMercadoPagoOffline = '*/1 * * * *';
+
+  cron.schedule(scheduleMercadoPagoOffline, async () => await ckeckOfflinePOSmercadopago());
+
+          Log.saveError(null, { message: 'SmartCloud Communication Error: MercadoPago -C Failed to get token from Cloud', platform: 'MercadoPago' });
+
+          Log.saveError(null, { message: `Platform Validation Error: MercadoPago -C Missing user_id in branch platform config [branchId: ${orderInfo.branchId}]`, platform: 'MercadoPago' });
+
+          Log.saveError(null, { message: `Platform Validation Error: MercadoPago -C Missing MercadoPago token URL in platform credentials [branchId: ${orderInfo.branchId}] [user_id: ${user_id}]`, platform: 'MercadoPago' });
+
+          tokenMercadoPagoCloud = await axios.get(urlTokenMercadoPagoCloud, headersToken);            
+          if (tokenMercadoPagoCloud?.status === 204) {
+            Log.saveError(null, { 
+              message: `SmartCloud Communication Error: MercadoPago -C No Content (204) fetching token from Cloud [branchId: ${orderInfo.branchId}] [user_id: ${user_id}]`,  
+              error: {
+                message: 'No Content (204)',
+                customDataAfter: {
+                  action: 'getCloudToken',
+                  platformId: 8,
+                  branch: {
+                    branchId: orderInfo.branchId,
+                    user_id: user_id
+                  },
+                  request: {
+                    url: urlTokenMercadoPagoCloud,
+                    method: 'GET'
+                  },
+                  response: {
+                    status: 204,
+                    data: null
+                  }
+                }
+              },
+              platform: 'MercadoPago' 
+            });            
+          }
+          } catch (err) {
+          Log.saveError(err, { 
+            message: `SmartCloud Communication Error: MercadoPago -C Error fetching token from Cloud [branchId: ${orderInfo.branchId}] [user_id: ${user_id}]`,  
+            error: {
+              message: err?.message,
+              customDataAfter: {
+                action: 'getCloudToken',
+                platformId: 8,
+                branch: {
+                  branchId: orderInfo.branchId,
+                  user_id: user_id
+                },
+                request: {
+                  url: urlTokenMercadoPagoCloud,
+                  method: 'GET'
+                },
+                response: {
+                  status: err?.response?.status,
+                  data: err?.response?.data
+                }
+              }
+            },
+            platform: 'MercadoPago' 
+          });
+
+          Log.saveError(null, { message: `SmartCloud Communication Error: MercadoPago -C Failed to get MercadoPago token from Cloud [branchId: ${orderInfo.branchId}] [user_id: ${user_id}]`, platform: 'MercadoPago' });</code></pre>
+            </div>
+
+            <div class="conclusion-box">
+                <h3>Conclusión del Archivo</h3>
+                <p>El controlador branch.js experimenta su cambio más significativo: la activación completa de la integración Open/Close con MercadoPago. El código que previamente existía como bloques comentados ahora está activo y mejorado con un sistema de observabilidad de primer nivel.</p>
+            </div>
+        </div>
+
+        <div class="general-conclusion">
+            <h2>Conclusión General</h2>
+            <p>La versión 8.7.0 del Concentrador representa la activación productiva de la integración Open/Close con MercadoPago. Este release activa, reestructura y complementa la funcionalidad con:</p>
+            <ul>
+                <li><strong>Monitoreo automatizado:</strong> Tareas programadas cada minuto para verificar comunicación POS y gestionar disponibilidad.</li>
+                <li><strong>Gestión desde Backoffice:</strong> Soporte completo en getStatus y sendOpen para la plataforma MercadoPago.</li>
+                <li><strong>Robustez técnica:</strong> Validación explícita de estados para PedidosYa y UberEats (eliminando asunciones "por defecto").</li>
+                <li><strong>Excelencia en logs:</strong> Estandarización total de mensajes de error con metadatos contextuales para diagnóstico inmediato.</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 SmartFran Releases. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+</body>
+</html>

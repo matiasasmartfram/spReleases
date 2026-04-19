@@ -14,11 +14,19 @@ skills-lock.json
 
 # Archivos de análisis intermedios (PRIVADO)
 analisis_*.md
+analisis_concentrador_8.6.3.md
+analisis_concentrador_8.6.4.md
+analisis_concentrador_8.6.5.md
+analisis_concentrador_8.6.6.md
 releaseResume.md
 releaseplatform.txt
 
 # Archivos de Confluence generados (PRIVADO)
 confluence_*.txt
+confluence_concentrador_8.6.3.txt
+confluence_concentrador_8.6.4.txt
+confluence_concentrador_8.6.5.txt
+confluence_concentrador_8.6.6.txt
 
 # Cualquier otro .md que no sea parte del release público
 *.md
