@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Release Notes - Platform 10.0.0</title>
+    <style>
+        :root {
+            --primary: #5c6bc0;
+            --secondary: #3949ab;
+            --bg: #f5f7fa;
+            --text: #2c3e50;
+            --card-bg: #ffffff;
+            --accent: #ff4081;
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
+            --del-bg: #4b1818;
+            --add-bg: #1e3a1e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
+        }
+
+        h1, h2, h3 { color: var(--secondary); }
+        header h1 { color: white; margin: 0; }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .meta-item {
+            background: #eef2f7;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .meta-label {
+            display: block;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+
+        .meta-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .diff-container {
+            background: var(--code-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .diff-header {
+            padding: 0.75rem 1rem;
+            background: #333;
+            color: #aaa;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #444;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            color: var(--code-text);
+        }
+
+        .code-title {
+            font-weight: bold;
+            margin-top: 1.5rem;
+            color: var(--primary);
+        }
+
+        .conclusion {
+            background: #e1f5fe;
+            border-left: 5px solid #03a9f4;
+            padding: 1.5rem;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Platform v10.0.0</h1>
+    <p>AWS Task 224 | Release de Modernización e Infraestructura</p>
+</header>
+
+<div class="container">
+    <div class="card">
+        <div class="meta-grid">
+            <div class="meta-item">
+                <span class="meta-label">Versión</span>
+                <span class="meta-value">10.0.0</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Fecha</span>
+                <span class="meta-value">22/04/2026</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">AWS Task</span>
+                <span class="meta-value">224</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Estado</span>
+                <span class="meta-value">Desplegado</span>
+            </div>
+        </div>
+
+        <h2>Resumen del Release</h2>
+        <p>Este release marca un hito importante en la infraestructura de SmartPedidos. Se ha realizado una migración completa de los SDKs de AWS a la versión 3 (v3), se ha actualizado el runtime a Node 20 y se ha optimizado el entorno de contenedores para una gestión más robusta de certificados SSL.</p>
+    </div>
+
+    <div class="card">
+        <h2>Modificaciones Técnicas Clave</h2>
+
+        <div class="feature">
+            <h3>1. Actualización de Runtime y Gestión de Certificados</h3>
+            <p>Se actualiza la imagen base de Node 14 a Node 20.20-alpine. Además, se añade soporte nativo para certificados CA de Sectigo y se configura la variable de entorno <code>NODE_EXTRA_CA_CERTS</code> para asegurar que las conexiones HTTPS utilicen el bundle del sistema.</p>
+            
+            <div class="code-title">Archivo: api/Dockerfile</div>
+            
+            <div class="diff-container">
+                <div class="diff-header">Código ANTES</div>
+                <pre>FROM node:14-alpine AS BASE
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install
+COPY . .
+RUN npm run build
+
+#
+# Build stage 2.
+#
+FROM node:14-alpine
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install --only=production
+COPY --from=BASE /usr/src/app/dist ./dist
+ENTRYPOINT ["npm", "run"]
+CMD ["serve"]</pre>
+            </div>
+
+            <div class="diff-container" style="border-left: 5px solid #4caf50;">
+                <div class="diff-header">Código DESPUÉS</div>
+                <pre>FROM node:20.20-alpine AS base
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install
+COPY . .
+RUN npm run build
+
+#
+# Build stage 2.
+#
+FROM node:20.20-alpine
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install --only=production
+COPY --from=BASE /usr/src/app/dist ./dist
+RUN apk add --no-cache ca-certificates
+COPY sectigo-fullchain.pem /usr/local/share/ca-certificates/sectigo.crt
+RUN update-ca-certificates
+# 💡 Esta línea es la que faltaba — le dice a Node.js que use el bundle del sistema
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+ENTRYPOINT ["npm", "run"]
+CMD ["serve"]</pre>
+            </div>
+        </div>
+
+        <div class="feature">
+            <h3>2. Migración a AWS SDK v3</h3>
+            <p>Se migra de la librería monolítica <code>aws-sdk</code> (v2) a clientes modulares de la versión 3. Se implementa el patrón de comandos (Command Pattern) para SQS y SSM.</p>
+            
+            <div class="code-title">Archivo: api/src/platforms/provider/aws.js</div>
+            
+            <div class="diff-container">
+                <div class="diff-header">Código ANTES</div>
+                <pre>import AWS from 'aws-sdk';
+
+class Aws {
+  constructor() {
+    AWS.config.update({
+      region: config.AWS.REGION,
+      accessKeyId: config.AWS.accessKeyId,
+      secretAccessKey:  config.AWS.secretAccessKey
+    });
+  }
+
+  retriveKey({ key = requiredParam('key') }) {
+    const ssm = new AWS.SSM({ credentials: null });
+    return ssm
+      .getParameters({ Names: [key] })
+      .promise()
+      .then((res) => res.Parameters.pop())
+      .then((param) => param.Value);
+  }
+
+  async pushNewToQueue(newOrder) {
+    const sqs = new AWS.SQS({ region: config.AWS.SQS.REGION, credentials: null });
+    const params = { MessageBody: JSON.stringify(newOrder), ... };
+    return sqs.sendMessage(params).promise();
+  }
+}</pre>
+            </div>
+
+            <div class="diff-container" style="border-left: 5px solid #4caf50;">
+                <div class="diff-header">Código DESPUÉS</div>
+                <pre>import { SQSClient, SendMessageCommand, GetQueueAttributesCommand } from '@aws-sdk/client-sqs';
+import { SSMClient, GetParametersCommand } from '@aws-sdk/client-ssm';
+
+class Aws {
+  constructor() {
+    this.sqsClient = new SQSClient({ region: config.AWS.SQS.REGION });
+    this.ssmClient = new SSMClient({ region: config.AWS.REGION });
+  }
+
+  async retriveKey({ key = requiredParam('key') }) {
+    const command = new GetParametersCommand({ Names: [key] });
+    const res = await this.ssmClient.send(command);
+    const param = res.Parameters.pop();
+    return param.Value;
+  }
+
+  async pushNewToQueue(newOrder) {
+    const params = {
+      MessageBody: JSON.stringify(newOrder),
+      MessageGroupId: newOrder._id.toString(),
+      MessageDeduplicationId: deduplicationIdGen(newOrder._id.toString(), newOrder.branchId.toString())
+    };
+    const command = new SendMessageCommand(params);
+    return this.sqsClient.send(command);
+  }
+}</pre>
+            </div>
+        </div>
+
+        <div class="feature">
+            <h3>3. Apertura de Endpoints para Consultas Logísticas</h3>
+            <p>Se permite el método <code>GET</code> para las rutas de órdenes, permitiendo consultas de estado logístico sin restricciones de seguridad innecesarias.</p>
+            
+            <div class="code-title">Archivo: api/src/app.js</div>
+            
+            <div class="diff-container">
+                <div class="diff-header">Código ANTES</div>
+                <pre>const exceptions = [
+  ...
+  { url: /\/order\/?.*/, methods: ['POST'] },
+  { url: /\/remoteId\/?.*/, methods: ['PUT'] },
+];</pre>
+            </div>
+
+            <div class="diff-container" style="border-left: 5px solid #4caf50;">
+                <div class="diff-header">Código DESPUÉS</div>
+                <pre>const exceptions = [
+  ...
+  { url: /\/order\/?.*/, methods: ['GET', 'POST'] },
+  { url: /\/remoteId\/?.*/, methods: ['PUT'] },
+];</pre>
+            </div>
+        </div>
+
+        <div class="feature">
+            <h3>4. Estandarización de Sintaxis (ESM)</h3>
+            <p>Como parte de la modernización del runtime, se reemplaza la carga de módulos mediante <code>require</code> por la sintaxis de importación de ES6 en el punto de entrada de la aplicación.</p>
+            
+            <div class="code-title">Archivo: api/src/index.js</div>
+            
+            <div class="diff-container">
+                <div class="diff-header">Código ANTES</div>
+                <pre>import newsModel from './models/news'; 
+import configsModel from './models/configs'; 
+
+const axios = require('axios');
+
+async function start() {
+  axios.defaults.timeout = 20000; // 20 segundos</pre>
+            </div>
+
+            <div class="diff-container" style="border-left: 5px solid #4caf50;">
+                <div class="diff-header">Código DESPUÉS</div>
+                <pre>import newsModel from './models/news'; 
+import configsModel from './models/configs'; 
+import axios from 'axios';
+
+async function start() {
+  axios.defaults.timeout = 20000; // 20 segundos</pre>
+            </div>
+        </div>
+        <div class="feature">
+            <h3>5. Automatización de Despliegue vía CLI</h3>
+            <p>Se introducen scripts de Bash (<code>deploy-staging.sh</code> y <code>deploy-prod.sh</code>) para reemplazar las pipelines de CI/CD anteriores. Estos scripts centralizan el flujo de validación, compilación y actualización de servicios en AWS ECS.</p>
+            
+            <div class="code-title">Archivo: deploy-prod.sh</div>
+            
+            <div class="diff-container">
+                <div class="diff-header">Código de Automatización</div>
+                <pre># Login ECR
+$(aws ecr get-login --profile ${PROFILE} --no-include-email --region us-east-2)
+
+# Build multitag
+docker build -t ${ECR_REPOSITORY}/${PROJ_IMG}:${BUILD_TAG} ./api/
+
+# Actualización ECS
+envsubst < container-definitions-prd.json > ecs-container-definitions.json
+aws ecs update-service --cluster smartfran-pedidos-production --service ... --force-new-deployment</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="card conclusion">
+        <h2>Conclusión General</h2>
+        <p>El <strong>Release 10.0.0</strong> constituye una redefinición estratégica de la infraestructura de SmartPedidos Platform. Se han consolidado tres pilares fundamentales:</p>
+        <ul style="color: #455a64; font-size: 0.95rem;">
+            <li><strong>Modernización:</strong> Transición a Node 20 y AWS SDK v3 para un rendimiento optimizado y carga modular.</li>
+            <li><strong>Seguridad:</strong> Gestión robusta de certificados CA Sectigo para handshakes SSL garantizados.</li>
+            <li><strong>Control Operativo:</strong> Implementación de flujos de despliegue manual vía CLI para mayor visibilidad y auditoría.</li>
+        </ul>
+        <p>Este salto de versión asienta una base tecnológica robusta capaz de soportar la escalabilidad y las exigencias del ecosistema logístico de SmartPedidos para los próximos años.</p>
+    </div>
+</div>
+
+<footer>
+    SmartPedidos Platform Team - 2026
+</footer>
+
+</body>
+</html>

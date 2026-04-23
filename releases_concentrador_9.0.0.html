@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Release Notes - Concentrador 9.0.0 (Upgrade Integral)</title>
+    <style>
+        :root {
+            --primary: #1b5e20;
+            --secondary: #2e7d32;
+            --accent: #4caf50;
+            --bg: #f5f5f5;
+            --text: #212121;
+            --card-bg: #ffffff;
+            --code-bg: #1e1e1e;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: -3rem auto 3rem;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+        }
+
+        h1, h2, h3 { margin-bottom: 1rem; }
+        .tag {
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: #f1f8e9;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .diff-box {
+            background: var(--code-bg);
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            border-top: 4px solid var(--accent);
+        }
+
+        .file-path {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-top: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .cleanup-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cleanup-list li {
+            padding: 0.5rem 0.5rem 0.5rem 2rem;
+            position: relative;
+            color: #d32f2f;
+            font-family: monospace;
+        }
+
+        .cleanup-list li::before {
+            content: "✘";
+            position: absolute;
+            left: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem;
+            color: #616161;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Concentrador v9.0.0</h1>
+    <p>Modernización Estructural & Depuración de Infraestructura</p>
+    <div style="margin-top: 1rem;">
+        <span class="tag">Major Update</span>
+        <span class="tag">Node 20</span>
+        <span class="tag">AWS SDK v3</span>
+    </div>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Visión General</h2>
+        <p>El Release 9.0.0 constituye una actualización mayor del Concentrador, centrada en la eficiencia operativa y la modernización del stack tecnológico. Se ha migrado el runtime a Node 20, se han actualizado las dependencias core a sus versiones más estables y se ha implementado el AWS SDK v3 para una gestión granular de recursos cloud.</p>
+        
+        <div class="grid">
+            <div class="stat-card">
+                <strong>Runtime</strong>
+                <div>Node 20.20-alpine</div>
+            </div>
+            <div class="stat-card">
+                <strong>Middleware</strong>
+                <div>Express-JWT v8.5.1</div>
+            </div>
+            <div class="stat-card">
+                <strong>Database</strong>
+                <div>Mongoose v7.8.7</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Detalles de Implementación</h2>
+
+        <!-- DOCKERFILE -->
+        <div class="file-path">Archivo: api/Dockerfile (Upgrade Node 20)</div>
+        <div class="diff-box">
+<pre>-FROM node:14-alpine AS BASE
++FROM node:20.20-alpine AS base
+
+-RUN npm install --only=production
+-COPY --from=BASE /usr/src/app/dist ./dist
++COPY --from=base /usr/src/app/package*.json .
++RUN npm install --only=production
++COPY --from=base /usr/src/app/dist ./dist</pre>
+        </div>
+
+        <!-- APP.JS -->
+        <div class="file-path">Archivo: api/src/app.js (Seguridad JWT)</div>
+        <div class="diff-box">
+<pre>-import jwt from 'express-jwt';
++import { expressjwt } from 'express-jwt';
+
+-app.use(jwt({ secret: settings.token.secret }).unless({ path: exceptions }));
++app.use(expressjwt({ secret: settings.token.secret, algorithms: ['HS256'] }).unless({ path: exceptions }));</pre>
+        </div>
+
+        <!-- AWS.JS -->
+        <div class="file-path">Archivo: api/src/provider/aws.js (SDK v3 Migración)</div>
+        <div class="diff-box">
+<pre>-    const sqs = new AWS.SQS({ ... });
+-    return sqs.createQueue({ ... }).promise();
+
++    const sqs = new SQSClient({ region: REGION });
++    return sqs.send(new CreateQueueCommand({
++      QueueName: queue,
++      Attributes: attributes
++    }));</pre>
+        </div>
+
+        <!-- PACKAGE.JSON -->
+        <div class="file-path">Archivo: api/package.json (Dependencias)</div>
+        <div class="diff-box">
+<pre>"dependencies": {
++   "@aws-sdk/client-sqs": "^3.0.0",
++   "@aws-sdk/client-ssm": "^3.0.0",
+-   "aws-sdk": "^2.789.0",
+-   "mongoose": "~5.10.15",
++   "mongoose": "~7.8.7",
+}</pre>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="color: #d32f2f;">Depuración de Infraestructura (Cleanup)</h2>
+        <p>Se ha realizado un desmantelamiento masivo de archivos y herramientas obsoletas para reducir la superficie de ataque y simplificar el mantenimiento.</p>
+        <ul class="cleanup-list">
+            <li>.gitlab-ci.yml (Eliminado)</li>
+            <li>Jenkinsfile (Eliminado)</li>
+            <li>api/test/functional/* (Suite Python/Behave eliminada)</li>
+            <li>api/seeders/* (Helpers de datos legacy eliminados)</li>
+            <li>api/sonar-project.properties (Eliminado)</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Nueva Estrategia de Despliegue (CLI)</h2>
+        <p>Se introducen scripts CLI robustos para orquestar los entornos de Staging y Producción, incorporando validación de ramas y etiquetado múltiple (Tagging) para auditoría.</p>
+        <div class="diff-box">
+<pre># deploy-prod.sh snippet
+docker build \
+        -t ${ECR_REPOSITORY}/${PROJ_IMG}:${BUILD_TAG} \
+        -t ${ECR_REPOSITORY}/${PROJ_IMG}:${BUILD_TAG}-${REV_PARSE} \
+        ./api/
+
+envsubst < container-definitions-prd.json > ecs-container-definitions.json</pre>
+        </div>
+    </div>
+
+    <div class="card" style="border-left: 8px solid var(--secondary);">
+        <h2>Conclusión General</h2>
+        <p>El Concentrador 9.0.0 consolida la modernización técnica del servicio, eliminando años de deuda técnica y estandarizando el ciclo de vida de desarrollo bajo estándares modernos de seguridad y performance.</p>
+    </div>
+</div>
+
+<footer>
+    SmartPedidos Engineering - 2026
+</footer>
+
+</body>
+</html>
