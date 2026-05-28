@@ -3,237 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Release Notes - Concentrador 9.0.0 (Upgrade Integral)</title>
+    <title>Notas de Release: Concentrador 9.0.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
         :root {
-            --primary: #1b5e20;
-            --secondary: #2e7d32;
-            --accent: #4caf50;
-            --bg: #f5f5f5;
-            --text: #212121;
-            --card-bg: #ffffff;
-            --code-bg: #1e1e1e;
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
+            padding: 2em;
+            line-height: 1.7;
         }
 
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-        }
+        .container { max-width: 960px; margin: 0 auto; }
 
-        .container {
-            max-width: 1100px;
-            margin: -3rem auto 3rem;
-            padding: 0 1rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid #e0e0e0;
-        }
-
-        h1, h2, h3 { margin-bottom: 1rem; }
-        .tag {
-            background: var(--accent);
-            color: white;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .stat-card {
-            background: #f1f8e9;
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid #c8e6c9;
-        }
-
-        .diff-box {
-            background: var(--code-bg);
-            color: #d4d4d4;
-            padding: 1.5rem;
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
             border-radius: 8px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.9rem;
-            margin: 1.5rem 0;
-            overflow-x: auto;
-            border-top: 4px solid var(--accent);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-        .file-path {
-            font-weight: bold;
-            color: var(--secondary);
-            margin-top: 2rem;
-            font-size: 1.1rem;
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
         }
 
-        .cleanup-list {
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
             list-style: none;
-            padding: 0;
         }
 
-        .cleanup-list li {
-            padding: 0.5rem 0.5rem 0.5rem 2rem;
-            position: relative;
-            color: #d32f2f;
-            font-family: monospace;
-        }
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
 
-        .cleanup-list li::before {
-            content: "✘";
-            position: absolute;
-            left: 0.5rem;
-        }
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .component-body h5 { margin-top: 1.5em; font-size: 1.1em; font-weight: 700; }
 
-        footer {
-            text-align: center;
-            padding: 4rem;
-            color: #616161;
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            overflow-wrap: break-word !important;
+            background-color: #2d2d2d;
+            color: #ccc;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Concentrador 9.0.0</h1>
+            <p>Modernización técnica del servicio: Node 20, AWS SDK v3 y desmantelamiento de infraestructura legacy.</p>
+        </header>
 
-<header>
-    <h1>Concentrador v9.0.0</h1>
-    <p>Modernización Estructural & Depuración de Infraestructura</p>
-    <div style="margin-top: 1rem;">
-        <span class="tag">Major Update</span>
-        <span class="tag">Node 20</span>
-        <span class="tag">AWS SDK v3</span>
-    </div>
-</header>
-
-<div class="container">
-    <div class="card">
-        <h2>Visión General</h2>
-        <p>El Release 9.0.0 constituye una actualización mayor del Concentrador, centrada en la eficiencia operativa y la modernización del stack tecnológico. Se ha migrado el runtime a Node 20, se han actualizado las dependencias core a sus versiones más estables y se ha implementado el AWS SDK v3 para una gestión granular de recursos cloud.</p>
-        
-        <div class="grid">
-            <div class="stat-card">
-                <strong>Runtime</strong>
-                <div>Node 20.20-alpine</div>
-            </div>
-            <div class="stat-card">
-                <strong>Middleware</strong>
-                <div>Express-JWT v8.5.1</div>
-            </div>
-            <div class="stat-card">
-                <strong>Database</strong>
-                <div>Mongoose v7.8.7</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Detalles de Implementación</h2>
-
-        <!-- DOCKERFILE -->
-        <div class="file-path">Archivo: api/Dockerfile (Upgrade Node 20)</div>
-        <div class="diff-box">
-<pre>-FROM node:14-alpine AS BASE
-+FROM node:20.20-alpine AS base
-
--RUN npm install --only=production
--COPY --from=BASE /usr/src/app/dist ./dist
-+COPY --from=base /usr/src/app/package*.json .
-+RUN npm install --only=production
-+COPY --from=base /usr/src/app/dist ./dist</pre>
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 9.0.0</p>
+            <p><b>Fecha de Despliegue:</b> 22/04/2026</p>
+            <p><b>AWS Task:</b> 288</p>
+            <p><b>Commits:</b> b90dcefc17f4392bbf31e22ab8db0549d13d9285</p>
         </div>
 
-        <!-- APP.JS -->
-        <div class="file-path">Archivo: api/src/app.js (Seguridad JWT)</div>
-        <div class="diff-box">
-<pre>-import jwt from 'express-jwt';
-+import { expressjwt } from 'express-jwt';
+        <section id="summary" class="service-section">
+            <h2>Resumen General de la Versión</h2>
+            <p>Este release marca un punto de inflexión estructural en el Concentrador. Se realiza la migración masiva a Node 20, la transición al AWS SDK v3, la actualización del middleware de seguridad express-jwt, y el desmantelamiento total de la infraestructura de CI/CD legacy en favor de un modelo de orquestación manual via CLI con multitagging de imágenes.</p>
+        </section>
 
--app.use(jwt({ secret: settings.token.secret }).unless({ path: exceptions }));
-+app.use(expressjwt({ secret: settings.token.secret, algorithms: ['HS256'] }).unless({ path: exceptions }));</pre>
-        </div>
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
 
-        <!-- AWS.JS -->
-        <div class="file-path">Archivo: api/src/provider/aws.js (SDK v3 Migración)</div>
-        <div class="diff-box">
-<pre>-    const sqs = new AWS.SQS({ ... });
--    return sqs.createQueue({ ... }).promise();
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/Dockerfile</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Upgrade de Runtime a Node 20</b></p>
+                        <p>Se actualiza la imagen base a node:20.20-alpine, garantizando compatibilidad con las últimas parches de seguridad y mejoras de rendimiento del motor V8. Se mantiene el esquema de build multi-etapa para mantener la imagen de producción ligera.</p>
+                    </div>
 
-+    const sqs = new SQSClient({ region: REGION });
-+    return sqs.send(new CreateQueueCommand({
-+      QueueName: queue,
-+      Attributes: attributes
-+    }));</pre>
-        </div>
+                    <h4>Código ANTES</h4>
+                    <pre class="language-dockerfile"><code>FROM node:14-alpine AS BASE
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install
+COPY . .
+RUN npm run build
 
-        <!-- PACKAGE.JSON -->
-        <div class="file-path">Archivo: api/package.json (Dependencias)</div>
-        <div class="diff-box">
-<pre>"dependencies": {
-+   "@aws-sdk/client-sqs": "^3.0.0",
-+   "@aws-sdk/client-ssm": "^3.0.0",
--   "aws-sdk": "^2.789.0",
--   "mongoose": "~5.10.15",
-+   "mongoose": "~7.8.7",
-}</pre>
-        </div>
-    </div>
+FROM node:14-alpine
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install --only=production
+COPY --from=BASE /usr/src/app/dist ./dist</code></pre>
 
-    <div class="card">
-        <h2 style="color: #d32f2f;">Depuración de Infraestructura (Cleanup)</h2>
-        <p>Se ha realizado un desmantelamiento masivo de archivos y herramientas obsoletas para reducir la superficie de ataque y simplificar el mantenimiento.</p>
-        <ul class="cleanup-list">
-            <li>.gitlab-ci.yml (Eliminado)</li>
-            <li>Jenkinsfile (Eliminado)</li>
-            <li>api/test/functional/* (Suite Python/Behave eliminada)</li>
-            <li>api/seeders/* (Helpers de datos legacy eliminados)</li>
-            <li>api/sonar-project.properties (Eliminado)</li>
-        </ul>
-    </div>
+                    <h4>Código DESPUÉS</h4>
+                    <pre class="language-dockerfile"><code>FROM node:20.20-alpine AS base
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install
+COPY . .
+RUN npm run build
 
-    <div class="card">
-        <h2>Nueva Estrategia de Despliegue (CLI)</h2>
-        <p>Se introducen scripts CLI robustos para orquestar los entornos de Staging y Producción, incorporando validación de ramas y etiquetado múltiple (Tagging) para auditoría.</p>
-        <div class="diff-box">
-<pre># deploy-prod.sh snippet
+FROM node:20.20-alpine
+WORKDIR /usr/src/app
+COPY --from=base /usr/src/app/package*.json .
+RUN npm install --only=production
+COPY --from=base /usr/src/app/dist ./dist</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>Actualización exitosa del entorno de ejecución a una versión moderna y soportada de Node.js.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/src/app.js</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Migración de Middleware de Seguridad (express-jwt v8)</b></p>
+                        <p>Actualización mandatoria del middleware de seguridad. La librería cambia su forma de exportación ({ expressjwt }) e indica que requiere especificar explícitamente los algoritmos de firmado, en este caso HS256.</p>
+                    </div>
+
+                    <h4>Código ANTES</h4>
+                    <pre class="language-javascript"><code>import jwt from 'express-jwt';
+
+app.use(jwt({ secret: settings.token.secret }).unless({ path: exceptions }));</code></pre>
+
+                    <h4>Código DESPUÉS</h4>
+                    <pre class="language-javascript"><code>import { expressjwt } from 'express-jwt';
+
+app.use(expressjwt({ secret: settings.token.secret, algorithms: ['HS256'] }).unless({ path: exceptions }));</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>Adaptación del middleware de autenticación a la nueva versión, mejorando la seguridad y compatibilidad.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/package.json</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Actualización de Stack Tecnológico y Dependencias Core</b></p>
+                        <p>Se eliminan las librerías v2 de AWS y se instalan los clientes granulares v3. Además, se realizan upgrades mayores en el motor de base de datos y herramientas de testing.</p>
+                    </div>
+
+                    <h4>Código ANTES</h4>
+                    <pre class="language-json"><code>  &quot;dependencies&quot;: {
+    &quot;aws-sdk&quot;: &quot;^2.789.0&quot;,
+    &quot;axios&quot;: &quot;^0.19.0&quot;,
+    &quot;express-jwt&quot;: &quot;^5.3.1&quot;,
+    &quot;jsonwebtoken&quot;: &quot;^8.3.0&quot;,
+    &quot;mongoose&quot;: &quot;~5.10.15&quot;,
+  },
+  &quot;devDependencies&quot;: {
+    &quot;mocha&quot;: &quot;^6.2.2&quot;,
+  }</code></pre>
+
+                    <h4>Código DESPUÉS</h4>
+                    <pre class="language-json"><code>  &quot;dependencies&quot;: {
+    &quot;@aws-sdk/client-sqs&quot;: &quot;^3.0.0&quot;,
+    &quot;@aws-sdk/client-ssm&quot;: &quot;^3.0.0&quot;,
+    &quot;axios&quot;: &quot;~1.13.5&quot;,
+    &quot;express-jwt&quot;: &quot;^8.5.1&quot;,
+    &quot;jsonwebtoken&quot;: &quot;^9.0.3&quot;,
+    &quot;mongoose&quot;: &quot;~7.8.7&quot;,
+  },
+  &quot;devDependencies&quot;: {
+    &quot;mocha&quot;: &quot;^11.7.5&quot;,
+  }</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>Modernización completa del árbol de dependencias, reduciendo vulnerabilidades y mejorando el rendimiento.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/src/provider/aws.js</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Refactorización a AWS SDK v3 Command Pattern</b></p>
+                        <p>Se elimina el uso de AWS.SQS / AWS.SSM y se adoptan los clientes modulares. El código ahora utiliza el patrón de envío de comandos (.send(new Command(...))), eliminando la necesidad de encadenar .promise().</p>
+                    </div>
+
+                    <h4>Código ANTES (SQS Queue Creation)</h4>
+                    <pre class="language-javascript"><code>    const sqs = new AWS.SQS({
+      region: REGION,
+      credentials: null
+    });
+    return sqs
+      .createQueue({
+        QueueName: queue,
+        Attributes: attributes
+      })
+      .promise();</code></pre>
+
+                    <h4>Código DESPUÉS (SQS Client Command)</h4>
+                    <pre class="language-javascript"><code>    const sqs = new SQSClient({ region: REGION });
+    return sqs.send(new CreateQueueCommand({
+      QueueName: queue,
+      Attributes: attributes
+    }));</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>Migración exitosa al patrón de comandos de AWS SDK v3, logrando un código más modular y preparado para el futuro.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>Desmantelamiento de Infraestructura Legacy</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Eliminación masiva de procesos de CI/CD y Testing Behave/Python</b></p>
+                        <p>Se realiza un &quot;hard cleanup&quot; del repositorio para remover archivos de orquestación que ya no se utilizan en la nueva metodología de trabajo.</p>
+                        <p>* <b>Archivos Eliminados:</b> .gitlab-ci.yml, Jenkinsfile, api/test/functional/*, api/seeders/*, api/sonar-project.properties</p>
+                    </div>
+
+                    <h4>Conclusión del Archivo</h4>
+                    <p>Limpieza profunda de deuda técnica y archivos obsoletos, simplificando el mantenimiento del repositorio.</p>
+                </div>
+            </details>
+
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>deploy-prod.sh y deploy-staging.sh</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Fijación de Metodología de Despliegue CLI y Multitagging</b></p>
+                        <p>Se introducen scripts bash que controlan el ciclo de vida del despliegue, permitiendo etiquetar las imágenes de Docker con alta granularidad (Commit, Rama, Fecha) para garantizar la trazabilidad total en ECR/ECS.</p>
+                    </div>
+
+                    <h4>Código DESPUÉS (deploy-prod.sh - Fragmento)</h4>
+                    <pre class="language-bash"><code># Taggeo múltiple para auditoría logística
 docker build \
         -t ${ECR_REPOSITORY}/${PROJ_IMG}:${BUILD_TAG} \
         -t ${ECR_REPOSITORY}/${PROJ_IMG}:${BUILD_TAG}-${REV_PARSE} \
+        -t ${ECR_REPOSITORY}/${PROJ_IMG}:${BUILD_TAG}-${TIMESTAMP} \
+        -t ${ECR_REPOSITORY}/${PROJ_IMG}:${CURRENT_BRANCH} \
         ./api/
 
-envsubst < container-definitions-prd.json > ecs-container-definitions.json</pre>
-        </div>
+# Registro de Task Definition mediante inyección de variables
+envsubst &lt; container-definitions-prd.json &gt; ecs-container-definitions.json
+aws ecs register-task-definition --cli-input-json file://ecs-container-definitions.json</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>Implementación de un sistema de despliegue robusto, manual y altamente auditable.</p>
+                    </div>
+                </div>
+            </details>
+
+        </section>
+
+        <section id="conclusion" class="service-section">
+            <h2>Conclusión General</h2>
+            <p>El Release 9.0.0 consolida la modernización técnica del Concentrador. Se ha eliminado la fricción de herramientas de CI/CD desactualizadas y scripts de testing legacy, sustituyéndolos por un núcleo moderno en Node 20, una comunicación eficiente con AWS vía SDK v3 y un flujo de despliegue manual pero altamente auditable. La actualización de componentes críticos como Mongoose 7 y express-jwt 8 posiciona al servicio para una escala mayor y mayor seguridad operativa.</p>
+        </section>
     </div>
-
-    <div class="card" style="border-left: 8px solid var(--secondary);">
-        <h2>Conclusión General</h2>
-        <p>El Concentrador 9.0.0 consolida la modernización técnica del servicio, eliminando años de deuda técnica y estandarizando el ciclo de vida de desarrollo bajo estándares modernos de seguridad y performance.</p>
-    </div>
-</div>
-
-<footer>
-    SmartPedidos Engineering - 2026
-</footer>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 </body>
 </html>

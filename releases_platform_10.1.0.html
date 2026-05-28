@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Platform 10.1.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .component-body h5 { margin-top: 1.5em; font-size: 1.1em; font-weight: 700; }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            overflow-wrap: break-word !important;
+            background-color: #2d2d2d;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Platform 10.1.0</h1>
+            <p>Este release introduce un mapeador avanzado para procesar promociones de Rappi que contienen productos a granel, y soluciona múltiples brechas de robustez, control de nulos y tolerancia a fallos en la integración con UberEats.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 10.1.0</p>
+            <p><b>Fecha de Despliegue:</b> 11/05/2026</p>
+            <p><b>AWS Task:</b> 231</p>
+            <p><b>Commits:</b> 33c702e5e0f139383c289a62af6db1d9435ab47b, f6ea44a4b3a76bf3c7376736a03200c02d33950e, 38a0695feba069b1885f069bd1055f775298d373, 2607e7c4237f62f2e8c3a0fd61bd11676a0a20c4, df355206500971271c44883a0a4cdb440d460ea6, edbb1fb10e2ce22cd1a3d9853a60e53ae01954e9, 55b879b12b2f7d7ed9a3fe9ee89f696942ffa7f4, d8012dd641202be4b7e7b8180f2f0053c1e9d647</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General de la Versión</h2>
+            <p>
+                El release Platform 10.1.0 expande la capacidad de integración del backend con los principales agregadores de pedidos. Por una parte, incorpora un procesador inteligente de promociones de Rappi a granel que desglosa automáticamente los subítems y compila sus opciones detalladamente en las notas del ítem. Por otra parte, incrementa drásticamente la estabilidad de la integración con UberEats al implementar resolución por defecto del país de la tienda a nivel de credenciales y rutas HTTP, protección integral frente a datos incompletos de clientes y observabilidad enriquecida de errores mediante try-catch estructurado. Finalmente, agiliza la compilación del Dockerfile y su empaquetado multi-stage, inyectando de forma nativa los certificados SSL para conexiones seguras de red.
+            </p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+
+            <!-- Archivo 1: api/src/controllers/uberEats.js (Consolidado de cambios) -->
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/src/controllers/uberEats.js</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Resolución por defecto de credenciales UberEats (Commit 33c702e y f6ea44a)</b></p>
+                        <p>
+                            Se incorporó una evaluación condicional y posterior simplificación con operador lógico OR al obtener el token de autorización de UberEats en <code>headersConfig</code>. Si el país (<code>req.params.country</code>) en la ruta del webhook viene indefinido, el sistema asigna automáticamente la credencial de <code>'Chile'</code> como fallback de contingencia.
+                        </p>
+                        <p><b>2. Captura, logging y re-lanzamiento obligatorio de excepciones HTTP (Commits 38a0695, 2607e7c y df35520)</b></p>
+                        <p>
+                            Se encapsuló la solicitud Axios que obtiene los datos de la orden en un bloque <code>try/catch</code> con la declaración de la variable en un ámbito léxico correcto. Si ocurre una falla en el llamado HTTP externo, se registran los detalles completos del fallo mediante <code>Log.saveError</code> y se re-lanza el error con <code>throw error</code> para detener la ejecución y alertar a los controladores superiores en vez de proseguir con datos nulos.
+                        </p>
+                    </div>
+
+                    <h4>Código ANTES (Commit 33c702e)</h4>
+                    <pre class="language-javascript"><code>              const headersConfig = {
+                headers: {
+                  'Authorization': `Bearer ${platform.tokenUber[req.params.country]}`,  
+                }
+              };   </code></pre>
+
+                    <h4>Código DESPUÉS (Commit 33c702e)</h4>
+                    <pre class="language-javascript"><code>              const headersConfig = {
+                headers: {
+                  'Authorization': `Bearer ${req.params.country ? platform.tokenUber[req.params.country] : platform.tokenUber['Chile']}`,  
+                }
+              };   </code></pre>
+
+                    <hr />
+
+                    <h4>Código ANTES (Commit f6ea44a)</h4>
+                    <pre class="language-javascript"><code>              const headersConfig = {
+                headers: {
+                  'Authorization': `Bearer ${req.params.country ? platform.tokenUber[req.params.country] : platform.tokenUber['Chile']}`,  
+                }
+              };   </code></pre>
+
+                    <h4>Código DESPUÉS (Commit f6ea44a)</h4>
+                    <pre class="language-javascript"><code>              const headersConfig = {
+                headers: {
+                  'Authorization': `Bearer ${platform.tokenUber[req.params.country] || platform.tokenUber['Chile']}`,
+                }
+              };   </code></pre>
+
+                    <hr />
+
+                    <h4>Código ANTES (Commit 38a0695)</h4>
+                    <pre class="language-javascript"><code>              let uberOrder = await axios.get(urlAvailability, headersConfig);        
+
+              let order = uberOrder.data.order;</code></pre>
+
+                    <h4>Código DESPUÉS (Commit 38a0695)</h4>
+                    <pre class="language-javascript"><code>              try {
+                let uberOrder = await axios.get(urlAvailability, headersConfig);
+              } catch (error) {  
+                Log.saveError(error, { message: 'Falló consulta orden uber', platform: 'UberEats', url: urlAvailability, headers: headersConfig});              
+              }
+
+              let order = uberOrder.data.order;</code></pre>
+
+                    <hr />
+
+                    <h4>Código ANTES (Commit 2607e7c)</h4>
+                    <pre class="language-javascript"><code>              try {
+                let uberOrder = await axios.get(urlAvailability, headersConfig);
+              } catch (error) {  
+                Log.saveError(error, { message: 'Falló consulta orden uber', platform: 'UberEats', url: urlAvailability, headers: headersConfig});              
+              }
+
+              let order = uberOrder.data.order;</code></pre>
+
+                    <h4>Código DESPUÉS (Commit 2607e7c)</h4>
+                    <pre class="language-javascript"><code>              let uberOrder;
+
+              try {
+                  uberOrder = await axios.get(urlAvailability, headersConfig);
+              } catch (error) {  
+                  Log.saveError(error, { 
+                      message: 'Falló consulta orden uber',
+                      platform: 'UberEats',
+                      url: urlAvailability,
+                      headers: headersConfig
+                  });              
+              }
+
+              let order = uberOrder.data.order;</code></pre>
+
+                    <hr />
+
+                    <h4>Código ANTES (Commit df35520)</h4>
+                    <pre class="language-javascript"><code>                  Log.saveError(error, { 
+                      message: 'Falló consulta orden uber',
+                      platform: 'UberEats',
+                      url: urlAvailability,
+                      headers: headersConfig
+                  });              
+              }
+
+              let order = uberOrder.data.order;</code></pre>
+
+                    <h4>Código DESPUÉS (Commit df35520)</h4>
+                    <pre class="language-javascript"><code>                  Log.saveError(error, { 
+                      message: 'Falló consulta orden uber',
+                      platform: 'UberEats',
+                      url: urlAvailability,
+                      headers: headersConfig
+                  }); 
+                  throw error;            
+              }
+
+              let order = uberOrder.data.order;</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>
+                            El controlador principal de UberEats centraliza la captura de excepciones HTTP, asegura la inicialización de variables de respuesta, previene errores de token indefinido al resolver a Chile por defecto, y fuerza la interrupción estructurada de la ingesta en caso de error crítico.
+                        </p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Archivo 2: api/src/routes/uberEats.js -->
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/src/routes/uberEats.js</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Soporte para ruta de webhook UberEats sin parámetro de país (Commit f6ea44a)</b></p>
+                        <p>
+                            Se registró un nuevo endpoint <code>/uber-notification</code> en el router Express que no requiere la especificación del parámetro geográfico <code>:country</code> en la ruta. Esto acomoda los webhooks enviados por Uber de forma directa sin alterar la infraestructura regional y mapea la documentación técnica de Swagger para este caso de uso.
+                        </p>
+                    </div>
+
+                    <h4>Código ANTES</h4>
+                    <pre class="language-javascript"><code>router.route('/uber-notification/:country').post(controller.uberNotification);
+
+module.exports = router;</code></pre>
+
+                    <h4>Código DESPUÉS</h4>
+                    <pre class="language-javascript"><code>router.route('/uber-notification/:country').post(controller.uberNotification);
+
+/**
+ * @swagger
+ * /uberEats/uber-notification:
+ *   post:
+ *     parameters:
+ *       - in: path
+ *         name: country 
+ *         schema:
+ *           type: string  
+ *         description: clientId para ubereats. 
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Notification'
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Endpoint para recibir los pedidos del webhook.
+ *     tags:
+ *       - APIUber
+ *     responses:
+ *       200:
+ *         description: Respuesta exitosa
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PeyaOrderResponse'
+ */
+router.route('/uber-notification').post(controller.uberNotification);
+
+module.exports = router;</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>
+                            El enrutador expone el nuevo webhook unificado de UberEats, incrementando la flexibilidad de integración y garantizando la compatibilidad con solicitudes que omitan el parámetro regional en la ruta.
+                        </p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Archivo 3: api/src/platforms/interfaces/uberEats.js -->
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/src/platforms/interfaces/uberEats.js</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Control preventivo de nulos en datos de clientes de UberEats (Commit edbb1fb)</b></p>
+                        <p>
+                            Se añadieron operadores de encadenamiento opcional (<code>?.</code>) sobre la resolución de las propiedades de nombre de cliente <code>client?.name?.display_name</code> y se previene el fallo por llamadas a propiedades de contactos no definidas <code>client?.contact ? ... : null</code> en caso de que los datos de contacto no sean despachados por el webhook, asignando un número telefónico nulo por defecto en tal contingencia.
+                        </p>
+                    </div>
+
+                    <h4>Código ANTES</h4>
+                    <pre class="language-javascript"><code>            customer.name = client.name.display_name;
+            customer.address = null;
+            customer.phone = client.contact.phone.number.replace(/\s+/g, '') +'|PIN ' + client.contact.phone.pin_code.replace(/\s+/g, '');</code></pre>
+
+                    <h4>Código DESPUÉS</h4>
+                    <pre class="language-javascript"><code>            customer.name = client?.name?.display_name;
+            customer.address = null;
+            customer.phone = client?.contact ? client.contact.phone.number.replace(/\s+/g, '') +'|PIN ' + client.contact.phone.pin_code.replace(/\s+/g, '') : null;</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>
+                            El parseador de la interfaz de UberEats se vuelve inmune a fallos por campos nulos o ausentes en el objeto de datos del cliente, garantizando una correcta normalización del pedido.
+                        </p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Archivo 4: api/src/platforms/interfaces/rappi.js -->
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/src/platforms/interfaces/rappi.js</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Mapeo de SKU de promoción y parseo avanzado de productos a granel (Commit 55b879b)</b></p>
+                        <p>
+                            Se remueve el sufijo identificador dinámico de Rappi en el SKU de la promoción utilizando <code>.split('-')[0]</code>. Además, se añade soporte nativo para el desglose de promociones con subítems a granel (identificados por guiones en sus SKUs). Los componentes base se registran de forma individual, mientras que los toppings o elementos hijos complementarios se parsean, cuantifican y concatenan de forma estructurada en la propiedad libre <code>optionalText</code> del ítem padre correspondiente.
+                        </p>
+                    </div>
+
+                    <h4>Código ANTES</h4>
+                    <pre class="language-javascript"><code>              // if (detail.type.trim().toLowerCase() == 'combo')
+              if (detail.name.trim().toLowerCase().startsWith('promo')) {
+                let detHeader = {};
+                // creating promo header
+                detHeader.productId = parseInt(detail.sku, 10);
+...
+                detHeader.sku = validationSKU(detail.sku) ? detail.sku : 99999;
+                detHeader.note = detail.comments;
+                detHeader.canje = 0;
+
+                details.push(detHeader);
+
+                //creating each detail of the promo
+                for (let product of detail.subitems) {
+                  let detDetails = {};
+                  detDetails.productId = parseInt(product.sku, 10);
+...
+                  let number = 0;
+                  detDetails.optionalText = '';
+
+                  if (!!product.toppings)</code></pre>
+
+                    <h4>Código DESPUÉS</h4>
+                    <pre class="language-javascript"><code>              if (detail.name.trim().toLowerCase().startsWith('promo')) {
+                detail.sku = detail.sku.split('-')[0];
+                let detHeader = {};
+                // creating promo header
+                detHeader.productId = parseInt(detail.sku, 10);
+...
+                detHeader.sku = validationSKU(detail.sku) ? detail.sku : 99999;
+                detHeader.note = detail.comments;
+                detHeader.canje = 0;
+                details.push(detHeader);
+
+                if(detail.subitems.some(r => r.sku.includes('-'))) {
+                  let itemsNoSig = detail.subitems.filter(i => !i.sku.includes('-'));
+                  let itemSig = detail.subitems.filter(i => i.sku.includes('-'));
+                  //itemsSig = itemSig.map(i => i, i.already= false);
+                  let itemSigGranel = itemSig.filter(i => i.sku.split('-').length === 2);
+                  
+                  for (let product of itemsNoSig) {                  
+                    let detDetails = {};
+                    detDetails.productId = parseInt(product.sku, 10);
+                    detDetails.promo = 1;
+                    detDetails.groupId = numberOfPromotions;
+                    detDetails.description = product.name;
+                    detDetails.count = product.quantity;
+                    detDetails.sku = validationSKU(product.sku)
+                      ? product.sku
+                      : 99999;
+
+                    let number = 0;
+                    detDetails.optionalText = '';
+                    details.push(detDetails);
+                  }
+                  
+                  for (let product of itemSigGranel) {
+                    let detDetails = {};
+                    detDetails.productId = parseInt(product.sku.split('-')[0], 10);
+                    detDetails.promo = 1;
+                    detDetails.groupId = numberOfPromotions;
+                    detDetails.description = product.name;
+                    detDetails.count = product.quantity;
+                    detDetails.optionalText = '';
+                    detDetails.sku = validationSKU(product.sku.split('-')[0])
+                      ? product.sku.split('-')[0]
+                      : 99999;
+                    let productInGranel = itemSig.filter(i => i.sku.startsWith(product.sku) && i.sku.split('-').length > 2);
+                    for (let productGranel of productInGranel) {                     
+                      detDetails.optionalText += productGranel.name + ' X ' + productGranel.quantity.toString() + ' ';
+                    }
+                    details.push(detDetails);
+                  }
+                  numberOfPromotions += 1; 
+                }
+                else
+                for (let product of detail.subitems) {                  
+                  let detDetails = {};
+                  detDetails.productId = parseInt(product.sku, 10);
+                  detDetails.promo = 1;
+                  detDetails.groupId = numberOfPromotions;
+                  detDetails.description = product.name;
+                  detDetails.count = product.quantity;
+                  detDetails.sku = validationSKU(product.sku)
+                    ? product.sku
+                    : 99999;
+
+                  let number = 0;
+                  detDetails.optionalText = '';
+                  //NO ENTRA NUNCA
+                  if (!!product.toppings)</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>
+                            La interfaz de Rappi añade una lógica de desglose sofisticada para promociones cuyos componentes son despachados a granel, mapeando correctamente la relación SKU-producto y poblando las opciones de forma concatenada dentro de las notas de los ítems.
+                        </p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Archivo 5: api/Dockerfile -->
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/Dockerfile</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Obtención automatizada de certificados y compilación multi-etapa (Commit d8012dd)</b></p>
+                        <p>
+                            Se actualiza el flujo de Docker del backend para instalar <code>openssl</code> de forma interactiva en la etapa base y conectarse a <code>bot-security.smartfran.com</code> para volcar el certificado SSL fullchain. En la etapa productiva, se copian de manera transparente todos los certificados CA dinámicos, se ejecutan las actualizaciones de CA en Alpine y se corrigen rutas y tipografía de nombres de etapas (de <code>BASE</code> a <code>base</code>).
+                        </p>
+                    </div>
+
+                    <h4>Código ANTES</h4>
+                    <pre class="language-dockerfile"><code>FROM node:20.20-alpine AS base
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install
+...
+FROM node:20.20-alpine
+RUN apk add --no-cache ca-certificates
+COPY sectigo-fullchain.pem /usr/local/share/ca-certificates/sectigo.crt
+RUN update-ca-certificates
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install --only=production
+COPY --from=BASE /usr/src/app/dist ./dist
+ENTRYPOINT ["npm", "run"]
+CMD ["serve"]</code></pre>
+
+                    <h4>Código DESPUÉS</h4>
+                    <pre class="language-dockerfile"><code>FROM node:20.20-alpine AS base
+RUN apk add openssl && mkdir certs
+RUN openssl s_client -connect bot-security.smartfran.com:443 -showcerts 2>/dev/null </line_number>:</original_line> | awk '/BEGIN CERTIFICATE/,/END CERTIFICATE/'   > certs/smartfran-fullchain.pem
+WORKDIR /usr/src/app
+COPY package.json .
+RUN npm install
+...
+FROM node:20.20-alpine
+RUN apk add --no-cache ca-certificates
+COPY --from=base certs/* /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+WORKDIR /usr/src/app
+COPY --from=base /usr/src/app/package*.json .
+RUN npm install --only=production
+COPY --from=base /usr/src/app/dist ./dist
+ENTRYPOINT ["npm", "run"]
+CMD ["serve"]</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>
+                            El archivo Dockerfile automatiza la inyección de CA para SmartFran en la compilación y unifica los comandos de copiado multi-etapa, asegurando consistencia en la generación de imágenes de contenedores.
+                        </p>
+                    </div>
+                </div>
+            </details>
+
+        </section>
+
+        <section id="conclusion" class="service-section">
+            <h2>Conclusión General</h2>
+            <p>
+                Este release de Platform representa una mejora sustancial en la robustez y flexibilidad operativa de las integraciones externas de SmartPedidos. Por un lado, la incorporación del parseador de promociones a granel de Rappi amplía la capacidad del backend para procesar estructuras de pedidos avanzadas sin alterar los identificadores SKU principales. Por otro lado, la unificación del webhook de UberEats sin parámetros geográficos obligatorios en combinación con los manejos de try-catch y re-lanzamiento en errores axios y comprobaciones preventivas de nulos mitigan de manera contundente la interrupción de flujos de órdenes. Finalmente, la automatización del aprovisionamiento de certificados SSL dentro del Dockerfile simplifica las tareas de despliegue y compatibilidad TLS con servicios internos de la compañía.
+            </p>
+        </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

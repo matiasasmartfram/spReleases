@@ -23,6 +23,7 @@ releaseplatform.txt
 
 # Archivos de Confluence generados (PRIVADO)
 confluence_*.txt
+confluence_*.md
 confluence_concentrador_8.6.3.txt
 confluence_concentrador_8.6.4.txt
 confluence_concentrador_8.6.5.txt
