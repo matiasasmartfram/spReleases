@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Concentrador 9.3.2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .commit-section { margin-bottom: 2.5em; }
+        .commit-section > h3 {
+            font-size: 1.2em;
+            color: #343a40;
+            font-family: 'Fira Code', monospace;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 0.75em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .component-body h5 { margin-top: 1.5em; font-size: 1.1em; font-weight: 700; }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            overflow-wrap: break-word !important;
+            background-color: #2d2d2d;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Concentrador 9.3.2</h1>
+            <p>Filtrado geográfico de sucursales en base de datos, resolución dinámica de cabeceras de autorización y logs de auditoría estandarizados en el cron de UberEats.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 9.3.2</p>
+            <p><b>Fecha de Despliegue:</b> 27/05/2026</p>
+            <p><b>AWS Task:</b> aws 298</p>
+            <p><b>Commits:</b>
+                4c48418bff284e121d621f243cd99eab4348dc14 /
+                64923b75d88223ea3e3f95d663b1b3edc26dd7d5 /
+                64444aa795a28fb6acc43c02c04b12b1fb68e036
+            </p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General de la Versión</h2>
+            <p>Este release introduce correcciones de segmentación geográfica en la sincronización periódica (Check-In/Check-Out) de UberEats. Se corrige la obtención y selección de credenciales/tokens para Argentina y Chile filtrando las sucursales por país desde la consulta de base de datos, y se simplifica la construcción de los headers de autorización utilizando la clave de país de forma dinámica en vez de condicionales estáticos. Por último, se estandarizan las propiedades identificadoras y el tipo de log de auditoría generados por el cron de UberEats.</p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+
+            <div class="commit-section">
+                <h3>Cambios Consolidados en api/src/controllers/branch.js</h3>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>api/src/controllers/branch.js</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Filtrado geográfico de sucursales en la consulta de base de datos</b></p>
+                            <p>En <code>sendStatusUberEats()</code>, se limita la consulta añadiendo la condición <code>'address.country': country</code> en las llamadas de Mongoose para traer únicamente los locales correspondientes a la región procesada por el cron.</p>
+
+                            <p><b>2. Simplificación dinámica del header de autorización</b></p>
+                            <p>Se elimina la segmentación condicional estática por país en el Axios de disponibilidad. Ahora se genera una única variable de autorización configurada dinámicamente según el país en proceso: <code>tokenUber[country]</code>.</p>
+
+                            <p><b>3. Estandarización de auditoría y tipo en log de cron de UberEats</b></p>
+                            <p>Se modifican los campos de creación de log de disponibilidad en <code>openClosedLogModel</code>. La propiedad <code>Ident</code> pasa del valor genérico <code>"Uber"</code> al parametrizado <code>UberEatsCron {country}</code>, facilitando la auditoría de ejecución por región. El campo <code>type</code> se reconfigura de <code>"Special"</code> a <code>"CRON"</code>.</p>
+
+                            <p><b>4. Ajuste en reporte de errores</b></p>
+                            <p>Se corrigen los mensajes de captura de excepciones generales en <code>sendStatusUberEats()</code> para referenciar correctamente la acción activa en lugar de <code>checkOfflinePOSuber</code>.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-javascript"><code>    let branchesToClose = await model.find({
+      platforms: {
+        $elemMatch: {
+          platform: new mongoose.Types.ObjectId(uberId),
+          isActive: true
+        }
+      },
+      alreadyClosedUber: true
+    });
+
+    let branchesToOpen = await model.find({
+      platforms: {
+        $elemMatch: {
+          platform: new mongoose.Types.ObjectId(uberId),
+          isActive: true
+        }
+      },
+      alreadyClosedUber: false
+    });
+
+    const headersConfig = {
+      headers: {
+        'Authorization': `Bearer ${tokenUber[\`\${country}\`]}`,
+        'Content-Type': 'application/json'
+      }
+    };
+// ...
+          await axios.post(urlAvailability, body, headersConfig);
+// ...
+          Log.saveError(error, { 
+            message: \`Branch OpenClose Error: Uber checkOfflinePOSuber CLOSE \${branchId}\`, 
+            action: 'sendStatusUberEats',
+// ...
+      await openClosedLogModel.create({
+        result: !extraData.some(branch =>
+          branch.results.some(r => r.result === false)
+        ),
+        Ident: "Uber",
+        extraData,
+        platformId: 4,
+        type: "Special"
+      });</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-javascript"><code>    let branchesToClose = await model.find({
+      platforms: {
+        $elemMatch: {
+          platform: new mongoose.Types.ObjectId(uberId),
+          isActive: true
+        }
+      },
+      'address.country': country,
+      alreadyClosedUber: true
+    });
+
+    let branchesToOpen = await model.find({
+      platforms: {
+        $elemMatch: {
+          platform: new mongoose.Types.ObjectId(uberId),
+          isActive: true
+        }
+      },
+      'address.country': country,
+      alreadyClosedUber: false
+    });
+
+    const headersConfig = {
+      headers: {
+        'Authorization': \`Bearer \${tokenUber[country]}\`,
+        'Content-Type': 'application/json'
+      }
+    };
+// ...
+          await axios.post(urlAvailability, body, headersConfig);
+// ...
+          Log.saveError(error, { 
+            message: \`Branch OpenClose Error: Uber sendStatusUberEats CLOSE \${branchId}\`, 
+            action: 'sendStatusUberEats',
+// ...
+      await openClosedLogModel.create({
+        result: !extraData.some(branch =>
+          branch.results.some(r => r.result === false)
+        ),
+        Ident: \`UberEatsCron \${country}\`,
+        extraData,
+        platformId: 4,
+        type: "CRON"
+      });</code></pre>
+                    </div>
+                </details>
+            </div>
+
+        </section>
+
+        <section id="conclusion" class="service-section">
+            <h2>Conclusión General</h2>
+            <p>Este release optimiza la sincronización de disponibilidad de UberEats al limitar las consultas de base de datos a sucursales que correspondan estrictamente al país procesado en la iteración cron actual. A partir de esto, se simplifica el envío de las cabeceras HTTP recuperando el token a través del identificador de país dinámico. Se reestructuran asimismo los logs de auditoría en base de datos para registrar el Check-In/Check-Out bajo la denominación <code>UberEatsCron {country}</code> y el tipo <code>CRON</code>.</p>
+        </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

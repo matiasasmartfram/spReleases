@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Concentrador 9.2.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .commit-section { margin-bottom: 2.5em; }
+        .commit-section > h3 {
+            font-size: 1.2em;
+            color: #343a40;
+            font-family: 'Fira Code', monospace;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 0.75em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .component-body h5 { margin-top: 1.5em; font-size: 1.1em; font-weight: 700; }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            overflow-wrap: break-word !important;
+            background-color: #2d2d2d;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Concentrador 9.2.0</h1>
+            <p>Cierre activo de sucursales en plataformas integradas posterior al rechazo automático de órdenes por estado cerrado.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 9.2.0</p>
+            <p><b>Fecha de Despliegue:</b> 13/05/2026</p>
+            <p><b>AWS Task:</b> N/A</p>
+            <p><b>Commits:</b>
+                3c9b69737ce958fd67ac079cae1babfc3a520376 /
+                98e189fcb954e6e3a559a4554350b3fcf4f0c2a1
+            </p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General de la Versión</h2>
+            <p>Este release incorpora un cierre activo de sucursales en todas las plataformas tras el rechazo automático de órdenes con estado cerrado (<code>orderRejClosed</code>). Cuando el Concentrador detecta que una sucursal tiene órdenes rechazadas por estar cerrada, ahora ejecuta un cierre explícito en PedidosYa, Rappi, UberEats, PediGrido y MercadoPago para cada plataforma activa, con manejo de errores individualizado por plataforma.</p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+
+            <!-- COMMIT 1 -->
+            <div class="commit-section">
+                <h3>Commit: 3c9b6973 — feat : enviar cerrados</h3>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>api/src/controllers/branch.js</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Nueva función sendClosedToPlatformsAfterRejectClosed() — cierre activo post-rechazo</b></p>
+                            <p>Se agrega una función que, dado un <code>branchId</code>, obtiene la sucursal de la base de datos, filtra sus plataformas activas y ejecuta el cierre en cada una usando las funciones específicas por plataforma (<code>closeBranchPeya</code>, <code>closeBranchRappi</code>, <code>closeBranchUber</code>, <code>closeBranchPediGrido</code>, <code>closeBranchMercadoPago</code>). Usa <code>Promise.allSettled</code> para no interrumpir el proceso si una plataforma falla, registrando el error de cada una de forma independiente.</p>
+
+                            <p><b>2. Nuevas funciones de cierre por plataforma</b></p>
+                            <p>Cada función maneja el cierre en su plataforma correspondiente: obtiene el token correcto (incluyendo por país para Rappi y UberEats), construye el cuerpo y la URL apropiados, ejecuta el <code>PUT</code> y registra el error con metadatos estructurados si la llamada falla.</p>
+
+                            <p><b>3. Invocación de sendClosedToPlatformsAfterRejectClosed() desde orderRejClosed()</b></p>
+                            <p>Dentro de <code>orderRejClosed()</code>, se agrega el bloque que extrae los <code>branchId</code> únicos de las noticias con órdenes rechazadas por cierre y llama a <code>sendClosedToPlatformsAfterRejectClosed()</code> para cada uno. También se reordena la lógica: el <code>updateMany</code> (marca como enviadas) se ejecuta antes del procesamiento, y el map de <code>newsIds</code> se mueve al inicio del flujo para usarse en ambas operaciones.</p>
+
+                            <p><b>4. Uso de tokenUber por país en closeBranchUber()</b></p>
+                            <p>La función de cierre para UberEats construye el header de autorización usando <code>tokenUber[branch.address?.country]</code>, alineándose con el modelo multi-país introducido en 9.1.0.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-javascript"><code>let tokenUber = '';
+let tokenPediGridoOpenClose = '';
+let uberClientId = '';
+
+async function orderRejClosed() {
+  await orderRejClosedModel.updateMany(
+    {
+      send: false,
+      createdAt: { $lt: date2minutes },
+      type: { $exists: false }
+    },
+    { $set: { send: true } }
+  );
+
+  const newsIds = ordersRejClosed.map(o => o.newId);
+
+
+  let rejecteds = await RejectedMessagesModel.aggregate(
+
+  const newsC = await news.find({ _id: { $in: newsIds } });
+
+  let trace = news.createTrace({
+
+async function sendClosedToPlatforms(branchId) {
+  try {
+    const branch = await model.findOne({ branchId: branchId });
+    
+    const activePlatforms = branch.platforms?.filter(p => p.isActive) || [];
+
+    await Promise.allSettled(activePlatforms.map(async (platform) => {
+
+    console.log(`✔ Branch ${branchId} cerrado en todas las plataformas`);
+  } catch (error) {
+    Log.saveError(error, {
+      message: `Error en sendClosedToPlatforms para branch: ${branchId}`,
+      branchId: branchId
+    });
+  }
+}
+
+      await axios.put(url, body, headersConfig);
+      // (sin try/catch — error burbujea sin log)
+
+      await axios.put(url, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, options);
+      // (sin try/catch — error burbujea sin log)
+
+        'Authorization': `Bearer ${tokenUber}`,//va a cambiar por pais
+
+      await axios.put(url, body, headersConfig);
+      console.log(`Cerrado en Uber: branch ${branch.branchId}, store_id ${store_id}`);
+      // (sin try/catch — error burbujea sin log)
+
+      await axios.put(url, body, headersConfig);
+      console.log(`Cerrado en PediGrido: branch ${branch.branchId}, branchRef ${branchRef}`);
+      // (sin try/catch — error burbujea sin log)
+
+      await axios.put(url, body, headersConfig);
+      console.log(`Cerrado en MercadoPago: branch ${branch.branchId}, store_id ${store_id}`);
+      // (sin try/catch — error burbujea sin log)</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-javascript"><code>let tokenUber = {};
+let tokenPediGridoOpenClose = '';
+let uberClientId = '';
+
+async function orderRejClosed() {
+  const newsIds = ordersRejClosed.map(o => o.newId);
+
+  await orderRejClosedModel.updateMany(
+    { newId: { $in: newsIds } },
+    { $set: { send: true } }
+  );
+
+  let rejecteds = await RejectedMessagesModel.aggregate(
+
+  const newsC = await news.find({ _id: { $in: newsIds } });
+
+  let branches = [...new Set(newsC.map(n => n.branchId))];
+
+  for (const branchId of branches) {
+    await sendClosedToPlatformsAfterRejectClosed(branchId);
+  }
+
+  let trace = news.createTrace({
+
+async function sendClosedToPlatformsAfterRejectClosed(branchId) {
+  try {
+    const branch = await model.findOne({ branchId: branchId });
+    
+    if (!branch) {
+      console.log(`Branch ${branchId} no encontrado`);
+      return;
+    }
+
+    const activePlatforms = branch.platforms?.filter(p => p.isActive) || [];
+
+    await Promise.allSettled(activePlatforms.map(async (platform) => {
+      const platformId = platform.platform?.toString();
+
+      try {
+        if (platformId === peyaId?.toString()) {
+          await closeBranchPeya(branch, platform);
+        } else if (platformId === rappiId?.toString()) {
+          await closeBranchRappi(branch, platform);
+        } else if (platformId === uberId?.toString()) {
+          await closeBranchUber(branch, platform);
+        } else if (platformId === pedigridoId?.toString()) {
+          await closeBranchPediGrido(branch, platform);
+        } else if (platformId === mercadopagoId?.toString()) {
+          await closeBranchMercadoPago(branch, platform);
+        }
+      } catch (error) {
+        Log.saveError(error, {
+          message: `Error cerrando branch ${branchId} en plataforma ${platformId}`,
+          branchId: branchId,
+          platformId: platformId
+        });
+      }
+    }));
+
+    console.log(`Branch ${branchId} cerrado en todas las plataformas`);
+  } catch (error) {
+    Log.saveError(error, {
+      message: `Error en sendClosedToPlatformsAfterRejectClosed  para branch: ${branchId}`,
+      branchId: branchId
+    });
+  }
+}
+
+async function closeBranchPeya(branch, platform) {
+  try {
+    const branchName = platform.branchName;
+    const branchNames = Array.isArray(branchName) ? branchName : [branchName];
+    
+    const headersConfig = {
+      headers: {
+        'Authorization': `Bearer ${tokenPeya}`,
+        'Content-Type': 'application/json'
+      }
+    };
+    
+    for (const remoteId of branchNames) {
+      const url = `${peyaBaseUrl}/v2/chains/${settings.chainCode}/remoteVendors/${remoteId}/availability`;
+      const statusResponse = await axios.get(url, headersConfig);
+      
+      const body = {
+        availabilityState: "CLOSED",
+        closedReason: "OTHER",
+        platformKey: statusResponse.data[0].platformKey,
+        platformRestaurantId: statusResponse.data[0].platformRestaurantId
+      };
+      try {
+        await axios.put(url, body, headersConfig);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: PedidosYa sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 1, // peyaId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: remoteId,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: body,
+              header: headersConfig.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }
+
+      console.log(`Cerrado en PedidosYa: branch ${branch.branchId}, remoteId ${remoteId}`);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function closeBranchRappi(branch, platform) {
+  try {
+    const branchReference = platform.branchReference;
+    const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+    const country = branch.address?.country;
+    
+    if (!tokenRappi[country]) {
+      throw new Error(`No hay token de Rappi para ${country}`);
+    }
+
+    const url = baseUrlRappi[country] + '/api/v2/restaurants-integrations-public-api/availability/stores/enable';
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-authorization': 'bearer ' + tokenRappi[country]
+      }
+    };
+
+    for (const rappiNumber of branchReferences) {
+      try {
+        await axios.put(url, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, options);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: Rappi sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 2, // rappiId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: rappiNumber,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: { stores: [{ store_id: rappiNumber, is_enabled: false }] },
+              header: options.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }
+   
+      console.log(`Cerrado en Rappi: branch ${branch.branchId}, store_id ${rappiNumber}`);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function closeBranchUber(branch, platform) {
+  try {
+    const branchReference = platform.branchReference;
+    const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+    
+    const headersConfig = {
+      headers: {
+        'Authorization': `Bearer ${tokenUber[branch.address?.country]}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const mañana = new Date();
+    mañana.setDate(mañana.getDate() + 1);
+    mañana.setHours(15, 0, 0, 0);
+
+    for (const store_id of branchReferences) {
+      const body = {
+        "is_offline_until": mañana.toISOString(),
+        "status": "OFFLINE",
+        "reason": "STORE CLOSED"
+      };
+      const url = `${baseUrlUber}/v1/delivery/store/${store_id}/update-store-status`;
+      try {
+        await axios.put(url, body, headersConfig);
+        console.log(`Cerrado en Uber: branch ${branch.branchId}, store_id ${store_id}`);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: Uber sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 4, // uberId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: store_id,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: body,
+              header: headersConfig.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }
+    
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function closeBranchPediGrido(branch, platform) {
+  try {
+    const branchReference = platform.branchReference;
+    const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+    
+    const headersConfig = {
+      headers: {
+        'Authorization': `Bearer ${tokenPediGridoOpenClose}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const url = `${baseUrlPedigrido}v1/locals/status`;
+
+    for (const branchRef of branchReferences) {
+      const body = {
+        branch: parseInt(branchRef),
+        active: false
+      };
+      
+      try {
+        await axios.put(url, body, headersConfig);
+        console.log(`Cerrado en PediGrido: branch ${branch.branchId}, branchRef ${branchRef}`);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: PediGrido sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 7, // pedigridoId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: branchRef,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: body,
+              header: headersConfig.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }
+
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function closeBranchMercadoPago(branch, platform) {
+  try {
+    const branchReference = platform.branchReference;
+    const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+    
+    const mercadoPagoPlatform = branch.platforms?.find(p => p.platform?.toString() === mercadopagoId?.toString());
+    const user_id = mercadoPagoPlatform?.mercadoPagoUserId;
+    const tenant = tenants.find(t => t.name === branch.chain?.trim().toLowerCase());
+    
+    if (!user_id || !tenant) {
+      throw new Error(`No se encontró user_id o tenant para branch ${branch.branchId}`);
+    }
+
+    const tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, false);
+    
+    if (!tokenMercadoPagoCloud) {
+      throw new Error(`No se pudo obtener token MercadoPago para branch ${branch.branchId}`);
+    }
+
+    const decryptedToken = await Token.decrypt(tokenMercadoPagoCloud?.token);
+    const headersConfig = {
+      headers: {
+        'Authorization': `Bearer ${decryptedToken}`
+      }
+    };
+
+    for (const store_id of branchReferences) {
+      const body = { status: "paused" };
+      const url = `${baseUrlMercadoPago}users/${user_id}/stores/${store_id}`;
+      
+      try {
+        await axios.put(url, body, headersConfig);
+        console.log(`Cerrado en MercadoPago: branch ${branch.branchId}, store_id ${store_id}`);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: MercadoPago sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 8, // mercadopagoId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: store_id,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: body,
+              header: headersConfig.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }
+    }
+  } catch (error) {
+    throw error;
+  }
+}</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El controlador de sucursales agrega un segundo camino de cierre activo: cuando <code>orderRejClosed()</code> detecta órdenes rechazadas por cierre, ahora también notifica a cada plataforma activa de la sucursal para que la marque como cerrada. El flujo es tolerante a fallos por plataforma (cada cierre va en un bloque independiente con log de error), y usa los tokens por país ya existentes para Rappi y UberEats. El <code>updateMany</code> se reordena para marcar las órdenes como procesadas antes de ejecutar el cierre, evitando reprocesos ante fallos parciales.</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- COMMIT 2 -->
+            <div class="commit-section">
+                <h3>Commit: 98e189fc — Merge pull request #38 from smartit-ar/enviarClosed</h3>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>api/src/controllers/branch.js</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Renombrado de sendClosedToPlatforms a sendClosedToPlatformsAfterRejectClosed y ajuste del error log</b></p>
+                            <p>El merge incorpora el renombrado de la función en todos los puntos de uso dentro del archivo y actualiza el mensaje de log de error para reflejar el nuevo nombre. Además, elimina el emoji del <code>console.log</code> de confirmación.</p>
+
+                            <p><b>2. Manejo de errores por plataforma en las funciones de cierre</b></p>
+                            <p>En el commit del PR, las llamadas a <code>axios.put()</code> en cada función de cierre no tenían try/catch. El merge integra el manejo de errores individuales con <code>Log.saveError</code> estructurado por plataforma, incluyendo acción, plataforma, datos de la sucursal, request y response.</p>
+
+                            <p><b>3. Uso de tokenUber por país en closeBranchUber()</b></p>
+                            <p>El header de autorización para UberEats en el cierre pasa de <code>tokenUber</code> a <code>tokenUber[branch.address?.country]</code>, usando el mapa de tokens por país introducido en 9.1.0.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-javascript"><code>  for (const branchId of branches) {
+    await sendClosedToPlatforms(branchId);
+  }
+
+async function sendClosedToPlatforms(branchId) {
+
+    console.log(`✔ Branch ${branchId} cerrado en todas las plataformas`);
+  } catch (error) {
+    Log.saveError(error, {
+      message: `Error en sendClosedToPlatforms para branch: ${branchId}`,
+
+        'Authorization': `Bearer ${tokenUber}`,//va a cambiar por pais
+
+      await axios.put(url, body, headersConfig);
+      // PedidosYa — sin try/catch
+
+      await axios.put(url, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, options);
+      // Rappi — sin try/catch
+
+      await axios.put(url, body, headersConfig);
+      console.log(`Cerrado en Uber: branch ${branch.branchId}, store_id ${store_id}`);
+      // Uber — sin try/catch
+
+      await axios.put(url, body, headersConfig);
+      console.log(`Cerrado en PediGrido: branch ${branch.branchId}, branchRef ${branchRef}`);
+      // PediGrido — sin try/catch
+
+      await axios.put(url, body, headersConfig);
+      console.log(`Cerrado en MercadoPago: branch ${branch.branchId}, store_id ${store_id}`);
+      // MercadoPago — sin try/catch</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-javascript"><code>  for (const branchId of branches) {
+    await sendClosedToPlatformsAfterRejectClosed(branchId);
+  }
+
+async function sendClosedToPlatformsAfterRejectClosed(branchId) {
+
+    console.log(`Branch ${branchId} cerrado en todas las plataformas`);
+  } catch (error) {
+    Log.saveError(error, {
+      message: `Error en sendClosedToPlatformsAfterRejectClosed  para branch: ${branchId}`,
+
+        'Authorization': `Bearer ${tokenUber[branch.address?.country]}`,
+
+      try {
+        await axios.put(url, body, headersConfig);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: PedidosYa sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 1, // peyaId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: remoteId,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: body,
+              header: headersConfig.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }
+
+      try {
+        await axios.put(url, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, options);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: Rappi sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 2, // rappiId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: rappiNumber,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: { stores: [{ store_id: rappiNumber, is_enabled: false }] },
+              header: options.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }
+
+      try {
+        await axios.put(url, body, headersConfig);
+        console.log(`Cerrado en Uber: branch ${branch.branchId}, store_id ${store_id}`);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: Uber sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 4, // uberId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: store_id,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: body,
+              header: headersConfig.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }
+
+      try {
+        await axios.put(url, body, headersConfig);
+        console.log(`Cerrado en PediGrido: branch ${branch.branchId}, branchRef ${branchRef}`);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: PediGrido sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 7, // pedigridoId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: branchRef,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: body,
+              header: headersConfig.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }
+
+      try {
+        await axios.put(url, body, headersConfig);
+        console.log(`Cerrado en MercadoPago: branch ${branch.branchId}, store_id ${store_id}`);
+      } catch (error) {
+        Log.saveError(error, { 
+          message: `Branch OpenClose Error: MercadoPago sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+          action: 'sendClosedToPlatformsAfterRejectClosed',
+          platformId: 8, // mercadopagoId
+          operation: 'CLOSE',
+          branch: {
+              branchReferenceId: store_id,
+              country: branch.address?.country,
+              branchId: branch.branchId
+          },
+          request: {
+              url: url,
+              method: 'PUT',
+              body: body,
+              header: headersConfig.headers
+          },
+          response: {
+              status: error?.response?.status,
+              data: error?.response?.data
+          }
+        });
+      }</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El merge consolida el cierre activo post-rechazo con nombre de función definitivo y manejo de errores completo para cada plataforma. El token de UberEats usa el modelo por país ya disponible. El flujo de <code>orderRejClosed()</code> queda alineado con el nuevo orden de operaciones.</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- COMPARATIVA INITIAL DATA -->
+            <div class="commit-section">
+                <h3>Commit: 98e189fc — api/src/utils/initialData.js (Merge PR Context)</h3>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>api/src/utils/initialData.js</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Estandarización de logs de error en la obtención de tokens MercadoPago</b></p>
+                            <p>El merge del PR incluye el mismo cambio de logs de <code>initialData.js</code> ya liberado en 9.0.3: simplificación de la estructura de metadatos de error, prefijo <code>C-</code> en los mensajes y adición de <code>platform: 'MercadoPago'</code>. Este diff aparece en el merge porque la rama <code>enviarClosed</code> fue creada a partir de una versión anterior de <code>develop</code>.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-javascript"><code>          message: `SmartCloud Communication Error: MercadoPago -C No Content (204) fetching token from Cloud [user_id: ${user_id}]`,  
+          error: {
+            message: 'No Content (204)',
+            customDataAfter: {
+              action: 'getCloudToken',
+              platformId: 8,
+              branch: {  
+                user_id: user_id
+              },
+              request: {
+                url: url,
+                method: 'GET'
+              },
+              response: {
+                status: 204,
+                data: null
+              }
+            }
+          }
+          message: `SmartCloud Communication Error: error fetching token from Cloud [user_id: ${user_id}]`,
+          error: {
+            message: error.message,
+            customDataAfter: {
+              action: 'getCloudToken',
+              platformId: 8,
+              request: {
+                url: urlTokenMercadoPagoCloud,
+                method: 'GET',
+                headers: headersToken.headers
+              },
+              response: {
+                status: error?.response?.status,
+                data: error?.response?.data
+              }
+            }
+          }
+          message: `SmartCloud Error: Invalid response from MercadoPago token endpoint [user_id: ${user_id}]`,
+          error: {
+            message: 'Response data is not a valid object',
+            customDataAfter: {
+              action: 'getCloudToken',
+              platformId: 8,
+              receivedData: tokenMercadoPagoCloud,
+              dataType: typeof tokenMercadoPagoCloud
+            }
+          }</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-javascript"><code>          message: `C- SmartCloud Communication Error: MercadoPago -C No Content (204) fetching token from Cloud [user_id: ${user_id}]`, 
+          action: 'getCloudToken',
+          platformId: 8,
+          branch: {  
+            user_id: user_id
+          },
+          request: {
+            url: url,
+            method: 'GET'
+          },
+          response: {
+            status: 204,
+            data: null
+          },
+          platform: 'MercadoPago' 
+          message: `C- SmartCloud Communication Error: error fetching token from Cloud [user_id: ${user_id}]`,
+          action: 'getCloudToken',
+          platformId: 8,
+          request: {
+            url: urlTokenMercadoPagoCloud,
+            method: 'GET',
+            headers: headersToken.headers
+          },
+          response: {
+            status: error?.response?.status,
+            data: error?.response?.data
+          },platform: 'MercadoPago'
+          message: `C- SmartCloud Error: Invalid response from MercadoPago token endpoint [user_id: ${user_id}]`, 
+          action: 'getCloudToken',
+          platformId: 8,
+          receivedData: tokenMercadoPagoCloud,
+          dataType: typeof tokenMercadoPagoCloud,
+          platform: 'MercadoPago'       </code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El cambio en <code>initialData.js</code> es idéntico al ya liberado en 9.0.3. Aparece en este merge porque la rama <code>enviarClosed</code> fue creada antes de que ese fix se integrara en <code>develop</code>.</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+        </section>
+
+        <section id="conclusion" class="service-section">
+            <h2>Conclusión General</h2>
+            <p>Este release completa el ciclo de cierre de sucursales en el contexto de órdenes rechazadas por estado cerrado. Hasta ahora, <code>orderRejClosed()</code> procesaba las órdenes pero no notificaba a las plataformas externas. Con este cambio, tras rechazar las órdenes, el Concentrador ejecuta un cierre activo en todas las plataformas activas de la sucursal (PedidosYa, Rappi, UberEats, PediGrido y MercadoPago), usando los tokens y credenciales correctos por país. El flujo es tolerante a fallos: si una plataforma falla, el error queda registrado y el proceso continúa con las demás.</p>
+        </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

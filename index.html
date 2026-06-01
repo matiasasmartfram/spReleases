@@ -4,74 +4,128 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Índice de Documentación de APIs</title>
+  <title>Portal de Releases — SmartPedidos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #f4f7f9;
+      --card-bg: #ffffff;
+      --border: #dee2e6;
+      --primary: #0056b3;
+      --primary-light: #e8f0fe;
+      --text: #212529;
+      --muted: #6c757d;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f4f6f8;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
       margin: 0;
-      padding: 2rem;
-      color: #333;
+      padding: 2rem 1rem;
+      color: var(--text);
+      line-height: 1.6;
     }
 
     .container {
-      max-width: 800px;
+      max-width: 860px;
       margin: 0 auto;
-      background-color: #ffffff;
-      padding: 2rem 3rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
 
-    h1 {
-      font-size: 2em;
-      color: #2c3e50;
-      border-bottom: 2px solid #e0e4e8;
-      padding-bottom: 0.5em;
-      margin-bottom: 1em;
+    /* ── Header ── */
+    .site-header {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2em 2.5em;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
     }
 
-    p {
-      color: #555;
-      font-size: 1.1em;
-      margin-bottom: 2em;
+    .site-header .logo {
+      font-size: 2.4em;
+      line-height: 1;
     }
 
-    /* Estilos del Acordeón */
+    .site-header h1 {
+      margin: 0 0 0.15em 0;
+      font-size: 1.7em;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .site-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95em;
+    }
+
+    /* ── Accordion ── */
     .accordion {
-      border-top: 1px solid #d1d9e2;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
     .accordion-item {
-      border-bottom: 1px solid #d1d9e2;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
     .accordion-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1em 0;
+      padding: 1.1em 1.6em;
       cursor: pointer;
       list-style: none;
-      /* Oculta el marcador de flecha por defecto */
+      user-select: none;
     }
 
-    .accordion-header::-webkit-details-marker {
-      display: none;
-      /* Oculta el marcador en navegadores WebKit */
+    .accordion-header::-webkit-details-marker { display: none; }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-icon {
+      font-size: 1.4em;
+      line-height: 1;
     }
 
     .accordion-header h2 {
       margin: 0;
-      font-size: 1.3em;
-      color: #34495e;
+      font-size: 1.15em;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .release-count {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.75em;
+      font-weight: 600;
+      padding: 0.15em 0.6em;
+      border-radius: 20px;
     }
 
     .accordion-icon {
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #007bff;
-      transition: transform 0.2s ease-in-out;
+      font-size: 1.3em;
+      font-weight: 700;
+      color: var(--primary);
+      transition: transform 0.2s ease;
+      line-height: 1;
     }
 
     .accordion-item[open] .accordion-icon {
@@ -79,321 +133,759 @@
     }
 
     .accordion-content {
-      padding: 0 1em 1.5em 1em;
+      padding: 0 1.2em 1.2em 1.2em;
     }
 
+    /* ── Release Links ── */
     .doc-link {
-      display: block;
-      padding: 0.8em 1.2em;
-      margin-bottom: 0.5em;
-      border: 1px solid #e0e4e8;
-      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65em 1em;
+      margin-bottom: 0.4em;
+      border: 1px solid var(--border);
+      border-radius: 7px;
       text-decoration: none;
-      color: #333;
-      transition: all 0.2s ease-in-out;
+      color: var(--text);
+      transition: all 0.18s ease;
+      gap: 1rem;
     }
 
     .doc-link:hover {
-      border-color: #007bff;
-      background-color: #f8faff;
-      transform: translateX(5px);
+      border-color: var(--primary);
+      background-color: var(--primary-light);
+      transform: translateX(4px);
     }
 
-    .doc-link strong {
-      display: block;
-      font-size: 1.1em;
-      color: #0056b3;
+    .doc-link:hover .version-badge {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .version-badge {
+      font-size: 0.9em;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 0.2em 0.65em;
+      border-radius: 5px;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+      min-width: 3.8em;
+      text-align: center;
+    }
+
+    .release-desc {
+      font-size: 0.85em;
+      color: var(--muted);
+      flex: 1;
+      text-align: left;
+    }
+
+    .link-arrow {
+      color: #adb5bd;
+      font-size: 0.9em;
+      flex-shrink: 0;
+    }
+
+    .doc-link:hover .link-arrow {
+      color: var(--primary);
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>Portal de Releases de SmartPedidos</h1>
-    <p>Haz clic en una categoría para expandir y ver los documentos disponibles.</p>
+
+    <header class="site-header">
+      <div class="logo">🚀</div>
+      <div>
+        <h1>Portal de Releases</h1>
+        <p>SmartPedidos — Historial de versiones por producto</p>
+      </div>
+    </header>
 
     <div class="accordion">
 
+      <!-- ── Platform ── -->
       <details class="accordion-item" open>
         <summary class="accordion-header">
-          <h2>Releases Platform</h2>
+          <div class="header-left">
+            <span class="section-icon">⚙️</span>
+            <h2>Releases Platform</h2>
+            <span class="release-count">52</span>
+          </div>
           <span class="accordion-icon">+</span>
         </summary>
         <div class="accordion-content">
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.6.1.html"
-            class="doc-link"><strong>10.6.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.6.0.html"
-            class="doc-link"><strong>10.6.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.5.1.html"
-            class="doc-link"><strong>10.5.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.5.0.html"
-            class="doc-link"><strong>10.5.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.4.0.html"
-            class="doc-link"><strong>10.4.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.3.0.html"
-            class="doc-link"><strong>10.3.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.2.0.html"
-            class="doc-link"><strong>10.2.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.1.0.html"
-            class="doc-link"><strong>10.1.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.6.html"
-            class="doc-link"><strong>10.0.6</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.5.html"
-            class="doc-link"><strong>10.0.5</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.4.html"
-            class="doc-link"><strong>10.0.4</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.3.html"
-            class="doc-link"><strong>10.0.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.1.html"
-            class="doc-link"><strong>10.0.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.0.html"
-            class="doc-link"><strong>10.0.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.6.2.html"
-            class="doc-link"><strong>9.6.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.6.1.html"
-            class="doc-link"><strong>9.6.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.6.0.html"
-            class="doc-link"><strong>9.6.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.12.html"
-            class="doc-link"><strong>9.5.12</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.11.html"
-            class="doc-link"><strong>9.5.11</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.10.html"
-            class="doc-link"><strong>9.5.10</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.9.html"
-            class="doc-link"><strong>9.5.9</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.8.html"
-            class="doc-link"><strong>9.5.8</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.7.html"
-            class="doc-link"><strong>9.5.7 (Error Semántico)</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.6.html"
-            class="doc-link"><strong>9.5.6</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.5.html"
-            class="doc-link"><strong>9.5.5</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.4.html"
-            class="doc-link"><strong>9.5.4</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.3.html"
-            class="doc-link"><strong>9.5.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.2.html"
-            class="doc-link"><strong>9.5.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.1.html"
-            class="doc-link"><strong>9.5.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.0.html"
-            class="doc-link"><strong>9.5.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.6.html"
-            class="doc-link"><strong>9.4.6</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.5.html"
-            class="doc-link"><strong>9.4.5</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.2.html"
-            class="doc-link"><strong>9.4.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.1.html"
-            class="doc-link"><strong>9.4.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.0.html"
-            class="doc-link"><strong>9.4.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.3.2.html"
-            class="doc-link"><strong>9.3.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.3.1.html"
-            class="doc-link"><strong>9.3.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.3.0.html"
-            class="doc-link"><strong>9.3.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.23.html"
-            class="doc-link"><strong>9.2.23</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.22.html"
-            class="doc-link"><strong>9.2.22</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.21.html"
-            class="doc-link"><strong>9.2.21</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.20.html"
-            class="doc-link"><strong>9.2.20</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.19.html"
-            class="doc-link"><strong>9.2.19</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.3.html"
-            class="doc-link"><strong>9.2.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.2.html"
-            class="doc-link"><strong>9.2.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.1.html"
-            class="doc-link"><strong>9.2.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.0.html"
-            class="doc-link"><strong>9.2.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.1.0.html"
-            class="doc-link"><strong>9.1.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.0.1.html"
-            class="doc-link"><strong>9.0.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.0.0.html"
-            class="doc-link"><strong>9.0.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.4.1.html"
-            class="doc-link"><strong>8.4.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.4.0.html"
-            class="doc-link"><strong>8.4.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.3.3.html"
-            class="doc-link"><strong>8.3.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.3.2.html"
-            class="doc-link"><strong>8.3.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.3.1.html"
-            class="doc-link"><strong>8.3.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.3.0.html"
-            class="doc-link"><strong>8.3.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.2.4.html"
-            class="doc-link"><strong>8.2.4 (Error Semantico)</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.1.3.html"
-            class="doc-link"><strong>8.1.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.1.2.html"
-            class="doc-link"><strong>8.1.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.1.1.html"
-            class="doc-link"><strong>8.1.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.1.0.html"
-            class="doc-link"><strong>8.1.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.0.1.html"
-            class="doc-link"><strong>8.0.1</strong></a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.6.1.html" class="doc-link">
+            <span class="version-badge">10.6.1</span>
+            <span class="release-desc">Fix MercadoPago y logs REST</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.6.0.html" class="doc-link">
+            <span class="version-badge">10.6.0</span>
+            <span class="release-desc">Cambios estructura de logs</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.5.1.html" class="doc-link">
+            <span class="version-badge">10.5.1</span>
+            <span class="release-desc">Fix UltimaMilla</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.5.0.html" class="doc-link">
+            <span class="version-badge">10.5.0</span>
+            <span class="release-desc">UltimaMilla Pedigrido</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.4.0.html" class="doc-link">
+            <span class="version-badge">10.4.0</span>
+            <span class="release-desc">MPD PromoGranel, fix Uber/Peya</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.3.0.html" class="doc-link">
+            <span class="version-badge">10.3.0</span>
+            <span class="release-desc">Actualización Axios</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.2.0.html" class="doc-link">
+            <span class="version-badge">10.2.0</span>
+            <span class="release-desc">Uber Eats Argentina</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.1.0.html" class="doc-link">
+            <span class="version-badge">10.1.0</span>
+            <span class="release-desc">Mapper Rappi Promo a Granel</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.6.html" class="doc-link">
+            <span class="version-badge">10.0.6</span>
+            <span class="release-desc">Logs fallos obtención orden MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.5.html" class="doc-link">
+            <span class="version-badge">10.0.5</span>
+            <span class="release-desc">Logs obtención token MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.4.html" class="doc-link">
+            <span class="version-badge">10.0.4</span>
+            <span class="release-desc">Fix UberEats parceo 99999</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.3.html" class="doc-link">
+            <span class="version-badge">10.0.3</span>
+            <span class="release-desc">Fix UberEats ExternalData</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.1.html" class="doc-link">
+            <span class="version-badge">10.0.1</span>
+            <span class="release-desc">Mejora logs fallo general</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_10.0.0.html" class="doc-link">
+            <span class="version-badge">10.0.0</span>
+            <span class="release-desc">Node 20, librerías, infraestructura</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.6.2.html" class="doc-link">
+            <span class="version-badge">9.6.2</span>
+            <span class="release-desc">Rappi quantity, PeYa OrderPickedUp</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.6.1.html" class="doc-link">
+            <span class="version-badge">9.6.1</span>
+            <span class="release-desc">MPD manejo 401 Unauthorized</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.6.0.html" class="doc-link">
+            <span class="version-badge">9.6.0</span>
+            <span class="release-desc">MPD cache tokens local/MongoDB</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.12.html" class="doc-link">
+            <span class="version-badge">9.5.12</span>
+            <span class="release-desc">Variable DeliveryType</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.11.html" class="doc-link">
+            <span class="version-badge">9.5.11</span>
+            <span class="release-desc">Mejoras logs MercadoPago</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.10.html" class="doc-link">
+            <span class="version-badge">9.5.10</span>
+            <span class="release-desc">Cacheo token MercadoPago</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.9.html" class="doc-link">
+            <span class="version-badge">9.5.9</span>
+            <span class="release-desc">Quitar logs MercadoPago</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.8.html" class="doc-link">
+            <span class="version-badge">9.5.8</span>
+            <span class="release-desc">Fix quantities Rappi y PedidosYa</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.7.html" class="doc-link">
+            <span class="version-badge">9.5.7</span>
+            <span class="release-desc">Error semántico en despliegue</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.6.html" class="doc-link">
+            <span class="version-badge">9.5.6</span>
+            <span class="release-desc">Fix PeYa precios y UberEats</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.5.html" class="doc-link">
+            <span class="version-badge">9.5.5</span>
+            <span class="release-desc">Timeout Axios de 40 a 20s</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.4.html" class="doc-link">
+            <span class="version-badge">9.5.4</span>
+            <span class="release-desc">MapperWeiss PedidosYa</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.3.html" class="doc-link">
+            <span class="version-badge">9.5.3</span>
+            <span class="release-desc"></span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.2.html" class="doc-link">
+            <span class="version-badge">9.5.2</span>
+            <span class="release-desc">PedidosYa OrderPickedUp</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.1.html" class="doc-link">
+            <span class="version-badge">9.5.1</span>
+            <span class="release-desc">Caché y limpieza BD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.5.0.html" class="doc-link">
+            <span class="version-badge">9.5.0</span>
+            <span class="release-desc">Logs communication error</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.6.html" class="doc-link">
+            <span class="version-badge">9.4.6</span>
+            <span class="release-desc">Logs dispatchOrder y deliveryOrder</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.5.html" class="doc-link">
+            <span class="version-badge">9.4.5</span>
+            <span class="release-desc">Mejoras orderTimes y order.details</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.2.html" class="doc-link">
+            <span class="version-badge">9.4.2</span>
+            <span class="release-desc">order.details extras y combos</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.1.html" class="doc-link">
+            <span class="version-badge">9.4.1</span>
+            <span class="release-desc">Fix variables MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.4.0.html" class="doc-link">
+            <span class="version-badge">9.4.0</span>
+            <span class="release-desc">Nuevo modelo orderTimes</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.3.2.html" class="doc-link">
+            <span class="version-badge">9.3.2</span>
+            <span class="release-desc">Fix MPD tipo delivery</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.3.1.html" class="doc-link">
+            <span class="version-badge">9.3.1</span>
+            <span class="release-desc">MPD reject, PeYa SKU order.details</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.3.0.html" class="doc-link">
+            <span class="version-badge">9.3.0</span>
+            <span class="release-desc">Nuevo parser order.details</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.23.html" class="doc-link">
+            <span class="version-badge">9.2.23</span>
+            <span class="release-desc">Latencia de órdenes orderTimes</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.22.html" class="doc-link">
+            <span class="version-badge">9.2.22</span>
+            <span class="release-desc">Fix MPD y PeYa TooBusy</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.21.html" class="doc-link">
+            <span class="version-badge">9.2.21</span>
+            <span class="release-desc">Tenant UltraCai, fix UberEats</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.20.html" class="doc-link">
+            <span class="version-badge">9.2.20</span>
+            <span class="release-desc">Optimización consulta MongoDB</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.19.html" class="doc-link">
+            <span class="version-badge">9.2.19</span>
+            <span class="release-desc">Fix pedidos SmartCloud Visto/Recibido</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.3.html" class="doc-link">
+            <span class="version-badge">9.2.3</span>
+            <span class="release-desc">Fix UberEats originalId</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.2.html" class="doc-link">
+            <span class="version-badge">9.2.2</span>
+            <span class="release-desc">originalId en String</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.1.html" class="doc-link">
+            <span class="version-badge">9.2.1</span>
+            <span class="release-desc">Corrección tenant MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.2.0.html" class="doc-link">
+            <span class="version-badge">9.2.0</span>
+            <span class="release-desc">CanjeApp</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.1.0.html" class="doc-link">
+            <span class="version-badge">9.1.0</span>
+            <span class="release-desc">Reintentos órdenes MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.0.1.html" class="doc-link">
+            <span class="version-badge">9.0.1</span>
+            <span class="release-desc">Fix integración Rappi multitenant</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_9.0.0.html" class="doc-link">
+            <span class="version-badge">9.0.0</span>
+            <span class="release-desc">Multitenant reglas por cadena</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.4.1.html" class="doc-link">
+            <span class="version-badge">8.4.1</span>
+            <span class="release-desc">URL token Cloud MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.4.0.html" class="doc-link">
+            <span class="version-badge">8.4.0</span>
+            <span class="release-desc">Estandarización motivos rechazo</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.3.3.html" class="doc-link">
+            <span class="version-badge">8.3.3</span>
+            <span class="release-desc">MPD token correcciones</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.3.2.html" class="doc-link">
+            <span class="version-badge">8.3.2</span>
+            <span class="release-desc">MPD token correcciones</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.3.1.html" class="doc-link">
+            <span class="version-badge">8.3.1</span>
+            <span class="release-desc">MPD actualización credenciales</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.3.0.html" class="doc-link">
+            <span class="version-badge">8.3.0</span>
+            <span class="release-desc">MPD gestión de token</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.2.4.html" class="doc-link">
+            <span class="version-badge">8.2.4</span>
+            <span class="release-desc">Error semántico versionado</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.1.3.html" class="doc-link">
+            <span class="version-badge">8.1.3</span>
+            <span class="release-desc">MPD info pedido en news</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.1.2.html" class="doc-link">
+            <span class="version-badge">8.1.2</span>
+            <span class="release-desc">Fix Rappi Sustituto</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.1.1.html" class="doc-link">
+            <span class="version-badge">8.1.1</span>
+            <span class="release-desc">MPD errores y parceo</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.1.0.html" class="doc-link">
+            <span class="version-badge">8.1.0</span>
+            <span class="release-desc">Rappi Sustituto, logs MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_platform_8.0.1.html" class="doc-link">
+            <span class="version-badge">8.0.1</span>
+            <span class="release-desc">COD PeYa, Rappi, token MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
         </div>
       </details>
 
-
+      <!-- ── Concentrador ── -->
       <details class="accordion-item">
         <summary class="accordion-header">
-          <h2>Releases Concentrador</h2>
+          <div class="header-left">
+            <span class="section-icon">🔌</span>
+            <h2>Releases Concentrador</h2>
+            <span class="release-count">43</span>
+          </div>
           <span class="accordion-icon">+</span>
         </summary>
         <div class="accordion-content">
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.3.2.html"
-            class="doc-link"><strong>9.3.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.3.1.html"
-            class="doc-link"><strong>9.3.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.3.0.html"
-            class="doc-link"><strong>9.3.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.2.1.html"
-            class="doc-link"><strong>9.2.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.2.0.html"
-            class="doc-link"><strong>9.2.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.1.0.html"
-            class="doc-link"><strong>9.1.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.0.3.html"
-            class="doc-link"><strong>9.0.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.0.1.html"
-            class="doc-link"><strong>9.0.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.0.0.html"
-            class="doc-link"><strong>9.0.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.8.1.html"
-            class="doc-link"><strong>8.8.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.8.0.html"
-            class="doc-link"><strong>8.8.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.7.0.html"
-            class="doc-link"><strong>8.7.0</strong></a>
-
-
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.6.html"
-            class="doc-link"><strong>8.6.6</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.5.html"
-            class="doc-link"><strong>8.6.5</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.4.html"
-            class="doc-link"><strong>8.6.4</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.3.html"
-            class="doc-link"><strong>8.6.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.2.html"
-            class="doc-link"><strong>8.6.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.1.html"
-            class="doc-link"><strong>8.6.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.0.html"
-            class="doc-link"><strong>8.6.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.5.3.html"
-            class="doc-link"><strong>8.5.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.5.2.html"
-            class="doc-link"><strong>8.5.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.5.1.html"
-            class="doc-link"><strong>8.5.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.5.0.html"
-            class="doc-link"><strong>8.5.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.4.0.html"
-            class="doc-link"><strong>8.4.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.3.0.html"
-            class="doc-link"><strong>8.3.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.7.html"
-            class="doc-link"><strong>8.2.7</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.6.html"
-            class="doc-link"><strong>8.2.6</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.5.html"
-            class="doc-link"><strong>8.2.5</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.4.html"
-            class="doc-link"><strong>8.2.4</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.3.html"
-            class="doc-link"><strong>8.2.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.2.html"
-            class="doc-link"><strong>8.2.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.1.html"
-            class="doc-link"><strong>8.2.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.0.html"
-            class="doc-link"><strong>8.2.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.1.1.html"
-            class="doc-link"><strong>8.1.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.1.0.html"
-            class="doc-link"><strong>8.1.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.0.2.html"
-            class="doc-link"><strong>8.0.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.0.1.html"
-            class="doc-link"><strong>8.0.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.0.0.html"
-            class="doc-link"><strong>8.0.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.4.0.html"
-            class="doc-link"><strong>7.4.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.3.0.html"
-            class="doc-link"><strong>7.3.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.2.1.html"
-            class="doc-link"><strong>7.2.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.2.0.html"
-            class="doc-link"><strong>7.2.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.1.0.html"
-            class="doc-link"><strong>7.1.0</strong></a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.3.2.html" class="doc-link">
+            <span class="version-badge">9.3.2</span>
+            <span class="release-desc">Fix country/CRON UberEats</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.3.1.html" class="doc-link">
+            <span class="version-badge">9.3.1</span>
+            <span class="release-desc">Fix token UberEats</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.3.0.html" class="doc-link">
+            <span class="version-badge">9.3.0</span>
+            <span class="release-desc">CheckIn UberEats y MercadoPago</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.2.1.html" class="doc-link">
+            <span class="version-badge">9.2.1</span>
+            <span class="release-desc">Fix Uber y Peya</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.2.0.html" class="doc-link">
+            <span class="version-badge">9.2.0</span>
+            <span class="release-desc">Close después del Close</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.1.0.html" class="doc-link">
+            <span class="version-badge">9.1.0</span>
+            <span class="release-desc">UberEats Argentina</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.0.3.html" class="doc-link">
+            <span class="version-badge">9.0.3</span>
+            <span class="release-desc">Logs obtención token MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.0.1.html" class="doc-link">
+            <span class="version-badge">9.0.1</span>
+            <span class="release-desc">Corrección logs SML</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_9.0.0.html" class="doc-link">
+            <span class="version-badge">9.0.0</span>
+            <span class="release-desc">Node 20, librerías, infraestructura</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.8.1.html" class="doc-link">
+            <span class="version-badge">8.8.1</span>
+            <span class="release-desc">MPD manejo 401 Unauthorized</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.8.0.html" class="doc-link">
+            <span class="version-badge">8.8.0</span>
+            <span class="release-desc">MPD cache tokens local/MongoDB</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.7.0.html" class="doc-link">
+            <span class="version-badge">8.7.0</span>
+            <span class="release-desc">OpenClose MercadoPago activo</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.6.html" class="doc-link">
+            <span class="version-badge">8.6.6</span>
+            <span class="release-desc">OpenClose MPD comentado, fixes</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.5.html" class="doc-link">
+            <span class="version-badge">8.6.5</span>
+            <span class="release-desc">OpenClose Pedigrido consulta masiva</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.4.html" class="doc-link">
+            <span class="version-badge">8.6.4</span>
+            <span class="release-desc">OpenClose Pedigrido, ajuste preventivo</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.3.html" class="doc-link">
+            <span class="version-badge">8.6.3</span>
+            <span class="release-desc">Activación OpenClose Pedigrido</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.2.html" class="doc-link">
+            <span class="version-badge">8.6.2</span>
+            <span class="release-desc">BD, desactivar OpenClose Pedigrido</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.1.html" class="doc-link">
+            <span class="version-badge">8.6.1</span>
+            <span class="release-desc">OpenClose BO Pedigrido, orderTimes</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.6.0.html" class="doc-link">
+            <span class="version-badge">8.6.0</span>
+            <span class="release-desc">OpenClose Pedigrido</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.5.3.html" class="doc-link">
+            <span class="version-badge">8.5.3</span>
+            <span class="release-desc">Fix orderTimes_avg</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.5.2.html" class="doc-link">
+            <span class="version-badge">8.5.2</span>
+            <span class="release-desc">Fix orderTimes</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.5.1.html" class="doc-link">
+            <span class="version-badge">8.5.1</span>
+            <span class="release-desc">Logs orderTimesAvg</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.5.0.html" class="doc-link">
+            <span class="version-badge">8.5.0</span>
+            <span class="release-desc">CRON ordertimes_avg</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.4.0.html" class="doc-link">
+            <span class="version-badge">8.4.0</span>
+            <span class="release-desc">Order details frontend</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.3.0.html" class="doc-link">
+            <span class="version-badge">8.3.0</span>
+            <span class="release-desc">OpenClose horarios Peya y Rappi</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.7.html" class="doc-link">
+            <span class="version-badge">8.2.7</span>
+            <span class="release-desc">Filtrado BO países y cadenas</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.6.html" class="doc-link">
+            <span class="version-badge">8.2.6</span>
+            <span class="release-desc">Tenant Ultracai</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.5.html" class="doc-link">
+            <span class="version-badge">8.2.5</span>
+            <span class="release-desc">MPD mercadoPagoUserId BO</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.4.html" class="doc-link">
+            <span class="version-badge">8.2.4</span>
+            <span class="release-desc">Mejoras en base de datos</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.3.html" class="doc-link">
+            <span class="version-badge">8.2.3</span>
+            <span class="release-desc">Mejoras en base de datos</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.2.html" class="doc-link">
+            <span class="version-badge">8.2.2</span>
+            <span class="release-desc">Corrección tenant MPD</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.1.html" class="doc-link">
+            <span class="version-badge">8.2.1</span>
+            <span class="release-desc">Filtro canje/no canje</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.2.0.html" class="doc-link">
+            <span class="version-badge">8.2.0</span>
+            <span class="release-desc">CanjeApp, MultiFiltro BO</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.1.1.html" class="doc-link">
+            <span class="version-badge">8.1.1</span>
+            <span class="release-desc">Fix SKU UberEats</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.1.0.html" class="doc-link">
+            <span class="version-badge">8.1.0</span>
+            <span class="release-desc">Gestión token MPD y Cloud</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.0.2.html" class="doc-link">
+            <span class="version-badge">8.0.2</span>
+            <span class="release-desc">Fix rechazos PedidosYa</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.0.1.html" class="doc-link">
+            <span class="version-badge">8.0.1</span>
+            <span class="release-desc">Fix reenvío confirmaciones</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_8.0.0.html" class="doc-link">
+            <span class="version-badge">8.0.0</span>
+            <span class="release-desc">Multitenant reglas por cadena</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.4.0.html" class="doc-link">
+            <span class="version-badge">7.4.0</span>
+            <span class="release-desc">Estandarización motivos rechazo</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.3.0.html" class="doc-link">
+            <span class="version-badge">7.3.0</span>
+            <span class="release-desc">OpenClose PeYa múltiples países</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.2.1.html" class="doc-link">
+            <span class="version-badge">7.2.1</span>
+            <span class="release-desc">Automatización OpenClose Rappi/Peya</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.2.0.html" class="doc-link">
+            <span class="version-badge">7.2.0</span>
+            <span class="release-desc">Descarga DeadLetter</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_concentrador_7.1.0.html" class="doc-link">
+            <span class="version-badge">7.1.0</span>
+            <span class="release-desc">Gestión estado tiendas BO</span>
+            <span class="link-arrow">›</span>
+          </a>
         </div>
       </details>
 
-
+      <!-- ── BackOffice ── -->
       <details class="accordion-item">
         <summary class="accordion-header">
-          <h2>Releases BackOffice</h2>
+          <div class="header-left">
+            <span class="section-icon">🖥️</span>
+            <h2>Releases BackOffice</h2>
+            <span class="release-count">23</span>
+          </div>
           <span class="accordion-icon">+</span>
         </summary>
         <div class="accordion-content">
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_7.0.0.html"
-            class="doc-link"><strong>7.0.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.4.0.html"
-            class="doc-link"><strong>6.4.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.9.html"
-            class="doc-link"><strong>6.3.9</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.8.html"
-            class="doc-link"><strong>6.3.8</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.7.html"
-            class="doc-link"><strong>6.3.7</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.6.html"
-            class="doc-link"><strong>6.3.6</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.5.html"
-            class="doc-link"><strong>6.3.5</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.4.html"
-            class="doc-link"><strong>6.3.4</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.3.html"
-            class="doc-link"><strong>6.3.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.2.html"
-            class="doc-link"><strong>6.3.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.1.html"
-            class="doc-link"><strong>6.3.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.0.html"
-            class="doc-link"><strong>6.3.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.4.html"
-            class="doc-link"><strong>6.2.4</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.3.html"
-            class="doc-link"><strong>6.2.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.2.html"
-            class="doc-link"><strong>6.2.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.1.html"
-            class="doc-link"><strong>6.2.1</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.0.html"
-            class="doc-link"><strong>6.2.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.1.3.html"
-            class="doc-link"><strong>6.1.3</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.1.2.html"
-            class="doc-link"><strong>6.1.2</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.1.0.html"
-            class="doc-link"><strong>6.1.0</strong></a>
-          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.0.1.html"
-            class="doc-link"><strong>6.0.1</strong></a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_7.1.0.html" class="doc-link">
+            <span class="version-badge">7.1.0</span>
+            <span class="release-desc">Exportación Excel por sucursal</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_7.0.1.html" class="doc-link">
+            <span class="version-badge">7.0.1</span>
+            <span class="release-desc"></span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_7.0.0.html" class="doc-link">
+            <span class="version-badge">7.0.0</span>
+            <span class="release-desc">Angular 21</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.4.0.html" class="doc-link">
+            <span class="version-badge">6.4.0</span>
+            <span class="release-desc">OpenClose MercadoPago</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.9.html" class="doc-link">
+            <span class="version-badge">6.3.9</span>
+            <span class="release-desc">OrderPickedUp</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.8.html" class="doc-link">
+            <span class="version-badge">6.3.8</span>
+            <span class="release-desc">Mapeo Weiss sucursales</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.7.html" class="doc-link">
+            <span class="version-badge">6.3.7</span>
+            <span class="release-desc">OpenClose MercadoPago</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.6.html" class="doc-link">
+            <span class="version-badge">6.3.6</span>
+            <span class="release-desc">OrderPickedUp</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.5.html" class="doc-link">
+            <span class="version-badge">6.3.5</span>
+            <span class="release-desc">OpenClose Pedigrido, AvgOrderTimes</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.4.html" class="doc-link">
+            <span class="version-badge">6.3.4</span>
+            <span class="release-desc">Latencias intervalo diario</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.3.html" class="doc-link">
+            <span class="version-badge">6.3.3</span>
+            <span class="release-desc">Mejoras latencias</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.2.html" class="doc-link">
+            <span class="version-badge">6.3.2</span>
+            <span class="release-desc">Mejoras ejes latencias día/hora</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.1.html" class="doc-link">
+            <span class="version-badge">6.3.1</span>
+            <span class="release-desc">Fix permisos latencias</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.3.0.html" class="doc-link">
+            <span class="version-badge">6.3.0</span>
+            <span class="release-desc">OrderTimes frontend</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.4.html" class="doc-link">
+            <span class="version-badge">6.2.4</span>
+            <span class="release-desc">Fix precios order.details v2</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.3.html" class="doc-link">
+            <span class="version-badge">6.2.3</span>
+            <span class="release-desc">Filtrado BO países y cadenas</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.2.html" class="doc-link">
+            <span class="version-badge">6.2.2</span>
+            <span class="release-desc">Visualización order.details v2</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.1.html" class="doc-link">
+            <span class="version-badge">6.2.1</span>
+            <span class="release-desc">Visualización order.details v2</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.2.0.html" class="doc-link">
+            <span class="version-badge">6.2.0</span>
+            <span class="release-desc">Nuevo parser order.details</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.1.3.html" class="doc-link">
+            <span class="version-badge">6.1.3</span>
+            <span class="release-desc">MPD mercadoPagoUserId BO</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.1.2.html" class="doc-link">
+            <span class="version-badge">6.1.2</span>
+            <span class="release-desc">Filtro canje/no canje</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.1.0.html" class="doc-link">
+            <span class="version-badge">6.1.0</span>
+            <span class="release-desc">MultiFiltro BO</span>
+            <span class="link-arrow">›</span>
+          </a>
+          <a href="https://matiasasmartfram.github.io/spReleases/releases_backoffice_6.0.1.html" class="doc-link">
+            <span class="version-badge">6.0.1</span>
+            <span class="release-desc">Fix filtros Turbo y Cloud</span>
+            <span class="link-arrow">›</span>
+          </a>
         </div>
       </details>
 
@@ -401,19 +893,11 @@
   </div>
 
   <script>
-    const accordionItems = document.querySelectorAll('.accordion-item');
-    accordionItems.forEach(item => {
+    document.querySelectorAll('.accordion-item').forEach(item => {
       const icon = item.querySelector('.accordion-icon');
-      const updateIcon = (isOpen) => {
-        icon.textContent = isOpen ? '×' : '+';
-        icon.style.transform = isOpen ? 'rotate(45deg)' : 'rotate(0deg)';
-      };
-
-      updateIcon(item.open);
-
-      item.addEventListener('toggle', event => {
-        updateIcon(event.target.open);
-      });
+      const sync = () => { icon.textContent = item.open ? '×' : '+'; };
+      sync();
+      item.addEventListener('toggle', sync);
     });
   </script>
 </body>
