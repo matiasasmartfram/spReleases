@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Backoffice 7.0.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .commit-section {
+            margin-bottom: 2em;
+        }
+
+        .commit-section > h3 {
+            font-size: 1.3em;
+            color: #343a40;
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.6em 1em;
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 1em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .component-body h5 { margin-top: 1.5em; font-size: 1.1em; font-weight: 700; }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            overflow-wrap: break-word !important;
+            background-color: #2d2d2d;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Backoffice 7.0.0</h1>
+            <p>Migración integral a Angular 21 — modernización del stack de dependencias, sistema de HTTP, guards de autenticación, detección de cambios y scripts de despliegue en AWS S3.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 7.0.0</p>
+            <p><b>Fecha de Despliegue:</b> 2026-06-01</p>
+            <p><b>AWS Task:</b> N/A</p>
+            <p><b>Commits:</b> f8dee113b4edda4b841d5848aa103a1ebbb8a330 · f38ddaaba89e10825a3edd729db08076b67163b6</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General de la Versión</h2>
+            <p>Esta versión actualiza la base tecnológica del panel de administración (Backoffice) desde Angular 8 a Angular 21, la versión actual del framework. El cambio implica una modernización completa de las bibliotecas de interfaz gráfica, el sistema de peticiones HTTP, las animaciones de carga y las herramientas de visualización de datos. Como resultado, la aplicación queda preparada para recibir nuevas funcionalidades sobre una infraestructura tecnológica soportada y actualizada.</p>
+            <p>Adicionalmente, se actualizan los scripts de publicación en el servidor para adaptarlos al nuevo formato de archivos generado por Angular 21, garantizando que los recursos (JavaScript, CSS, HTML) se sirvan con los tipos de contenido correctos.</p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+
+            <div class="commit-section">
+                <h3>Commit f8dee113 — Merge pull request #12 from smartit-ar/angular21</h3>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/package.json</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Actualización de Infraestructura Core de Angular a v21</b><br>
+                            Actualización masiva de las dependencias principales de Angular (core, common, compiler, forms, router, animations, etc.) desde la versión 8.1.2 a la versión 21.2.10.</p>
+                            <p><b>2. Actualización de Angular CDK y Material</b><br>
+                            Migración de componentes y directivas de diseño a la versión 20.2.0, garantizando compatibilidad con el nuevo motor de renderizado de Angular.</p>
+                            <p><b>3. Reemplazo de Biblioteca de Gráficos</b><br>
+                            Eliminación de la dependencia obsoleta <code>angular-google-charts</code> y adición de <code>apexcharts</code> y <code>ng-apexcharts</code> v2.4.0 para el renderizado eficiente de gráficos vectoriales interactivos.</p>
+                            <p><b>4. Actualización de Utilidades de UI y Control de Estado</b><br>
+                            Actualización de <code>sweetalert2</code> y <code>@sweetalert2/ngx-sweetalert2</code> para modales modernos, <code>ngx-spinner</code> para indicadores de carga, e incorporación de <code>rxjs</code> v7.8.2 e <code>typescript</code> v5.9.3 en el entorno de build.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-json"><code>    "@angular-devkit/build-angular": "0.801.2",
+    "@angular/animations": "~8.1.2",
+    "@angular/cdk": "^8.2.3",
+    "@angular/cli": "^8.3.19",
+    "@angular/common": "~8.1.2",
+    "@angular/compiler": "~8.1.2",
+    "@angular/compiler-cli": "~8.1.2",
+    "@angular/core": "~8.1.2",
+    "@angular/forms": "~8.1.2",
+    "@angular/language-service": "~8.1.2",
+    "@angular/material": "~8.2.3",
+    "@angular/platform-browser": "~8.1.2",
+    "@angular/platform-browser-dynamic": "~8.1.2",
+    "@angular/router": "~8.1.2",
+    "@sweetalert2/ngx-sweetalert2": "^6.0.1",
+    "angular-google-charts": "^0.1.6",
+    "apexcharts": "3.19.3",
+    "ng-apexcharts": "1.5.0",
+    "ngx-spinner": "8.0.3",
+    "rxjs": "~6.4.0",
+    "sweetalert2": "^8.18.6",
+    "zone.js": "~0.9.1"
+    "@types/node": "~8.9.4",
+    "codelyzer": "^5.0.0",
+    "jasmine-core": "~3.4.0",
+    "karma": "~4.1.0",
+    "karma-jasmine-html-reporter": "^1.4.0",
+    "protractor": "~5.4.0",
+    "tslint": "~5.15.0",
+    "typescript": "~3.4.3",</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-json"><code>    "@angular/animations": "^21.2.10",
+    "@angular/cdk": "^20.2.0",
+    "@angular/common": "^21.2.10",
+    "@angular/compiler": "^21.2.10",
+    "@angular/compiler-cli": "^21.2.10",
+    "@angular/core": "^21.2.10",
+    "@angular/forms": "^21.2.10",
+    "@angular/language-service": "^21.2.10",
+    "@angular/material": "^20.2.0",
+    "@angular/platform-browser": "^21.2.10",
+    "@angular/platform-browser-dynamic": "^21.2.10",
+    "@angular/router": "^21.2.10",
+    "@sweetalert2/ngx-sweetalert2": "^14.1.4",
+    "apexcharts": "^5.10.6",
+    "ng-apexcharts": "^2.4.0",
+    "ngx-spinner": "^21.1.0",
+    "rxjs": "^7.8.2",
+    "sweetalert2": "^11.26.24",
+    "zone.js": "~0.15.1"
+    "@angular-devkit/build-angular": "^21.2.8",
+    "@angular/cli": "^21.2.7",
+    "@types/node": "^25.6.0",
+    "jasmine-core": "~3.8.0",
+    "karma": "~6.4.4",
+    "karma-jasmine-html-reporter": "~1.7.0",
+    "typescript": "^5.9.3"</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El archivo de dependencias del proyecto se renueva por completo, eliminando librerías deprecadas y alineando el stack tecnológico del frontend a los estándares modernos de Angular 21, TypeScript 5.9 y RxJS 7.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/angular.json</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Migración al Constructor de Aplicaciones Moderno</b><br>
+                            Se reemplaza el builder clásico <code>@angular-devkit/build-angular:browser</code> por <code>@angular-devkit/build-angular:application</code>, optimizando los tiempos de build, bundling y optimización del código de producción.</p>
+                            <p><b>2. Reconfiguración del Output y Polyfills</b><br>
+                            Se reestructura la propiedad <code>outputPath</code> adaptándola al formato de objetos y se configuran los polyfills como un arreglo de recursos en lugar de una entrada única.</p>
+                            <p><b>3. Adición de Estilos de ngx-spinner</b><br>
+                            Se inyecta la hoja de estilos <code>ball-atom.css</code> directamente en el bundle global para dar soporte nativo a las animaciones de carga.</p>
+                            <p><b>4. Remoción de Tslint</b><br>
+                            Se elimina por completo el target de <code>lint</code> basado en Tslint y Codelyzer, en concordancia con su deprecación en el ecosistema Angular moderno.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-json"><code>          "builder": "@angular-devkit/build-angular:browser",
+            "outputPath": "dist",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+              "node_modules/@fortawesome/fontawesome-free/css/all.css"
+            ]
+              "extractCss": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "extractCss": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "extractCss": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+            "browserTarget": "smartfran:build"
+              "browserTarget": "smartfran:build:production"
+            "browserTarget": "smartfran:build"
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+  "defaultProject": "smartfran"</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-json"><code>          "builder": "@angular-devkit/build-angular:application",
+            "outputPath": {
+              "base": "dist"
+            },
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
+              "node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "node_modules/ngx-spinner/animations/ball-atom.css"
+            ],
+            "extractLicenses": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
+            "browser": "src/main.ts"
+          },
+          "defaultConfiguration": ""
+            "buildTarget": "smartfran:build"
+              "buildTarget": "smartfran:build:production"
+            "buildTarget": "smartfran:build"
+  "schematics": {
+    "@schematics/angular:component": {
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
+    }
+  }</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>La configuración del espacio de trabajo de Angular migra hacia el nuevo constructor de aplicaciones optimizado (Application Builder), simplificando la estructura del bundle final y preparando el terreno para el compilador moderno.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/tsconfig.json</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Modernización de Destino de Transpilación</b><br>
+                            Se cambia el target de transpilación desde un obsoleto <code>ES5</code> a <code>ES2022</code>, permitiendo que el navegador ejecute JavaScript nativo moderno y reduciendo el tamaño final de los polyfills generados.</p>
+                            <p><b>2. Configuración de Resolución de Módulos</b><br>
+                            Se actualiza la resolución de módulos a <code>bundler</code> y se habilita <code>esModuleInterop</code> para asegurar la interoperabilidad con módulos CommonJS.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-json"><code>    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ]</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-json"><code>    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "target": "ES2022",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "useDefineForClassFields": false</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El compilador de TypeScript se reconfigura para generar código nativo moderno y eficiente, descartando polyfills de compatibilidad para navegadores legados.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/src/main.ts</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Optimización de Detección de Cambios con Zone Change Detection</b><br>
+                            Se inyecta <code>provideZoneChangeDetection()</code> dentro de las opciones de inicialización del módulo principal, permitiendo reducir el procesamiento de ciclos de Zone.js mediante coalescencia de eventos.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-typescript"><code>import { enableProdMode } from '@angular/core';
+platformBrowserDynamic().bootstrapModule(AppModule)</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-typescript"><code>import { enableProdMode, provideZoneChangeDetection } from '@angular/core';
+platformBrowserDynamic().bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()], })</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El punto de entrada del frontend inicializa la aplicación implementando detección de cambios optimizada, disminuyendo el sobreprocesamiento en la UI.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/src/polyfills.ts</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Remoción de Polyfills Obsoletos</b><br>
+                            Se eliminan todos los comentarios y referencias a polyfills específicos de Internet Explorer 10/11 y navegadores antiguos.</p>
+                            <p><b>2. Simplificación del Bundle de Zone.js</b><br>
+                            Se reemplaza la importación de la subruta de Zone <code>import 'zone.js/dist/zone'</code> por la importación directa <code>import 'zone.js'</code>, alineada con el estándar actual del framework.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-typescript"><code>/** IE10 and IE11 requires the following for NgClass support on SVG elements */
+// import 'classlist.js';  // Run `npm install --save classlist.js`.
+
+/**
+ * Web Animations `@angular/platform-browser/animations`
+ * Only required if AnimationBuilder is used within the application and using IE/Edge or Safari.
+ * Standard animation support in Angular DOES NOT require any polyfills (as of Angular 6.0).
+ */
+// import 'web-animations-js';  // Run `npm install --save web-animations-js`.
+import 'zone.js/dist/zone';  // Included with Angular CLI.</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-typescript"><code>import 'zone.js';  // Included with Angular CLI.</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El archivo de polyfills se reduce al mínimo, eliminando código de compatibilidad innecesario para navegadores obsoletos.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/src/app/app.module.ts</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Actualización en Configuración de HttpClient</b><br>
+                            Se remueve el módulo obsoleto <code>HttpClientModule</code> de los <code>imports</code> y se configura el nuevo proveedor moderno de servicios HTTP <code>provideHttpClient(withInterceptorsFromDi())</code> en la sección de <code>providers</code>.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-typescript"><code>import { HttpClientModule } from '@angular/common/http';
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    HttpClientModule,
+    SweetAlert2Module.forRoot(),
+    NgxSpinnerModule,
+    LoginModule,
+    CoreModule
+  ],
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
+  bootstrap: [AppComponent]
+})</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-typescript"><code>import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+@NgModule({ declarations: [
+        AppComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        SweetAlert2Module.forRoot(),
+        NgxSpinnerModule,
+        LoginModule,
+        CoreModule], providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }, provideHttpClient(withInterceptorsFromDi())] })</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El módulo raíz adopta las API modernas de inyección de dependencias de Angular 21 para el cliente HTTP, preservando la inyección de interceptores basados en clases.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/src/app/core/auth/auth.guard.ts</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Deprecación de la Interfaz CanActivate</b><br>
+                            Se elimina la declaración <code>implements CanActivate</code> del AuthGuard, adaptándolo al estándar de Angular moderno donde las guards ya no requieren implementar interfaces explícitas.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-typescript"><code>import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+export class AuthGuard implements CanActivate {</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-typescript"><code>import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+export class AuthGuard  {</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>La guard de autenticación se simplifica estructuralmente, removiendo interfaces obsoletas sin alterar su lógica de verificación interna.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/src/app/core/core.module.ts</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Adopción de API HTTP Moderna en Módulo Core</b><br>
+                            Se reemplaza la importación de <code>HttpClientModule</code> por <code>provideHttpClient(withInterceptorsFromDi())</code> dentro de los proveedores del módulo, asegurando consistencia en la provisión del servicio HTTP y sus interceptores a nivel global.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-typescript"><code>import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+@NgModule({
+  imports: [
+    CommonModule,
+    HttpClientModule
+  ],
+  providers: [
+    AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ]
+})</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-typescript"><code>import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+@NgModule({ imports: [CommonModule], providers: [
+        AuthService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El módulo core de la aplicación estandariza sus proveedores HTTP utilizando las API recomendadas por Angular 21.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/src/app/pages/dashboard/dashboard.module.ts</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Reemplazo de Google Charts por NgApexcharts</b><br>
+                            Se remueven las referencias y la inicialización de <code>GoogleChartsModule.forRoot()</code> y se importa <code>NgApexchartsModule</code> para dar soporte nativo a los nuevos gráficos en el módulo del dashboard.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-typescript"><code>import { GoogleChartsModule } from 'angular-google-charts';
+    GoogleChartsModule.forRoot(),</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-typescript"><code>//import { GoogleChartsModule } from 'angular-google-charts';
+    //GoogleChartsModule.forRoot(),
+    NgApexchartsModule</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El módulo del dashboard descontinúa el uso de Google Charts e integra formalmente la biblioteca NgApexcharts para el renderizado de gráficos vectoriales.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/src/app/pages/dashboard/reporting/reporting.component.ts</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Corrección de Importaciones en Módulos de Utilidad</b><br>
+                            Se modifican las importaciones de tipo comodín <code>import * as moment from "moment"</code> e <code>import * as flat from "flat"</code> por importaciones directas por defecto, alineándose con <code>esModuleInterop</code>.</p>
+                            <p><b>2. Configuración de Componente Standalone en Falso</b><br>
+                            Se declara explícitamente la propiedad <code>standalone: false</code> dentro del decorador <code>@Component</code> para mantener compatibilidad con el esquema de módulos clásico del Backoffice.</p>
+                            <p><b>3. Pospuesta Asíncrona del Título del Toolbar</b><br>
+                            Se envuelve la llamada a <code>setTitle</code> dentro de un <code>setTimeout</code> para evitar errores de ciclo de detección de cambios en el ciclo de vida de Angular moderno.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-typescript"><code>import * as moment from "moment";
+import * as flat from "flat";
+@Component({
+  selector: "app-reporting",
+  templateUrl: "./reporting.component.html",
+  styleUrls: ["./reporting.component.css"],
+})
+    this._toolbarSevice.setTitle("Reporting");</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-typescript"><code>import moment from "moment";
+import flat from "flat";
+@Component({
+    selector: "app-reporting",
+    templateUrl: "./reporting.component.html",
+    styleUrls: ["./reporting.component.css"],
+    standalone: false
+})
+    setTimeout(() =&gt; {
+       this._toolbarSevice.setTitle("Reporting");
+    });</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El componente de Reportes se adapta a los estándares de transpilación de ES2022 y previene fallos de ciclo de detección de cambios al actualizar la barra de navegación.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>app/src/app/pages/dashboard/status/status.component.ts</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Estandarización de Tipado e Inicialización de Gráficos</b><br>
+                            Se define el tipo <code>ChartOptions</code> para el control de gráficos de Apexcharts y se expone la propiedad <code>chartOptions</code> inicializada con un objeto vacío y tipo "donut".</p>
+                            <p><b>2. Prevención de Errores de Detección de Cambios en Toolbar</b><br>
+                            Se encapsula toda la inicialización del componente dentro de un <code>setTimeout</code> asíncrono, eliminando errores de ciclo de vida al iniciar el flujo de datos.</p>
+                            <p><b>3. Migración a Gráfico de Torta de Apexcharts en Monitoreo</b><br>
+                            Se reemplaza la lógica de renderizado del estado de plataformas por la configuración activa de un gráfico circular ('pie') que contrasta visualmente plataformas Online y Offline con colores personalizados (verde y gris).</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-typescript"><code>import * as moment from "moment";
+@Component({
+  selector: "app-status",
+  templateUrl: "./status.component.html",
+  styleUrls: ["./status.component.css"],
+})
+  public newStates = [];
+    this._toolbarSevice.setTitle("Status");
+    ]).then(() =&gt; {
+      this.generateBranchDashboard();
+      this.generatePlatformDashboard();
+      this.generateNewsDashboard();
+      // this.generateChartsDashboard();
+    });
+      let online = 0;
+      platforms.forEach((platform) =&gt; {
+        let inTime = false;
+
+        let ahora = new Date();
+        ahora.setMinutes(ahora.getMinutes() - this.platformMinutes);
+        if (new Date(platform.lastContact) &gt;= ahora) inTime = true;
+
+        if (platform.active)
+          this.platformDashboard.onlinePlatforms.push({
+            name: platform.name,
+            time: platform.lastContact,
+          });
+        else
+          this.platformDashboard.offlinePlatforms.push({
+            name: platform.name,
+            time: platform.lastContact,
+          });
+      });</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-typescript"><code>import moment from "moment";
+import { ApexNonAxisChartSeries, ApexChart, ApexResponsive, ApexLegend } from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  colors: string[];
+  legend: ApexLegend;
+  responsive: ApexResponsive[];
+};
+@Component({
+    selector: "app-status",
+    templateUrl: "./status.component.html",
+    styleUrls: ["./status.component.css"],
+    standalone: false
+})
+ public chartOptions: any = {
+  series: [],
+  chart: { type: "donut" },
+  labels: []
+};
+  public newStates: any[] = [];
+  setTimeout(() =&gt; {
+    this._toolbarSevice.setTitle("Status");
+    ]).then(async () =&gt; {
+      this.generateBranchDashboard();
+      this.generatePlatformDashboard();
+      this.generateNewsDashboard();
+      //this.generateOnlineDashboard();
+      // this.generateChartsDashboard();
+    });
+  }, 0);
+      for (const platform of platforms) {
+        let inTime = false;
+        let ahora = new Date();
+        ahora.setMinutes(ahora.getMinutes() - this.platformMinutes);
+        if (new Date(platform.lastContact) &gt;= ahora) inTime = true;
+
+        if (platform.active)
+          this.platformDashboard.onlinePlatforms.push({
+            name: platform.name,
+            time: platform.lastContact,
+          });
+        else
+          this.platformDashboard.offlinePlatforms.push({
+            name: platform.name,
+            time: platform.lastContact,
+          });
+      }
+      this.chartOptions =  {
+        series: [this.platformDashboard.onlinePlatforms.length, this.platformDashboard.offlinePlatforms.length],
+        chart: {
+          type: 'pie'
+        },
+        labels: ['Online', 'Offline'],
+        colors: ["#28a745", "#6c757d"],
+        responsive: [
+          {
+            breakpoint: 768,
+            options: {
+              chart: {
+                width: 250
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }
+        ]
+      };  </code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El componente de Status se actualiza incorporando un gráfico dinámico de Apexcharts para representar el estado operativo de las plataformas, resolviendo a su vez problemas de ciclo de vida con la barra de herramientas.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>deploy-staging.sh</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Segmentación de Despliegue en AWS S3 por Contenido</b><br>
+                            Se reemplaza la sincronización directa del directorio dist por una subida segmentada de la carpeta <code>dist/browser/</code>. Primero sincroniza archivos <code>.js</code> con content-type <code>application/javascript</code>, luego archivos <code>.css</code> con <code>text/css</code>, copia individualmente el <code>index.html</code> como <code>text/html</code> y finalmente sincroniza el resto de recursos (assets), asegurando la correcta asignación de cabeceras HTTP en S3.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-bash"><code># Deploy
+aws s3 sync ./dist/ s3://${S3_BUCKET} --profile ${PROFILE}</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-bash"><code># Deploy
+# JS
+aws s3 sync ./dist/browser/ s3://${S3_BUCKET} \
+  --exclude "*" --include "*.js" \
+  --content-type "application/javascript"
+
+# CSS
+aws s3 sync ./dist/browser/ s3://${S3_BUCKET} \
+  --exclude "*" --include "*.css" \
+  --content-type "text/css"
+
+# HTML
+aws s3 cp ./dist/browser/index.html s3://${S3_BUCKET}/index.html \
+  --content-type "text/html"
+
+# resto (assets)
+aws s3 sync ./dist/browser/ s3://${S3_BUCKET} \
+  --exclude "*.js" --exclude "*.css" --exclude "index.html"</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>El script de despliegue a staging se optimiza para estructurar y subir el nuevo formato de bundle generado por el constructor de aplicaciones de Angular 21 (subcarpeta browser), garantizando tipos MIME correctos en AWS S3.</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="commit-section">
+                <h3>Commit f38ddaab — fix: angular21</h3>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>deploy-prod-2.sh [ELIMINADO]</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Eliminación de Script de Despliegue Duplicado</b><br>
+                            Se elimina por completo el script <code>deploy-prod-2.sh</code>, unificando el flujo de subida del entorno de producción en un único script optimizado.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-bash"><code>PROFILE=smartfran
+S3_BUCKET=boprodpedidos.smartfran.com
+DISTRIBUTION_ID=EN17DHYYWUZ8X
+INVALIDATE_PATH=/*
+ENV=prd
+
+# Clean 
+cd app/
+rm -rf package-lock.json ./dist ./node_modules
+aws s3 rm s3://${S3_BUCKET} --profile ${PROFILE} --recursive
+
+#Build
+npm i 
+npm run build:${ENV}
+# Deploy
+aws s3 sync ./dist/ s3://${S3_BUCKET} --profile ${PROFILE}
+
+#Invalidate CloudFront caches
+aws cloudfront create-invalidation \
+    --profile ${PROFILE} \
+    --distribution-id ${DISTRIBUTION_ID} \
+    --paths "${INVALIDATE_PATH}"</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-bash"><code>(archivo eliminado)</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>Se remueve el script de despliegue secundario redundante para evitar confusiones en los flujos de publicación en producción.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="component-card" open>
+                    <summary class="component-header">
+                        <h3>deploy-prod.sh [NUEVO]</h3>
+                    </summary>
+                    <div class="component-body">
+                        <div class="analysis-box">
+                            <h4>Modificaciones Identificadas</h4>
+                            <p><b>1. Creación de Script de Producción con Despliegue Segmentado</b><br>
+                            Se crea un nuevo script de deploy para producción que incorpora la compilación de Angular 21 y realiza una sincronización en AWS S3 segmentada por tipos MIME (<code>.js</code> como javascript, <code>.css</code> como css, e <code>index.html</code> como html) a partir de la nueva ruta de distribución <code>dist/browser/</code>.</p>
+                        </div>
+
+                        <h4>Código ANTES</h4>
+                        <pre class="language-bash"><code>(archivo nuevo — no existía)</code></pre>
+
+                        <h4>Código DESPUÉS</h4>
+                        <pre class="language-bash"><code>PROFILE=smartfran
+S3_BUCKET=boprodpedidos.smartfran.com
+DISTRIBUTION_ID=EN17DHYYWUZ8X
+INVALIDATE_PATH=/*
+ENV=prd
+
+# Clean 
+cd app/
+rm -rf package-lock.json ./dist ./node_modules
+aws s3 rm s3://${S3_BUCKET} --profile ${PROFILE} --recursive
+
+#Build
+npm i 
+npm run build:${ENV}
+# JS
+aws s3 sync ./dist/browser/ s3://${S3_BUCKET} \
+  --exclude "*" --include "*.js" \
+  --content-type "application/javascript"
+
+# CSS
+aws s3 sync ./dist/browser/ s3://${S3_BUCKET} \
+  --exclude "*" --include "*.css" \
+  --content-type "text/css"
+
+# HTML
+aws s3 cp ./dist/browser/index.html s3://${S3_BUCKET}/index.html \
+  --content-type "text/html"
+
+# resto (assets)
+aws s3 sync ./dist/browser/ s3://${S3_BUCKET} \
+  --exclude "*.js" --exclude "*.css" --exclude "index.html"
+
+#Invalidate CloudFront caches
+aws cloudfront create-invalidation \
+    --profile ${PROFILE} \
+    --distribution-id ${DISTRIBUTION_ID} \
+    --paths "${INVALIDATE_PATH}"</code></pre>
+
+                        <div class="analysis-box">
+                            <h4>Conclusión del Archivo</h4>
+                            <p>Se implementa el nuevo script de producción estándar, garantizando que el bundle moderno de la SPA se despliegue con cabeceras MIME óptimas y CloudFront se invalide correctamente.</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+        </section>
+
+        <section id="conclusion" class="service-section">
+            <h2>Conclusión General</h2>
+            <p>La migración a Angular 21 marca un hito evolutivo clave en el frontend del Backoffice, reemplazando dependencias antiguas y obsoletas (como Angular 8 y Google Charts) por alternativas modernas y de alto rendimiento como Angular 21 y NgApexcharts. Esta base tecnológica no solo optimiza la reactividad y velocidad de la interfaz mediante la inyección de proveedores de detección de cambios optimizados, sino que también estandariza los flujos de despliegue mediante sincronización segmentada por tipo de contenido en AWS S3. Los cambios en Guards, interceptores y componentes de reportes y estado sientan una infraestructura sólida para futuros desarrollos visuales y de monitoreo.</p>
+        </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
