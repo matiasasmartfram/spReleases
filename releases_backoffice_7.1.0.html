@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +31,10 @@
             line-height: 1.7;
         }
 
-        .container { max-width: 960px; margin: 0 auto; }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
 
         .main-header {
             background-color: var(--card-bg-color);
@@ -41,8 +45,17 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
-        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+        .main-header h1 {
+            margin: 0 0 0.25em 0;
+            font-size: 2.2em;
+            color: var(--primary-color);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--text-muted-color);
+        }
 
         .deployment-info-box {
             background-color: var(--deployment-bg);
@@ -52,11 +65,23 @@
             border-radius: 4px;
         }
 
-        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
-        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+        .deployment-info-box h4 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #166534;
+        }
 
-        .service-section { margin-bottom: 3em; }
-        .service-section > h2 {
+        .deployment-info-box p {
+            margin: 0.5em 0 0 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+        }
+
+        .service-section {
+            margin-bottom: 3em;
+        }
+
+        .service-section>h2 {
             font-size: 1.8em;
             color: var(--primary-color);
             border-bottom: 2px solid var(--border-color);
@@ -81,12 +106,31 @@
             list-style: none;
         }
 
-        .component-header::-webkit-details-marker { display: none; }
-        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+        .component-header::-webkit-details-marker {
+            display: none;
+        }
 
-        .component-body { padding: 1.5em; }
-        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
-        .component-body h5 { margin-top: 1.5em; font-size: 1.1em; font-weight: 700; }
+        .component-header h3 {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2em;
+        }
+
+        .component-body {
+            padding: 1.5em;
+        }
+
+        .component-body h4 {
+            margin-top: 1.5em;
+            font-size: 1.2em;
+            color: #343a40;
+        }
+
+        .component-body h5 {
+            margin-top: 1.5em;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
 
         .analysis-box {
             background-color: var(--analysis-bg);
@@ -95,108 +139,13 @@
             margin-top: 1.5em;
             border-radius: 4px;
         }
-        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
 
-        pre[class*="language-"] {
-            padding: 1.2em !important;
-            margin: 1em 0 !important;
-            border-radius: 6px;
-            font-family: 'Fira Code', monospace !important;
-            font-size: 0.9em !important;
-            line-height: 1.5 !important;
-            border: 1px solid var(--border-color);
-            white-space: pre-wrap !important;
-            word-break: break-all !important;
-            overflow-wrap: break-word !important;
-            background-color: #2d2d2d;
-            color: #ccc;
+        .analysis-box h4 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: var(--primary-color);
         }
 
-        /* === BACKOFFICE: Vista Previa Visual === */
-        .visual-preview {
-            border: 2px dashed #91caff;
-            border-radius: 8px;
-            margin: 1.5em 0;
-            overflow: hidden;
-            background: #f0f7ff;
-        }
-        .visual-preview-header {
-            background: #1677ff;
-            padding: 0.5em 1em;
-            font-size: 0.82em;
-            color: #ffffff;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.03em;
-        }
-        .visual-preview-content {
-            padding: 1.5em;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95em;
-            color: #1a1a2e;
-            background: #f8fbff;
-        }
-        .visual-preview-content button {
-            padding: 0.35em 1em;
-            border: 1px solid #1677ff;
-            border-radius: 4px;
-            cursor: default;
-            background: #1677ff;
-            color: #fff;
-            font-size: 0.9em;
-            margin: 0.2em;
-        }
-        .visual-preview-content button.btn-secondary {
-            background: #fff;
-            color: #1677ff;
-        }
-        .visual-preview-content input,
-        .visual-preview-content select,
-        .visual-preview-content textarea {
-            padding: 0.35em 0.6em;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 0.9em;
-            margin: 0.2em;
-            background: #fff;
-        }
-        .visual-preview-content table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 0.5em 0;
-        }
-        .visual-preview-content td,
-        .visual-preview-content th {
-            border: 1px solid #d0e4f7;
-            padding: 0.5em 0.8em;
-            font-size: 0.9em;
-        }
-        .visual-preview-content th {
-            background: #e6f0fd;
-            font-weight: 600;
-            text-align: left;
-        }
-        .visual-preview-content label {
-            font-weight: 500;
-            margin-right: 0.4em;
-        }
-        .visual-preview-content .card,
-        .visual-preview-content .panel {
-            border: 1px solid #d0e4f7;
-            border-radius: 6px;
-            padding: 1em;
-            margin: 0.5em 0;
-            background: #fff;
-        }
-        .visual-preview-content .badge {
-            display: inline-block;
-            padding: 0.15em 0.6em;
-            border-radius: 12px;
-            font-size: 0.8em;
-            background: #e6f4ff;
-            color: #0958d9;
-            border: 1px solid #91caff;
-        }
         .mockup-container {
             margin: 1em 0;
             border-radius: 6px;
@@ -204,24 +153,28 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header class="main-header">
             <h1>Notas de Release: Backoffice 7.1.0</h1>
-            <p>Este release del Backoffice añade una potente herramienta de reporte al permitir la exportación de sucursales y sus respectivas plataformas asociadas directamente a planillas Excel. La interfaz de exportación parametrizable con selección de cadenas, países y plataformas otorga a los administradores un control absoluto del reporte generado.</p>
+            <p>Módulo de gestión de sucursales con nueva pantalla de exportación masiva a Excel y filtros por cadena,
+                país y plataforma.</p>
         </header>
 
         <div class="deployment-info-box">
             <h4>Información de Despliegue</h4>
             <p><b>Versión:</b> 7.1.0</p>
             <p><b>Fecha de Despliegue:</b> 01/06/2026</p>
-            <p><b>AWS Task:</b> N/A</p>
-            <p><b>Commits:</b> b34f07876c4858cdb9f29b21368596332bea85c3</p>
+            <p><b>JIRA Task:</b> GITSFP-1550</p>
+            <p><b>Commits:</b> 4d9c70dc83dd11f66c9253325f1f4bbc44e56b58</p>
         </div>
 
         <section id="summary" class="service-section">
             <h2>Resumen General de la Versión</h2>
-            <p>Este release del Backoffice implementa una completa funcionalidad de exportación a Excel para las plataformas habilitadas en cada sucursal. Los operadores y administradores ahora pueden filtrar por cadena, país y plataforma de delivery y generar reportes consolidados detallando las referencias y configuraciones de cada local comercial de manera ágil y con soporte para grandes volúmenes de datos mediante paginación asíncrona.</p>
+            <p>Este release del Backoffice introduce una nueva herramienta de descarga que facilita la obtención de un
+                archivo Excel consolidado de las sucursales del sistema y la configuración de sus plataformas de
+                delivery, mejorando la auditoría y gestión de sucursales activas.</p>
         </section>
 
         <section id="technical-analysis" class="service-section">
@@ -234,13 +187,13 @@
                 <div class="component-body">
                     <div class="analysis-box">
                         <h4>Modificaciones Identificadas</h4>
-                        <p><b>1. Configuración de Rutas para la Nueva Pantalla de Exportación</b></p>
-                        <p>Se registra la ruta <code>exportBranches</code> asociada al componente <code>ExportBranchesComponent</code>, permitiendo la navegación directa a la nueva herramienta de exportación. Asimismo, se incorpora explícitamente la ruta <code>branches</code> apuntando al componente principal de gestión de sucursales.</p>
+                        <p><b>1. Definición de ruta para exportación de sucursales</b></p>
+                        <p>Se agrega el componente de exportación de sucursales en la configuración de rutas de la
+                            sección de sucursales bajo el path <code>exportBranches</code>.</p>
                     </div>
-
                     <div class="analysis-box" style="margin-top: 1em;">
                         <h4>Conclusión</h4>
-                        <p>El enrutador de sucursales integra la nueva pantalla de exportación al árbol de navegación, permitiendo el flujo de usuarios hacia esta funcionalidad.</p>
+                        <p>Se registra la ruta para permitir la navegación al nuevo panel de exportación.</p>
                     </div>
                 </div>
             </details>
@@ -251,49 +204,36 @@
                 </summary>
                 <div class="component-body">
                     <div class="mockup-container">
-<div style="font-family:Arial,sans-serif;font-size:13px;border:1px solid #dee2e6;border-radius:6px;overflow:hidden;margin:8px 0;">
-  <div style="background:#343a40;color:#fff;padding:6px 12px;font-size:11px;font-weight:600;letter-spacing:0.05em;">
-    MOCKUP — branches.component.html — Panel de Sucursales
-  </div>
-  <div style="padding:16px;background:#fff;">
-    <div style="opacity:0.6;padding:4px 0;">
-      <button style="padding:4px 8px;font-size:12px;background:#007bff;color:#fff;border:none;border-radius:4px;">🔍 Buscar Sucursal</button>
-    </div>
-    <div style="background:#f0fff4;border:1.5px solid #52c41a;border-radius:4px;padding:8px;margin:4px 0;">
-      <span style="font-size:10px;color:#52c41a;font-weight:700;text-transform:uppercase;margin-bottom:4px;display:block;">+ NUEVO (Botón de Exportación)</span>
-      <button style="padding:6px 12px;font-size:13px;background:#28a745;color:#fff;border:none;border-radius:4px;font-weight:bold;cursor:pointer;">📊 Exportar Plataformas por Sucursal</button>
-    </div>
-  </div>
-</div>
+                        <div
+                            style="font-family:Arial,sans-serif;font-size:13px;border:1px solid #dee2e6;border-radius:6px;overflow:hidden;margin:8px 0;">
+                            <div
+                                style="background:#343a40;color:#fff;padding:6px 12px;font-size:11px;font-weight:600;letter-spacing:0.05em;">
+                                MOCKUP — branches.component.html — estado después del deploy
+                            </div>
+                            <div style="padding:16px;background:#fff;display:flex;justify-content:flex-end;">
+                                <div
+                                    style="background:#f0fff4;border:1.5px solid #52c41a;border-radius:4px;padding:8px;width:300px;text-align:right;">
+                                    <span
+                                        style="font-size:10px;color:#52c41a;font-weight:700;text-transform:uppercase;margin-bottom:4px;display:block;text-align:left;">+
+                                        NUEVO BOTÓN</span>
+                                    <button
+                                        style="padding:0.5rem 1rem;font-size:14px;background:#28a745;color:#fff;border:1px solid #28a745;border-radius:0.25rem;cursor:pointer;width:100%;font-weight:500;">
+                                        📄 Exportar Plataformas por Sucursal
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
                     <div class="analysis-box" style="margin-top: 1.5em;">
                         <h4>Modificaciones Identificadas</h4>
-                        <p><b>1. Incorporación de Botón de Exportación en la Interfaz Principal</b></p>
-                        <p>Se introduce un botón con color de énfasis success ("Exportar Plataformas por Sucursal") al final del panel de control de sucursales. Al presionarlo, redirige al operador a la nueva pantalla de exportación. Cuenta con un ícono representativo de archivo Excel.</p>
+                        <p><b>1. Botón de acceso a la pantalla de exportación</b></p>
+                        <p>Se añade un botón verde con el icono de Excel al pie del panel para acceder a la nueva
+                            pantalla de exportación.</p>
                     </div>
-
                     <div class="analysis-box" style="margin-top: 1em;">
                         <h4>Conclusión</h4>
-                        <p>El panel general de sucursales ahora expone el punto de entrada a la funcionalidad de exportación para cadenas seleccionadas de forma intuitiva.</p>
-                    </div>
-                </div>
-            </details>
-
-            <details class="component-card" open>
-                <summary class="component-header">
-                    <h3>app/src/app/pages/management/branches/export-branches/export-branches.component.css</h3>
-                </summary>
-                <div class="component-body">
-                    <div class="analysis-box">
-                        <h4>Modificaciones Identificadas</h4>
-                        <p><b>1. Estilos Específicos para el Módulo de Exportación</b></p>
-                        <p>Se definen reglas CSS exclusivas para estructurar la nueva pantalla de exportación, regulando el tamaño del texto principal, la animación de tarjetas al pasar el cursor, el diseño con desplazamiento vertical interno en los menús desplegables de filtros múltiples, y las proporciones de los contenedores gráficos de la interfaz.</p>
-                    </div>
-
-                    <div class="analysis-box" style="margin-top: 1em;">
-                        <h4>Conclusión</h4>
-                        <p>El archivo de estilos provee un maquetado limpio y enfocado a la usabilidad para los controles de selección múltiple y la barra de progreso.</p>
+                        <p>La pantalla principal de listado de sucursales incorpora el botón de navegación hacia el
+                            módulo de exportación.</p>
                     </div>
                 </div>
             </details>
@@ -304,70 +244,85 @@
                 </summary>
                 <div class="component-body">
                     <div class="mockup-container">
-<div style="font-family:Arial,sans-serif;font-size:13px;border:1px solid #dee2e6;border-radius:6px;overflow:hidden;margin:8px 0;">
-  <div style="background:#343a40;color:#fff;padding:6px 12px;font-size:11px;font-weight:600;letter-spacing:0.05em;">
-    MOCKUP — export-branches.component.html — Generador de Reporte Excel
-  </div>
-  <div style="padding:20px;background:#f8f9fa;">
-    <div style="background:#fff;padding:16px;border:1px solid #dee2e6;border-radius:6px;margin-bottom:16px;">
-      <h5 style="margin:0 0 4px 0;font-size:14px;color:#333;">Exportar Plataformas por Sucursal</h5>
-      <p style="margin:0 0 16px 0;font-size:11px;color:#666;">Configurá los filtros antes de generar el Excel</p>
+                        <div
+                            style="font-family:Arial,sans-serif;font-size:13px;border:1px solid #dee2e6;border-radius:6px;overflow:hidden;margin:8px 0;">
+                            <div
+                                style="background:#343a40;color:#fff;padding:6px 12px;font-size:11px;font-weight:600;letter-spacing:0.05em;">
+                                MOCKUP — export-branches.component.html — estado después del deploy
+                            </div>
+                            <div style="padding:16px;background:#fff;">
+                                <div
+                                    style="background:#f0fff4;border:1.5px solid #52c41a;border-radius:4px;padding:12px;margin:4px 0;">
+                                    <span
+                                        style="font-size:10px;color:#52c41a;font-weight:700;text-transform:uppercase;margin-bottom:4px;display:block;">+
+                                        NUEVA PANTALLA</span>
+                                    <h2 style="margin:0 0 4px 0;font-size:1.4rem;font-weight:500;color:#333;">Exportar
+                                        Plataformas por Sucursal</h2>
+                                    <p style="margin:0 0 16px 0;color:#666;font-size:0.85rem;">Configurá los filtros
+                                        antes de generar el Excel</p>
 
-      <div style="margin-bottom:12px;">
-        <label style="display:block;font-size:11px;font-weight:bold;margin-bottom:4px;color:#555;">Cadena</label>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border:1px solid #ced4da;border-radius:4px;background:#fff;cursor:pointer;font-size:12px;">
-          <span>Todas las Cadenas</span>
-          <span style="font-size:8px;color:#888;">▼</span>
-        </div>
-      </div>
+                                    <div style="margin-bottom:1rem;max-width:400px;">
+                                        <label
+                                            style="display:block;margin-bottom:0.3rem;font-weight:500;">Cadena</label>
+                                        <button
+                                            style="display:flex;justify-content:space-between;align-items:center;width:100%;padding:0.375rem 0.75rem;background:#fff;border:1px solid #ced4da;border-radius:0.25rem;text-align:left;font-size:0.875rem;">
+                                            <span style="flex:1;">Todas las Cadenas</span>
+                                            <span>▾</span>
+                                        </button>
+                                    </div>
 
-      <div style="margin-bottom:12px;">
-        <label style="display:block;font-size:11px;font-weight:bold;margin-bottom:4px;color:#555;">País</label>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border:1px solid #ced4da;border-radius:4px;background:#fff;cursor:pointer;font-size:12px;">
-          <span>Todos los Paises</span>
-          <span style="font-size:8px;color:#888;">▼</span>
-        </div>
-      </div>
+                                    <div style="margin-bottom:1rem;max-width:400px;">
+                                        <label style="display:block;margin-bottom:0.3rem;font-weight:500;">País</label>
+                                        <button
+                                            style="display:flex;justify-content:space-between;align-items:center;width:100%;padding:0.375rem 0.75rem;background:#fff;border:1px solid #ced4da;border-radius:0.25rem;text-align:left;font-size:0.875rem;">
+                                            <span style="flex:1;">Todos los Paises</span>
+                                            <span>▾</span>
+                                        </button>
+                                    </div>
 
-      <div style="margin-bottom:16px;">
-        <label style="display:block;font-size:11px;font-weight:bold;margin-bottom:4px;color:#555;">Plataforma</label>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border:1px solid #ced4da;border-radius:4px;background:#fff;cursor:pointer;font-size:12px;">
-          <span>Todas las Plataformas</span>
-          <span style="font-size:8px;color:#888;">▼</span>
-        </div>
-      </div>
+                                    <div style="margin-bottom:1.5rem;max-width:400px;">
+                                        <label
+                                            style="display:block;margin-bottom:0.3rem;font-weight:500;">Plataforma</label>
+                                        <button
+                                            style="display:flex;justify-content:space-between;align-items:center;width:100%;padding:0.375rem 0.75rem;background:#fff;border:1px solid #ced4da;border-radius:0.25rem;text-align:left;font-size:0.875rem;">
+                                            <span style="flex:1;">Todas las Plataformas</span>
+                                            <span>▾</span>
+                                        </button>
+                                    </div>
 
-      <!-- Barra de Progreso Activa -->
-      <div style="margin-bottom:16px;">
-        <div style="font-size:10px;text-align:right;color:#666;margin-bottom:4px;">Progreso de generación: 65%</div>
-        <div style="background:#e9ecef;border-radius:12px;height:14px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);">
-          <div style="background:repeating-linear-gradient(45deg, #007bff, #007bff 10px, #0056b3 10px, #0056b3 20px);width:65%;height:100%;transition:width 0.6s ease;"></div>
-        </div>
-      </div>
+                                    <div
+                                        style="background:#e9ecef;border-radius:0.25rem;overflow:hidden;height:1.25rem;margin-bottom:1.5rem;max-width:400px;">
+                                        <div
+                                            style="width:0%;background:#007bff;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.75rem;font-weight:700;">
+                                            0%
+                                        </div>
+                                    </div>
 
-      <!-- Fila de Botones -->
-      <div style="display:flex;justify-content:flex-end;gap:8px;">
-        <button style="padding:6px 16px;background:#6c757d;color:#fff;border:none;border-radius:4px;font-size:12px;cursor:pointer;font-weight:bold;">Volver</button>
-        <button style="padding:6px 16px;background:#007bff;color:#fff;border:none;border-radius:4px;font-size:12px;cursor:pointer;font-weight:bold;display:flex;align-items:center;gap:4px;">📥 Exportar a Excel</button>
-      </div>
-    </div>
-  </div>
-</div>
+                                    <div style="display:flex;justify-content:flex-end;gap:8px;">
+                                        <button
+                                            style="padding:0.375rem 0.75rem;background:#6c757d;color:#fff;border:1px solid #6c757d;border-radius:0.25rem;font-size:0.875rem;">
+                                            Volver
+                                        </button>
+                                        <button
+                                            style="padding:0.375rem 0.75rem;background:#007bff;color:#fff;border:1px solid #007bff;border-radius:0.25rem;font-size:0.875rem;">
+                                            Exportar Plataformas por Sucursal
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
                     <div class="analysis-box" style="margin-top: 1.5em;">
                         <h4>Modificaciones Identificadas</h4>
-                        <p><b>1. Formulario de Parámetros y Filtros de Exportación</b></p>
-                        <p>Se diseña la maquetación completa del formulario de exportación, incluyendo menús desplegables con casillas de verificación para filtrar cadenas, países y plataformas de entrega.</p>
-                        <p><b>2. Indicador de Progreso Visual</b></p>
-                        <p>Se añade una barra de progreso animada que refleja el porcentaje de avance de la descarga de datos en tiempo real, manteniendo informado al operador durante la generación de reportes extensos.</p>
-                        <p><b>3. Botones de Control de Acción</b></p>
-                        <p>Se ubican los botones de control al pie de la vista para regresar al listado anterior o iniciar la exportación de la planilla Excel con los parámetros establecidos.</p>
+                        <p><b>1. Interfaz del panel de exportación masiva</b></p>
+                        <p>Se crea la pantalla que contiene la configuración de los filtros de Cadenas, Países y
+                            Plataformas, la barra de progreso del proceso de descarga y los botones de acción para
+                            volver o ejecutar la exportación.</p>
                     </div>
-
                     <div class="analysis-box" style="margin-top: 1em;">
                         <h4>Conclusión</h4>
-                        <p>La plantilla de exportación expone un formulario altamente interactivo y dinámico para parametrizar el reporte y visualizar el estado del proceso de descarga.</p>
+                        <p>La interfaz de usuario del componente queda estructurada para guiar al usuario en el filtrado
+                            y descarga de datos.</p>
                     </div>
                 </div>
             </details>
@@ -379,19 +334,15 @@
                 <div class="component-body">
                     <div class="analysis-box">
                         <h4>Modificaciones Identificadas</h4>
-                        <p><b>1. Carga y Preparación de Filtros Iniciales</b></p>
-                        <p>Al inicializar el componente, se cargan de manera asíncrona la totalidad de países, cadenas y plataformas habilitadas a través de los servicios correspondientes y se pre-seleccionan todas las opciones por defecto para acelerar el flujo del usuario.</p>
-                        <p><b>2. Lógica de Selección y Deselección Dinámica</b></p>
-                        <p>Implementa el manejador de cambios de las casillas de verificación de los desplegables. Si se marca "Todas las Cadenas" u opciones globales análogas, se seleccionan automáticamente todos los elementos subordinados; de lo contrario, se procesan elementos individuales.</p>
-                        <p><b>3. Exportación Asíncrona Paginada a Excel</b></p>
-                        <p>Se diseña un algoritmo de exportación robusto. Primero obtiene el recuento total de sucursales a exportar. Luego, realiza consultas paginadas sucesivas (en bloques de 500 registros) para evitar sobrecargar la memoria del navegador, actualizando la barra de progreso de manera progresiva.</p>
-                        <p><b>4. Formateo y Estructuración del Archivo Excel</b></p>
-                        <p>Una vez descargados todos los registros de sucursales y sus respectivas plataformas asociadas, la lógica los formatea en un archivo Excel (<code>.xlsx</code>) estructurando columnas personalizadas por plataforma (habilitación, referencias y códigos identificadores) y descarga el archivo automáticamente.</p>
+                        <p><b>1. Lógica de filtrado y generación de archivo Excel</b></p>
+                        <p>Se implementa el comportamiento del controlador de Angular para recuperar datos paginados de
+                            sucursales desde el Concentrador de forma asíncrona, recopilar los registros y convertirlos
+                            a formato estructurado Excel utilizando la librería XLSX.</p>
                     </div>
-
                     <div class="analysis-box" style="margin-top: 1em;">
                         <h4>Conclusión</h4>
-                        <p>El controlador TypeScript coordina toda la lógica de filtrado, descarga por lotes y conversión a formato Excel de las sucursales del ecosistema de manera robusta y resiliente.</p>
+                        <p>El controlador implementa la lógica de consumo y exportación de datos a planillas de Excel.
+                        </p>
                     </div>
                 </div>
             </details>
@@ -403,13 +354,14 @@
                 <div class="component-body">
                     <div class="analysis-box">
                         <h4>Modificaciones Identificadas</h4>
-                        <p><b>1. Nuevos Métodos de Comunicación con el Concentrador</b></p>
-                        <p>Se implementan las llamadas HTTP <code>getBranchesToExport</code> y <code>getBranchesToExportCount</code> dirigidas a los nuevos endpoints de la API del Concentrador, permitiendo solicitar las páginas de sucursales configuradas y el conteo total de sucursales según los filtros de cadena y país.</p>
+                        <p><b>1. Conexión HTTP al Concentrador</b></p>
+                        <p>Se añaden los métodos del servicio Angular para realizar llamadas HTTP POST al backend para
+                            recuperar el conteo y listado de sucursales a exportar.</p>
                     </div>
-
                     <div class="analysis-box" style="margin-top: 1em;">
                         <h4>Conclusión</h4>
-                        <p>El servicio de sucursales expone los endpoints necesarios para alimentar la lógica de exportación paginada del frontend de manera modular.</p>
+                        <p>El servicio encapsula y provee las funciones cliente de comunicación con la API del
+                            Concentrador.</p>
                     </div>
                 </div>
             </details>
@@ -418,12 +370,14 @@
 
         <section id="conclusion" class="service-section">
             <h2>Conclusión General</h2>
-            <p>Este release del Backoffice añade una potente herramienta de reporte al permitir la exportación de sucursales y sus respectivas plataformas asociadas directamente a planillas Excel. La interfaz de exportación parametrizable con selección de cadenas, países y plataformas otorga a los administradores un control absoluto del reporte generado.
-
-La implementación técnica destaca por su robustez ante grandes volúmenes de datos, utilizando llamadas paginadas asíncronas sucesivas de 500 registros y reportando el progreso en tiempo real al operador. Esto previene cuellos de botella y fugas de memoria en el navegador, asegurando un desempeño óptimo en todo momento.</p>
+            <p>Este release introduce una nueva herramienta de descarga que facilita la obtención de un archivo Excel
+                consolidado de las sucursales del sistema y la configuración de sus plataformas de delivery, mejorando
+                la auditoría y gestión de sucursales activas.</p>
         </section>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 </body>
+
 </html>

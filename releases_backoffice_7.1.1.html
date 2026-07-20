@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Backoffice 7.1.1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .component-body h5 { margin-top: 1.5em; font-size: 1.1em; font-weight: 700; }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+
+        .mockup-container {
+            margin: 1em 0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Backoffice 7.1.1</h1>
+            <p>Dashboard de auditoría y monitoreo con nuevos filtros avanzados: estado de retiro (PickedUp), tipo de entrega y monto total.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 7.1.1</p>
+            <p><b>Fecha de Despliegue:</b> 02/06/2026</p>
+            <p><b>AWS Task:</b> aws 300</p>
+            <p><b>JIRA Task:</b> GITSFP-1567</p>
+            <p><b>Commits:</b> ddc27ebce878e3af07303ec76cc9ab3a158aca22</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General de la Versión</h2>
+            <p>Este release introduce nuevos filtros en el panel Dashboard (Status) de auditoría del Backoffice. Habilita búsquedas cruzadas por estado de PickedUp, logística de entrega e importe total de ticket para un monitoreo más ágil.</p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>app/src/app/pages/dashboard/status/status.component.html</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="mockup-container">
+                        <div style="font-family:Arial,sans-serif;font-size:13px;border:1px solid #dee2e6;border-radius:6px;overflow:hidden;margin:8px 0;">
+                          <div style="background:#343a40;color:#fff;padding:6px 12px;font-size:11px;font-weight:600;letter-spacing:0.05em;">
+                            MOCKUP — status.component.html — estado después del deploy
+                          </div>
+                          <div style="padding:16px;background:#fff;">
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;">
+                              <div style="opacity:0.6;display:flex;gap:4px;">
+                                <input type="text" placeholder="N° Orden" style="padding:0.25rem 0.5rem;font-size:0.875rem;border:1px solid #ced4da;border-radius:0.2rem;width:90px;" readonly />
+                                <input type="text" placeholder="N° Sucursal" style="padding:0.25rem 0.5rem;font-size:0.875rem;border:1px solid #ced4da;border-radius:0.2rem;width:90px;" readonly />
+                                <select style="padding:0.25rem 0.5rem;font-size:0.875rem;border:1px solid #ced4da;border-radius:0.2rem;" disabled><option>Todos los Estados</option></select>
+                              </div>
+
+                              <div style="background:#f0fff4;border:1.5px solid #52c41a;border-radius:4px;padding:6px;display:inline-flex;gap:8px;align-items:center;">
+                                <span style="font-size:9px;color:#52c41a;font-weight:700;text-transform:uppercase;writing-mode:vertical-lr;text-orientation:mixed;">+ NUEVO</span>
+                                
+                                <div style="display:inline-block;">
+                                  <label style="display:block;font-size:10px;margin-bottom:2px;color:#444;">Picked Up</label>
+                                  <select style="padding:0.25rem 0.5rem;font-size:0.875rem;border:1px solid #ced4da;border-radius:0.2rem;background:#fff;">
+                                    <option>Si/No PickedUp</option>
+                                    <option>Si</option>
+                                    <option>No</option>
+                                  </select>
+                                </div>
+
+                                <div style="display:inline-block;">
+                                  <label style="display:block;font-size:10px;margin-bottom:2px;color:#444;">Logística</label>
+                                  <button style="padding:0.25rem 0.5rem;font-size:0.875rem;background:#fff;border:1px solid #ced4da;border-radius:0.2rem;text-align:left;min-width:140px;display:flex;justify-content:space-between;align-items:center;">
+                                    <span>Todos los deliveries</span>
+                                    <span>▾</span>
+                                  </button>
+                                </div>
+
+                                <div style="display:inline-block;">
+                                  <label style="display:block;font-size:10px;margin-bottom:2px;color:#444;">Monto</label>
+                                  <input type="text" placeholder="Monto" style="padding:0.25rem 0.5rem;font-size:0.875rem;border:1px solid #ced4da;border-radius:0.2rem;width:80px;background:#fff;" />
+                                </div>
+                              </div>
+
+                              <button style="padding:0.25rem 0.75rem;font-size:0.875rem;background:#007bff;color:#fff;border:1px solid #007bff;border-radius:0.2rem;cursor:pointer;">Actualizar</button>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="analysis-box" style="margin-top: 1.5em;">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Filtro de estado de retiro (Picked Up)</b></p>
+                        <p>Se incorpora un selector desplegable en el panel de filtros de novedades para permitir filtrar por pedidos retirados o no por el repartidor.</p>
+                        <p><b>2. Desplegable de tipos de logística de entrega</b></p>
+                        <p>Se implementa un selector multi-check que expone opciones de filtrado por los distintos métodos de entrega del sistema (Propio, Plataforma, TakeAway).</p>
+                        <p><b>3. Filtro por monto total</b></p>
+                        <p>Se agrega un input de texto que permite filtrar de forma directa pedidos que coincidan con un importe total determinado.</p>
+                    </div>
+                    <div class="analysis-box" style="margin-top: 1em;">
+                        <h4>Conclusión</h4>
+                        <p>La interfaz de usuario del dashboard incorpora los tres nuevos elementos de entrada y selección en el formulario de filtros.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>app/src/app/pages/dashboard/status/status.component.ts</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Variables de control de nuevos filtros</b></p>
+                        <p>Se declaran las propiedades <code>selectedDeliveries</code>, <code>deliveryName</code>, <code>pickedUpBoolean</code>, <code>orderTotalAmount</code> y el array de referencia <code>deliveryTypes</code> para coordinar el estado de los nuevos campos desde el controlador Angular.</p>
+                        <p><b>2. Métodos de interacción y despacho de búsqueda</b></p>
+                        <p>Se añaden las funciones de respuesta <code>onDeliveryTypeChange</code> y <code>onOrderTotalAmountInput</code> para capturar la interacción de los filtros y despachar los parámetros correspondientes en el payload HTTP enviado a la API de consulta de novedades del Concentrador.</p>
+                    </div>
+                    <div class="analysis-box" style="margin-top: 1em;">
+                        <h4>Conclusión</h4>
+                        <p>El controlador implementa las variables y métodos necesarios para capturar y enviar las selecciones del usuario en el payload HTTP.</p>
+                    </div>
+                </div>
+            </details>
+
+        </section>
+
+        <section id="conclusion" class="service-section">
+            <h2>Conclusión General</h2>
+            <p>Este release introduce nuevos filtros en el panel Dashboard (Status) de auditoría del Backoffice. Habilita búsquedas cruzadas por estado de PickedUp, logística de entrega e importe total de ticket para un monitoreo más ágil.</p>
+        </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
