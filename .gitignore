@@ -6,6 +6,10 @@
 # Directorio de agentes/skills (PRIVADO)
 .agents/
 
+# Herramientas internas (PRIVADO) — contiene credenciales de Jira
+# NUNCA trackear nada de acá: .jira.local.json guarda el API token.
+tools/
+
 # Archivos de configuración de agente (PRIVADO)
 AGENTS.md
 AGENTSconcentrador.md
