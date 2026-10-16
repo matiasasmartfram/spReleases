@@ -1,0 +1,1716 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Concentrador 9.10.1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 2em; line-height: 1.7; }
+        .container { max-width: 960px; margin: 0 auto; }
+        .main-header { background-color: var(--card-bg-color); padding: 2em; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 2.5em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+        .deployment-info-box { background-color: var(--deployment-bg); border-left: 4px solid var(--deployment-border); padding: 1em 1.5em; margin-bottom: 2.5em; border-radius: 4px; }
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 { font-size: 1.8em; color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5em; margin-bottom: 1.5em; }
+        .component-card { background-color: var(--card-bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 2em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
+        .component-header { padding: 1em 1.5em; background-color: #fafafa; border-bottom: 1px solid var(--border-color); cursor: pointer; list-style: none; }
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .analysis-box { background-color: var(--analysis-bg); border-left: 4px solid var(--analysis-border); padding: 1em 1.5em; margin-top: 1.5em; border-radius: 4px; }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+        pre[class*="language-"] { padding: 1.2em !important; margin: 1em 0 !important; border-radius: 6px; font-family: 'Fira Code', monospace !important; font-size: 0.9em !important; line-height: 1.5 !important; border: 1px solid var(--border-color); white-space: pre-wrap !important; word-break: break-all !important; overflow-wrap: break-word !important; background-color: #2d2d2d; color: #ccc; }
+
+        pre.diff-highlight { white-space: pre !important; overflow-x: auto; word-break: normal !important; overflow-wrap: normal !important; tab-size: 4; }
+        pre.diff-highlight > code { display: block; min-width: max-content; }
+        pre.diff-highlight .token.deleted:not(.prefix) { display: block; background: #67060c; color: #ffdcd7; }
+        pre.diff-highlight .token.inserted:not(.prefix) { display: block; background: #033a16; color: #aff5b4; }
+        pre.diff-highlight .token.deleted .prefix { color: #ff7b72; user-select: text; }
+        pre.diff-highlight .token.inserted .prefix { color: #7ee787; user-select: text; }
+        pre.diff-highlight .token.coord { color: #79c0ff; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="main-header">
+        <h1>Notas de Release: Concentrador 9.10.1</h1>
+        <p>Este release corrige la identificación de sucursales en los errores de apertura y cierre de PedidosYa, reemplazando el texto genérico por el `remoteId` real. También consolida cambios transversales de comunicación HTTP y logging del Concentrador, con mensajes categorizados y metadatos operativos más consistentes para facilitar el seguimiento de fallos.</p>
+    </header>
+    <div class="deployment-info-box">
+        <h4>Información de Despliegue</h4>
+        <p><b>Versión:</b> 9.10.1</p>
+        <p><b>Fecha de Despliegue:</b> 30/07/2026</p>
+        <p><b>AWS Task:</b> [Pendiente]</p>
+        <p><b>JIRA Task:</b> GITSFP-1603</p>
+        <p><b>Commits:</b> 7d3bfa5aa0500395dc2b95d27a77965db389f9b4 — Merge pull request #64 from smartit-ar/peyaerror</p>
+    </div>
+    <section id="summary" class="service-section">
+        <h2>Resumen General de la Versión</h2>
+        <p>Este release corrige la identificación de sucursales en los errores de apertura y cierre de PedidosYa, reemplazando el texto genérico por el `remoteId` real. También consolida cambios transversales de comunicación HTTP y logging del Concentrador, con mensajes categorizados y metadatos operativos más consistentes para facilitar el seguimiento de fallos.</p>
+    </section>
+    <section id="technical-analysis" class="service-section">
+        <h2>Análisis Técnico Detallado</h2>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/controllers/branch.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Conservar el identificador remoto en errores de PedidosYa**</b></p>
+<p>En los flujos de cierre y apertura, los resultados fallidos dejan de registrar `branchName: "Error"` y pasan a conservar `remoteId`. Esto permite asociar el error con el local concreto de PedidosYa que generó la respuesta fallida.</p>
+<p><b>2. **Aplicar la corrección en los cuatro caminos de Open/Closed**</b></p>
+<p>El mismo ajuste se realiza en las verificaciones offline y en los envíos generales de estado, tanto para acciones `Open` como `Closed`. Se mantiene el resultado fallido y la información de respuesta de la API, cambiando únicamente la identificación del local.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -1337,17 +1337,17 @@ async function checkOfflinePOSpeya() {
+                   status: error?.response?.status,
+                   data: error?.response?.data
+                 }
+               });
+             }
+           }
+         } catch (error) {
+           branchData.results.push({
+-            branchName: "Error",
++            branchName: remoteId,
+             type: "Closed",
+             result: false,
+             resultApi: error?.response?.data,
+             resultStatus: error?.response?.status
+           });
+           Log.saveError(error, {
+             message: `Branch OpenClose Error: PedidosYa checkOfflinePOSpeya CLOSE GENERAL ${branchId}`,
+             action: 'checkOfflinePOSpeya',
+@@ -1443,17 +1443,17 @@ async function checkOfflinePOSpeya() {
+                   data: error?.response?.data
+                 },
+                 element: element
+               });
+             }
+           }
+         } catch (error) {
+           branchData.results.push({
+-            branchName: "Error",
++            branchName: remoteId,
+             type: "Open",
+             result: false,
+             resultApi: error?.response?.data,
+             resultStatus: error?.response?.status
+           });
+           Log.saveError(error, {
+             message: `Branch OpenClose Error: PedidosYa checkOfflinePOSpeya OPEN GENERAL ${branchId}`,
+             action: 'OPEN',
+@@ -2524,17 +2524,17 @@ async function enviarEstadoPedidosYa(country) {
+                 data: error?.response?.data
+               },
+               element: element
+             });
+           }
+         }
+       } catch (error) {
+         branchData.results.push({
+-          branchName: "Error",
++          branchName: remoteId,
+           type: "Closed",
+           result: false,
+           resultApi: error?.response?.data,
+           resultStatus: error?.response?.status
+         });
+         Log.saveError(error, {
+           message: `Branch OpenClose Error: PedidosYa sendOpen CLOSE GENERAL ${branchId}`,
+           action: 'enviarEstadoPedidosYa',
+@@ -2613,17 +2613,17 @@ async function enviarEstadoPedidosYa(country) {
+                 data: error?.response?.data
+               },
+               element: element
+             });
+           }
+         }
+       } catch (error) {
+         branchData.results.push({
+-          branchName: "Error",
++          branchName: remoteId,
+           type: "Closed",
+           result: false,
+           resultApi: error?.response?.data,
+           resultStatus: error?.response?.status
+         });
+         Log.saveError(error, {
+           message: `Branch OpenClose Error: PedidosYa sendOpen OPEN GENERAL ${branchId}`,
+           action: 'enviarEstadoPedidosYa',</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El controlador de sucursales ahora conserva el `remoteId` en los resultados fallidos de PedidosYa. La información mostrada en los logs Open/Closed puede identificar la sucursal afectada en lugar de presentar un valor genérico.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>diff</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Registrar el bloque transversal incluido por el commit**</b></p>
+<p>El esqueleto del release contiene un bloque adicional identificado como `diff`, con cambios distribuidos en controladores del Concentrador. El bloque elimina la función de logging de consola para errores de autenticación y remueve varios `console.log` de diagnóstico.</p>
+<p><b>2. **Centralizar las llamadas HTTP**</b></p>
+<p>Se incorpora `httpClient` en el controlador de sucursales y se reemplazan llamadas directas a `axios` en integraciones y operaciones de estado. También se agrega `sanitizeHeaders` para el tratamiento de headers antes de registrarlos o utilizarlos en el flujo correspondiente.</p>
+<p><b>3. **Estandarizar el contexto de los errores**</b></p>
+<p>Los registros pasan a incluir categorías como `INTEGRATION`, `INFRA` y `ORDER`, mensajes con formato `[CATEGORIA/ERROR]`, plataforma, sucursal, orden y código de estado cuando están disponibles. Esto evita depender de payloads completos o mensajes heterogéneos para interpretar un fallo.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -1,1513 +0,0 @@
+-diff --git a/api/src/app.js b/api/src/app.js
+-index 4a9371c5..d0fbfd61 100644
+---- a/api/src/app.js
+-+++ b/api/src/app.js
+-@@ -30,25 +30,6 @@ const exceptions = [
+-   { url: `/` }
+- ];
+- 
+--const createConsoleLog = (headers, res) =&gt; {
+--  console.log('\n' + '***********************************************************************************');
+--  console.log(
+--    'Fecha: ' +
+--      new Date() +
+--      ' BranchId: ' +
+--      headers['branch-id'] +
+--      ', Respuesta: ' +
+--      res +
+--      ' Agente: ' +
+--      headers['agent-version'] +
+--      ' Notificador: ' +
+--      headers['notifications-version'] +
+--      ', Componente: ' +
+--      headers['component']
+--  );
+--  console.log('***********************************************************************************' + '\n');
+--};
+--
+- const cors = require('cors');
+- const https = require('https');
+- const app = express();
+-@@ -79,7 +60,6 @@ app.use(function (err, req, res, next) {
+-   if (err.message === 'jwt expired') msg = 'Expired token.';
+-   if (err.message === 'invalid signature') msg = 'Invalid token.';
+-   const custerr = new CustomError(CORE.TOKEN, msg, req.uuid);
+--  createConsoleLog(req.headers, 401);
+-   return res.status(401).json(custerr).end();
+- });
+- 
+-diff --git a/api/src/controllers/activeSoftware.js b/api/src/controllers/activeSoftware.js
+-index c6923ab1..1423d27f 100644
+---- a/api/src/controllers/activeSoftware.js
+-+++ b/api/src/controllers/activeSoftware.js
+-@@ -190,7 +190,6 @@ const smartfran_swParsedToActiveSoftware = (branch, activeSotfware, management)
+-       };
+-     }
+-   }
+--  console.log(management)
+-   if (management) {
+-     data.agentManagement = {
+-       actualVersion: management.smartfran_sw.agentManagement.nextVersionToInstall,
+-diff --git a/api/src/controllers/branch.js b/api/src/controllers/branch.js
+-index 5315affa..0c4a9ca9 100644
+---- a/api/src/controllers/branch.js
+-+++ b/api/src/controllers/branch.js
+-@@ -18,6 +18,7 @@ import { APP_BRANCH } from '../utils/errors/codeError';
+- import checkUTC from '../utils/checkUTC';
+- import initialData from '../utils/initialData';
+- import axios from 'axios';
+-+import httpClient from '../utils/httpClient';
+- import _ from 'lodash';
+- import moment from 'moment';
+- import config from '../config/env';
+-@@ -25,6 +26,7 @@ import Aws from '../provider/aws';
+- import FormData from 'form-data';
+- const mongoose = require('mongoose');
+- import Log from '../utils/log';
+-+import sanitizeHeaders from '../utils/sanitizeHeaders';
+- import orderRejClosedModel from '../models/orderRejClosed';
+- import configsModel from '../models/configs';
+- import openClosedLogModel from '../models/openClosedLog';
+-@@ -91,7 +93,7 @@ async function pediGridoLogin() {
+-       'Content-Type': 'application/json'
+-     }
+-   }
+--  await axios.post(`${config.pediGridoParams.baseUrl}v1/login`, body, configData).then(r =&gt; {
+-+  await httpClient.post(`${config.pediGridoParams.baseUrl}v1/login`, body, configData).then(r =&gt; {
+-     tokenPediGridoOpenClose = r.data.accessToken;
+-   });
+- }
+-@@ -135,14 +137,13 @@ async function peyaLogin(baseUrl) {
+-       'Content-Type': 'application/x-www-form-urlencoded'
+-     }
+-   }
+--  await axios.post(`${baseUrl}/v2/login`, dataSend.toString(), configData).then(r =&gt; {
+-+  await httpClient.post(`${baseUrl}/v2/login`, dataSend.toString(), configData).then(r =&gt; {
+-     tokenPeya = r.data.access_token;
+-   });
+-   
+- }
+- 
+- async function cronHorariosPediGrido() {
+--  console.log('cronHorariosPediGrido');
+-   let countries = await countryModel.find({});
+-   // 1. Detener y eliminar todos los crons previos
+-   const dias = [
+-@@ -236,8 +237,8 @@ async function cronHorariosPediGrido() {
+- 
+- async function syncCheckUTC() {
+-   if ( process.env.NODE_ENV === 'production'){
+--    const schedule = '0 7 * * *';
+--    cron.schedule(schedule, async () =&gt; await checkUTC.checkUTC('Scheduled'));
+-+    const schedule = '0 4 * * *';
+-+    cron.schedule(schedule, async () =&gt; await checkUTC.checkUTC());
+-   }
+- }
+- 
+-@@ -254,8 +255,8 @@ async function uberLogin() {
+-     try {
+-       await loginCountryUber(country, clientId);    
+-     } catch (error) {
+--      Log.saveError(error, { message: 'Falló loginCountryUber general', country: country, clientId: clientId, platform: 'UberEats' });
+--    }     
+-+      Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] uber_login failed', platform: 'UberEats', country: country, branch_id: 'unknown', order_id: 'unknown' });
+-+    }
+-   }
+- }
+- 
+-@@ -279,8 +280,7 @@ async function loginCountryUber(country, clientId) {
+-     const response = await axios(config);
+-     tokenUber[country] = response.data.access_token;
+-   } catch (error) {
+--    console.log(error)
+--    Log.saveError(error, { message: 'Falló loginCountryUber',country: country, clientId: clientId, platform: 'UberEats' });
+-+    Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] uber_login failed', platform: 'UberEats', country: country, branch_id: 'unknown', order_id: 'unknown' });
+-   }
+- }
+- 
+-@@ -333,13 +333,13 @@ async function SMLLogin() {
+-       client_secret: settings.smlParams.client_secret,
+-       audience: settings.smlParams.audience
+-     }
+--    await axios.post(`${settings.smlParams.url}`, body).then(r =&gt; {
+-+    await httpClient.post(`${settings.smlParams.url}`, body).then(r =&gt; {
+-       tokenSML = r.data.access_token;
+-       expires_in = Date.now() + (r.data.expires_in * 1000);
+-     });
+-   }
+-   catch (error) {
+--    Log.saveError(error, { message: 'Falló SMLLogin concentrador 2', platform: 'thridParty' });
+-+    Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] sml_login failed', platform: 'ThirdParty', branch_id: 'unknown', order_id: 'unknown' });
+-   }
+- }
+- 
+-@@ -414,10 +414,9 @@ async function sendRejectsToCanje(orderid, internalCode) {
+-       "PlatformOrder": internalCode === 7 ? "PG" : "I+D"
+-     }
+-     try {
+--      await axios.post(`${settings.smlParams.api}/api/UpdateCustomerOrder`, bodySml, headerssml)
+-+      await httpClient.post(`${settings.smlParams.api}/api/UpdateCustomerOrder`, bodySml, headerssml);
+-     } catch (error) {
+--      console.log(error)
+--      Log.saveError(error, {                     
+-+      Log.saveError(error, {
+-         message: 'Platform Communication Error: '+ PlatformOrder +' branchRejectOrder-C ' + orderInfo.order.id,                    
+-         action: 'branchRejectOrder', 
+-         platformId: internalCode, 
+-@@ -436,7 +435,7 @@ async function sendRejectsToCanje(orderid, internalCode) {
+-       });
+-     }    
+-   } catch (error) {
+--    Log.saveError(error, { message: 'Falló peticion cancel concentrador sml-C ' + reject.orderId, platform: 'SML' });
+-+    Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] sml_cancel failed', order_id: reject?.orderId ?? 'unknown', platform: 'SML' });
+-   }
+- }
+- 
+-@@ -514,7 +513,7 @@ async function checkOfflinePOSrappi() {
+- 
+-         if (branch.address.country === "Argentina") {
+-           try {
+--            await axios.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsAr);
+-+            await httpClient.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsAr);
+-             branchData.results.push({
+-               rappiNumber: rappiNumber,
+-               type: "Closed",
+-@@ -552,7 +551,7 @@ async function checkOfflinePOSrappi() {
+- 
+-         if (branch.address.country === "Perú") {
+-           try {
+--            await axios.put(urlPr, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsPr);
+-+            await httpClient.put(urlPr, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsPr);
+-             branchData.results.push({
+-               rappiNumber: rappiNumber,
+-               type: "Closed",
+-@@ -585,13 +584,13 @@ async function checkOfflinePOSrappi() {
+-                   data: error?.response?.data
+-               }
+-             });
+--            Log.saveError(error, { message: 'Falló checkOfflinePOS Rappi CLOSED', platform: 'Rappi-Concentrador', urlPr: urlPr, rappiNumber: rappiNumber, optionsPr: optionsPr });
+-+            Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/WARN] rappi_offline_check failed', platform: 'Rappi-Concentrador', url: urlPr, branch_id: rappiNumber ?? 'unknown', order_id: 'unknown' });
+-           }
+-         }
+- 
+-         if (branch.address.country === "Chile") {
+-           try {
+--            await axios.put(urlCl, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsCl);
+-+            await httpClient.put(urlCl, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsCl);
+-             branchData.results.push({
+-               rappiNumber: rappiNumber,
+-               type: "Closed",
+-@@ -629,7 +628,7 @@ async function checkOfflinePOSrappi() {
+- 
+-         if (branch.address.country === "Uruguay") {
+-           try {
+--            await axios.put(urlUr, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsUr);
+-+            await httpClient.put(urlUr, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsUr);
+-             branchData.results.push({
+-               rappiNumber: rappiNumber,
+-               type: "Closed",
+-@@ -678,7 +677,7 @@ async function checkOfflinePOSrappi() {
+-       await Promise.allSettled(branchReferences.map(async (rappiNumber) =&gt; {
+-         if (branch.address.country === "Argentina") {
+-           try {
+--            await axios.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsAr);
+-+            await httpClient.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsAr);
+-             branchData.results.push({
+-               rappiNumber: rappiNumber,
+-               type: "Open",
+-@@ -716,7 +715,7 @@ async function checkOfflinePOSrappi() {
+- 
+-         if (branch.address.country === "Perú") {
+-           try {
+--            await axios.put(urlPr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsPr);
+-+            await httpClient.put(urlPr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsPr);
+-             branchData.results.push({
+-               rappiNumber: rappiNumber,
+-               type: "Open",
+-@@ -754,7 +753,7 @@ async function checkOfflinePOSrappi() {
+- 
+-         if (branch.address.country === "Chile") {
+-           try {
+--            await axios.put(urlCl, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsCl);
+-+            await httpClient.put(urlCl, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsCl);
+-             branchData.results.push({
+-               rappiNumber: rappiNumber,
+-               type: "Open",
+-@@ -792,7 +791,7 @@ async function checkOfflinePOSrappi() {
+- 
+-         if (branch.address.country === "Uruguay") {
+-           try {
+--            await axios.put(urlUr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsUr);
+-+            await httpClient.put(urlUr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsUr);
+-             branchData.results.push({
+-               rappiNumber: rappiNumber,
+-               type: "Open",
+-@@ -916,9 +915,9 @@ async function checkOfflinePOSuber() {
+-         const urlAvailability = `${baseUrlUber}/v1/delivery/store/${store_id}/update-store-status`;
+-         try {
+-           if (branch.address.country === "Argentina")
+--              await axios.post(urlAvailability, body, headersConfigAr);          
+--          if (branch.address.country === "Chile") 
+--              await axios.post(urlAvailability, body, headersConfigCl);                  
+-+              await httpClient.post(urlAvailability, body, headersConfigAr);
+-+          if (branch.address.country === "Chile")
+-+              await httpClient.post(urlAvailability, body, headersConfigCl);
+-           branchData.results.push({
+-             branchReference: store_id,
+-             type: "Closed",
+-@@ -969,10 +968,10 @@ async function checkOfflinePOSuber() {
+-         };
+-         const urlAvailability = `${baseUrlUber}/v1/delivery/store/${store_id}/update-store-status`;
+-         try {
+--          if (branch.address.country === "Argentina") 
+--            await axios.post(urlAvailability, body, headersConfigAr);          
+--          if (branch.address.country === "Chile") 
+--            await axios.post(urlAvailability, body, headersConfigCl);          
+-+          if (branch.address.country === "Argentina")
+-+            await httpClient.post(urlAvailability, body, headersConfigAr);
+-+          if (branch.address.country === "Chile")
+-+            await httpClient.post(urlAvailability, body, headersConfigCl);
+- 
+-           branchData.results.push({
+-             branchReference: store_id,
+-@@ -1080,7 +1079,7 @@ async function checkOfflinePOSpedigrido() {
+-         };
+-         const urlAvailability = `${baseUrlPedigrido}v1/locals/status`;
+-         try {
+--          await axios.put(urlAvailability, body, headersConfig);
+-+          await httpClient.put(urlAvailability, body, headersConfig);
+-           branchData.results.push({
+-             branchReference: branchReference,
+-             type: "Closed",
+-@@ -1131,7 +1130,7 @@ async function checkOfflinePOSpedigrido() {
+-         };
+-         const urlAvailability = `${baseUrlPedigrido}v1/locals/status`;
+-         try {
+--          await axios.put(urlAvailability, body, headersConfig);
+-+          await httpClient.put(urlAvailability, body, headersConfig);
+-           branchData.results.push({
+-             branchReference: branchReference,
+-             type: "Open",
+-@@ -1223,10 +1222,10 @@ async function checkOfflinePOSpeya() {
+-       await Promise.allSettled(branchNames.map(async (remoteId) =&gt; {
+-         const urlAvailability = `${peyaBaseUrl}/v2/chains/${settings.chainCode}/remoteVendors/${remoteId}/availability`;
+-         try {
+--          const statuspos = await axios.get(urlAvailability, headersConfig3);
+--          if(statuspos.data.length &gt; 1) 
+-+          const statuspos = await httpClient.get(urlAvailability, headersConfig3);
+-+          if(statuspos.data.length &gt; 1)
+-           {
+--            Log.saveError(new Error('Multiple POS status returned'), { 
+-+            Log.saveError(new Error('Multiple POS status returned'), {
+-               message: `Branch OpenClose Error: PedidosYa checkOfflinePOSpeya CLOSE ${branchId} - Multiple POS status returned`, 
+-               action: 'checkOfflinePOSpeya',
+-               platformId: 1,
+-@@ -1246,8 +1245,8 @@ async function checkOfflinePOSpeya() {
+-               "platformKey": element.platformKey,
+-               "platformRestaurantId": element.platformRestaurantId
+-             };
+--            try {          
+--              await axios.put(urlAvailability, body, headersConfig3);
+-+            try {
+-+              await httpClient.put(urlAvailability, body, headersConfig3);
+-               branchData.results.push({
+-                 branchName: remoteId,
+-                 type: "Closed",
+-@@ -1324,10 +1323,10 @@ async function checkOfflinePOSpeya() {
+-       await Promise.allSettled(branchNames.map(async (remoteId) =&gt; {
+-         const urlAvailability = `${peyaBaseUrl}/v2/chains/${settings.chainCode}/remoteVendors/${remoteId}/availability`;
+-         try {
+--          const statuspos = await axios.get(urlAvailability, headersConfig3);
+-+          const statuspos = await httpClient.get(urlAvailability, headersConfig3);
+-           if(statuspos.data.length &gt; 1) {
+--            Log.saveError(new Error(`Multiple POS status returned`), { 
+--              message: `Branch OpenClose Error: PedidosYa checkOfflinePOSpeya OPEN ${branchId} - Multiple POS status returned`, 
+-+            Log.saveError(new Error(`Multiple POS status returned`), {
+-+              message: `Branch OpenClose Error: PedidosYa checkOfflinePOSpeya OPEN ${branchId} - Multiple POS status returned`,
+-               action: 'checkOfflinePOSpeya',
+-               platformId: 1,
+-               operation: 'OPEN',
+-@@ -1346,7 +1345,7 @@ async function checkOfflinePOSpeya() {
+-               "platformRestaurantId": element.platformRestaurantId
+-             };
+-             try {
+--              await axios.put(urlAvailability, body, headersConfig3);
+-+              await httpClient.put(urlAvailability, body, headersConfig3);
+-               branchData.results.push({
+-                 branchName: remoteId,
+-                 type: "Open",
+-@@ -1494,9 +1493,9 @@ async function ckeckOfflinePOSmercadopago() {
+-             const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;    
+-             try {
+-               try {
+--                await axios.put(urlAvailability, body, headersConfig);
+-+                await httpClient.put(urlAvailability, body, headersConfig);
+-               } catch (error) {
+--                if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {                
+-+                if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
+-                   tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId,true);
+-                   decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-                   const headersConfig2 = {
+-@@ -1504,16 +1503,15 @@ async function ckeckOfflinePOSmercadopago() {
+-                       'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-                     }
+-                   }
+--                  await axios.put(urlAvailability, body, headersConfig2);
+-+                  await httpClient.put(urlAvailability, body, headersConfig2);
+-                 } else throw error;
+--              }           
+-+              }
+-               branchData.results.push({
+-                 branchReference: store_id,
+-                 type: "Closed",
+-                 result: true
+-               });
+-             } catch (error) {
+--              console.log(error);
+-               branchData.results.push({
+-                 branchReference: store_id,
+-                 type: "Closed",
+-@@ -1565,7 +1563,7 @@ async function ckeckOfflinePOSmercadopago() {
+-           "status": "enabled"
+-         };
+-         let user_id = mercadoPagoPlatform?.mercadoPagoUserId;
+--        let tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, false);  
+-+        let tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, false);
+-         let decryptedTokenMercadoPagoCloud;
+-         if (tokenMercadoPagoCloud) {
+-           decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-@@ -1574,22 +1572,22 @@ async function ckeckOfflinePOSmercadopago() {
+-               'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-             }
+-           }
+--          await Promise.allSettled(branchReferences.map(async (store_id) =&gt; {  
+-+          await Promise.allSettled(branchReferences.map(async (store_id) =&gt; {
+-             const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+--            try {                
+-+            try {
+-               try {
+--                await axios.put(urlAvailability, body, headersConfig);
+-+                await httpClient.put(urlAvailability, body, headersConfig);
+-               } catch (error) {
+--                if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {                
+--                  tokenMercadoPagoCloud =  await searchToken(user_id, tenant.tenantId,true);
+-+                if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
+-+                  tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId,true);
+-                   decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-                   const headersConfig2 = {
+-                     headers: {
+-                       'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-                     }
+-                   }
+--                  await axios.put(urlAvailability, body, headersConfig2);
+--                }  else throw error;
+-+                  await httpClient.put(urlAvailability, body, headersConfig2);
+-+                } else throw error;
+-               }
+-               branchData.results.push({
+-                 branchReference: store_id,
+-@@ -1836,7 +1834,7 @@ async function enviarEstadoRappi(country) {
+- 
+-       await Promise.allSettled(branchReferences.map(async (rappiNumber) =&gt; {
+-         try {
+--          await axios.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsAr);
+-+          await httpClient.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, optionsAr);
+-           branchData.results.push({
+-             rappiNumber: rappiNumber,
+-             type: "Closed",
+-@@ -1882,7 +1880,7 @@ async function enviarEstadoRappi(country) {
+- 
+-       await Promise.allSettled(branchReferences.map(async (rappiNumber) =&gt; {
+-         try {
+--          await axios.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsAr);
+-+          await httpClient.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsAr);
+-           branchData.results.push({
+-             rappiNumber: rappiNumber,
+-             type: "Open",
+-@@ -2000,14 +1998,14 @@ async function sendStateMercadoPago(country) {
+-               'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-             }
+-           }
+--          await Promise.allSettled(branchReferences.map(async (store_id) =&gt; {    
+--            const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;    
+-+          await Promise.allSettled(branchReferences.map(async (store_id) =&gt; {
+-+            const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+-             try {
+-               try {
+--                await axios.put(urlAvailability, body, headersConfig);
+-+                await httpClient.put(urlAvailability, body, headersConfig);
+-               } catch (error) {
+-                 // significa que dio error al obtener token y token no está en memoria intenta traer token desde cloud
+--                if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {                
+-+                if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
+-                   tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId,true);
+-                   decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-                   const headersConfig2 = {
+-@@ -2015,16 +2013,15 @@ async function sendStateMercadoPago(country) {
+-                       'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-                     }
+-                   }
+--                  await axios.put(urlAvailability, body, headersConfig2);
+-+                  await httpClient.put(urlAvailability, body, headersConfig2);
+-                 } else throw error;
+--              }           
+-+              }
+-               branchData.results.push({
+-                 branchReference: store_id,
+-                 type: "Closed",
+-                 result: true
+-               });
+-             } catch (error) {
+--              console.log(error);
+-               branchData.results.push({
+-                 branchReference: store_id,
+-                 type: "Closed",
+-@@ -2074,7 +2071,7 @@ async function sendStateMercadoPago(country) {
+-           "status": "enabled"
+-         };
+-         let user_id = mercadoPagoPlatform?.mercadoPagoUserId;
+--        let tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, false);  
+-+        let tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, false);
+-         let decryptedTokenMercadoPagoCloud;
+-         if (tokenMercadoPagoCloud) {
+-           decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-@@ -2083,22 +2080,22 @@ async function sendStateMercadoPago(country) {
+-               'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-             }
+-           }
+--          await Promise.allSettled(branchReferences.map(async (store_id) =&gt; {  
+-+          await Promise.allSettled(branchReferences.map(async (store_id) =&gt; {
+-             const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+--            try {                
+-+            try {
+-               try {
+--                await axios.put(urlAvailability, body, headersConfig);
+-+                await httpClient.put(urlAvailability, body, headersConfig);
+-               } catch (error) {
+--                if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {                
+--                  tokenMercadoPagoCloud =  await searchToken(user_id, tenant.tenantId,true);
+-+                if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
+-+                  tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId,true);
+-                   decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-                   const headersConfig2 = {
+-                     headers: {
+-                       'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-                     }
+-                   }
+--                  await axios.put(urlAvailability, body, headersConfig2);
+--                }  else throw error;
+-+                  await httpClient.put(urlAvailability, body, headersConfig2);
+-+                } else throw error;
+-               }
+-               branchData.results.push({
+-                 branchReference: store_id,
+-@@ -2220,7 +2217,7 @@ try {
+-         };
+-         const urlAvailability = `${baseUrlUber}/v1/delivery/store/${store_id}/update-store-status`;
+-         try {
+--          await axios.post(urlAvailability, body, headersConfig);          
+-+          await httpClient.post(urlAvailability, body, headersConfig);
+-           branchData.results.push({
+-             branchReference: store_id,
+-             type: "Closed",
+-@@ -2270,7 +2267,7 @@ try {
+-         };
+-         const urlAvailability = `${baseUrlUber}/v1/delivery/store/${store_id}/update-store-status`;
+-         try {
+--              await axios.post(urlAvailability, body, headersConfig);          
+-+          await httpClient.post(urlAvailability, body, headersConfig);
+-           branchData.results.push({
+-             branchReference: store_id,
+-             type: "Open",
+-@@ -2333,7 +2330,7 @@ async function deadLetterSave() {
+-   try {
+-     await Aws.deadLetterSave();
+-   } catch (error) {
+--    Log.saveError(error, { message: 'Falló deadLetterSave', platform: 'aws' });
+-+    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] dead_letter_save failed', platform: 'aws' });
+-   }
+- }
+- 
+-@@ -2368,7 +2365,7 @@ async function enviarEstadoPedidosYa(country) {
+-     await Promise.allSettled(branchNames.map(async (remoteId) =&gt; {
+-       const urlAvailability = `${peyaBaseUrl}/v2/chains/${settings.chainCode}/remoteVendors/${remoteId}/availability`;
+-       try {
+--        const statuspos = await axios.get(urlAvailability, headersConfig3);
+-+        const statuspos = await httpClient.get(urlAvailability, headersConfig3);
+-         for (const element of statuspos.data) {
+-           let body = {
+-             "availabilityState": "CLOSED",
+-@@ -2377,7 +2374,7 @@ async function enviarEstadoPedidosYa(country) {
+-             "platformRestaurantId": element.platformRestaurantId
+-           };
+-           try {
+--            await axios.put(urlAvailability, body, headersConfig3);
+-+            await httpClient.put(urlAvailability, body, headersConfig3);
+-             branchData.results.push({
+-               branchName: remoteId,
+-               type: "Closed",
+-@@ -2447,7 +2444,7 @@ async function enviarEstadoPedidosYa(country) {
+-       const urlAvailability = `${peyaBaseUrl}/v2/chains/${settings.chainCode}/remoteVendors/${remoteId}/availability`;
+-       
+-       try {
+--        const statuspos = await axios.get(urlAvailability, headersConfig3);
+-+        const statuspos = await httpClient.get(urlAvailability, headersConfig3);
+-         for (const element of statuspos.data) {
+-           let body = {
+-             "availabilityState": "OPEN",
+-@@ -2455,7 +2452,7 @@ async function enviarEstadoPedidosYa(country) {
+-             "platformRestaurantId": element.platformRestaurantId
+-           };
+-           try {
+--            await axios.put(urlAvailability, body, headersConfig3);
+-+            await httpClient.put(urlAvailability, body, headersConfig3);
+-             branchData.results.push({
+-               branchName: remoteId,
+-               type: "Open",
+-@@ -2564,12 +2561,11 @@ async function loginToAuth0(country) {
+-           'Content-Type': 'application/json'
+-         }
+-       };
+--      let response = await axios.post(url, JSON.stringify(payload), config);
+-+      let response = await httpClient.post(url, JSON.stringify(payload), config);
+-       if (!response) throw 'Can not login to Rappi.';
+-       resolve(response.data.access_token);
+-     } catch (error) {
+--      console.log('error loginToAuth0');
+--      Log.saveError(error, { message: 'Falló login rappi concentrador', platform: 'Rappi-Concentrador' });
+-+      Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] rappi_login failed', platform: 'Rappi-Concentrador', branch_id: 'unknown', order_id: 'unknown' });
+-       if (!error) error = '';
+-       const msg = 'Failed to login. Auth0 Rappi';
+-       const err = new CustomError(APP_PLATFORM.LOGIN, msg, this.uuid, {
+-@@ -2581,7 +2577,6 @@ async function loginToAuth0(country) {
+- }
+- 
+- async function orderRejClosed() {
+--  console.log('[CRON] Revisando ordenes pendientes concentrador...');
+-   const dateNow = new Date();
+-   let orderRejClosedTime = await configsModel.findOne({});
+-   const date2minutes = new Date(dateNow.getTime() - (orderRejClosedTime.orderRejClosedTime + 1) * 60 * 1000);//pasar a base de datos pero agregar uno mas para ponerle limnite al q los intenta reenviar
+-@@ -2657,7 +2652,6 @@ async function orderRejClosed() {
+-     try {
+-       await sendReject(element, element.order.platformId);
+-     } catch (error) {
+--      console.log(error)
+-       continue;
+-     }
+-   }
+-@@ -2668,7 +2662,6 @@ async function sendClosedToPlatformsAfterRejectClosed(branchId) {
+-     const branch = await model.findOne({ branchId: branchId });
+-     
+-     if (!branch) {
+--      console.log(`Branch ${branchId} no encontrado`);
+-       return;
+-     }
+- 
+-@@ -2697,8 +2690,6 @@ async function sendClosedToPlatformsAfterRejectClosed(branchId) {
+-         });
+-       }
+-     }));
+--
+--    console.log(`Branch ${branchId} cerrado en todas las plataformas`);
+-   } catch (error) {
+-     Log.saveError(error, {
+-       message: `Error en sendClosedToPlatformsAfterRejectClosed  para branch: ${branchId}`,
+-@@ -2721,7 +2712,7 @@ async function closeBranchPeya(branch, platform) {
+-     
+-     for (const remoteId of branchNames) {
+-       const url = `${peyaBaseUrl}/v2/chains/${settings.chainCode}/remoteVendors/${remoteId}/availability`;
+--      const statusResponse = await axios.get(url, headersConfig);
+-+      const statusResponse = await httpClient.get(url, headersConfig);
+-       for (const element of statusResponse.data) {
+-         const body = {
+-           availabilityState: "CLOSED",
+-@@ -2730,7 +2721,7 @@ async function closeBranchPeya(branch, platform) {
+-           platformRestaurantId: element.platformRestaurantId
+-         };
+-         try {
+--          await axios.put(url, body, headersConfig);
+-+          await httpClient.put(url, body, headersConfig);
+-         } catch (error) {
+-           Log.saveError(error, { 
+-             message: `Branch OpenClose Error: PedidosYa sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+-@@ -2756,7 +2747,6 @@ async function closeBranchPeya(branch, platform) {
+-           });
+-         }
+-       }
+--      console.log(`Cerrado en PedidosYa: branch ${branch.branchId}, remoteId ${remoteId}`);
+-     }
+-   } catch (error) {
+-     throw error;
+-@@ -2783,9 +2773,9 @@ async function closeBranchRappi(branch, platform) {
+- 
+-     for (const rappiNumber of branchReferences) {
+-       try {
+--        await axios.put(url, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, options);
+-+        await httpClient.put(url, { stores: [{ store_id: rappiNumber, is_enabled: false }] }, options);
+-       } catch (error) {
+--        Log.saveError(error, { 
+-+        Log.saveError(error, {
+-           message: `Branch OpenClose Error: Rappi sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+-           action: 'sendClosedToPlatformsAfterRejectClosed',
+-           platformId: 2, // rappiId
+-@@ -2808,7 +2798,6 @@ async function closeBranchRappi(branch, platform) {
+-         });
+-       }
+-    
+--      console.log(`Cerrado en Rappi: branch ${branch.branchId}, store_id ${rappiNumber}`);
+-     }
+-   } catch (error) {
+-     throw error;
+-@@ -2839,8 +2828,7 @@ async function closeBranchUber(branch, platform) {
+-       };
+-       const url = `${baseUrlUber}/v1/delivery/store/${store_id}/update-store-status`;
+-       try {
+--        await axios.post(url, body, headersConfig);
+--        console.log(`Cerrado en Uber: branch ${branch.branchId}, store_id ${store_id}`);
+-+        await httpClient.post(url, body, headersConfig);
+-       } catch (error) {
+-         Log.saveError(error, { 
+-           message: `Branch OpenClose Error: Uber sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+-@@ -2892,10 +2880,9 @@ async function closeBranchPediGrido(branch, platform) {
+-       };
+-       
+-       try {
+--        await axios.put(url, body, headersConfig);
+--        console.log(`Cerrado en PediGrido: branch ${branch.branchId}, branchRef ${branchRef}`);
+-+        await httpClient.put(url, body, headersConfig);
+-       } catch (error) {
+--        Log.saveError(error, { 
+-+        Log.saveError(error, {
+-           message: `Branch OpenClose Error: PediGrido sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+-           action: 'sendClosedToPlatformsAfterRejectClosed',
+-           platformId: 7, // pedigridoId
+-@@ -2955,8 +2942,7 @@ async function closeBranchMercadoPago(branch, platform) {
+-       const url = `${baseUrlMercadoPago}users/${user_id}/stores/${store_id}`;
+-       
+-       try {
+--        await axios.put(url, body, headersConfig);
+--        console.log(`Cerrado en MercadoPago: branch ${branch.branchId}, store_id ${store_id}`);
+-+        await httpClient.put(url, body, headersConfig);
+-       } catch (error) {
+-         Log.saveError(error, { 
+-           message: `Branch OpenClose Error: MercadoPago sendClosedToPlatformsAfterRejectClosed CLOSE ${branch.branchId}`, 
+-@@ -3035,14 +3021,8 @@ async function openClosedBranchesGrido(country) {
+-             'Content-Type': 'application/json'
+-           }
+-         };
+--        console.log('PUT PediGrido', {
+--          url: urlAvailability,
+--          body,
+--          headers: headersConfig.headers
+--        });
+--
+-         try {
+--          const resp = await axios.put(urlAvailability, body, headersConfig);
+-+          const resp = await httpClient.put(urlAvailability, body, headersConfig);
+-           if (!resp.data || resp.data.success !== true) {
+-             throw new Error(`API no cerró branch ${branchReference}: ${JSON.stringify(resp.data)}`);
+-           }
+-@@ -3115,7 +3095,6 @@ async function openClosedBranchesGrido(country) {
+- 
+- async function getInfoBranchesGrido() {
+-   try {
+--    console.log('getInfoBranchesGrido')
+-     // 1. Obtener sucursales activas desde mongodb
+-     const activeBranches = await model.find({
+-       platforms: {
+-@@ -3138,19 +3117,18 @@ async function getInfoBranchesGrido() {
+-       try {
+-         const p = branch.platforms.find(b =&gt; b.platform == pedigridoId);
+-         if (!p) {
+--          console.log("No se encontró platform para branch:", branch._id);
+-           return null;
+-         }
+- 
+-         const branchReference = p.branchReference;
+-         const urlAvailability = `${baseUrlPedigrido}v1/locals/horario?branch=${branchReference}`;
+- 
+--        const resp = await axios.get(urlAvailability, headersConfig);
+-+        const resp = await httpClient.get(urlAvailability, headersConfig);
+- 
+-         if (resp?.data?.horarios?.takeaway?.mensaje) {
+-           Log.saveError(null, {
+--            message: 'Falló GET getInfoBranchesGrido()',
+--            mensaje: resp.data.horarios.takeaway.mensaje, urlAvailability, headersConfig,
+-+            message: '[INTEGRATION/WARN] pedigrido_get_info_branches api_error',
+-+            api_message: resp.data.horarios.takeaway.mensaje, url: urlAvailability,
+-             platform: 'PediGrido-Concentrador',
+-           })
+-           return null;
+-@@ -3159,7 +3137,7 @@ async function getInfoBranchesGrido() {
+-         return { branch, data: resp.data };
+-       } catch (error) {
+-         Log.saveError(error, {
+--          message: 'Falló GET getInfoBranchesGrido()',
+-+          message: '[INTEGRATION/ERROR] pedigrido_get_info_branches failed',
+-           platform: 'PediGrido-Concentrador'
+-         });
+-         return null;
+-@@ -3205,9 +3183,8 @@ async function getInfoBranchesGrido() {
+-     // Detiene, elimina y crea nuevamente CRONS de horarios branches Grido
+-     cronHorariosPediGrido();
+-   } catch (error) {
+--    console.log(error)
+-     Log.saveError(error, {
+--      message: `Falló getInfoBranchesGrido PediGrido`,
+-+      message: '[INTEGRATION/ERROR] pedigrido_get_info_branches failed',
+-       platform: 'PediGrido-Concentrador'
+-     });
+-   }
+-@@ -3250,9 +3227,9 @@ async function saveGridoBranch(branch, data) {
+-     );
+-   } catch (error) {
+-     Log.saveError(error, {
+--      message: "Falló guardar horarios branch Grido en MongoDB",
+--      platform: "PediGrido-Concentrador",
+--      branch: branch.branchId
+-+      message: '[INFRA/ERROR] pedigrido_save_branch_hours failed',
+-+      platform: 'PediGrido-Concentrador',
+-+      branch_id: branch.branchId ?? 'unknown'
+-     });
+-   }
+- }
+-@@ -3279,10 +3256,9 @@ async function sendReject(orderInfo, internalCode) {
+-         };
+-      
+-         try {
+--          await axios.post(fullOrder.order.callbackUrls.orderRejectedUrl, bodyReject, headersConfig3);
+-+          await httpClient.post(fullOrder.order.callbackUrls.orderRejectedUrl, bodyReject, headersConfig3);
+-         } catch (error) {
+--          console.log(error)
+--          Log.saveError(error, {                     
+-+          Log.saveError(error, {
+-             message: 'Platform Communication Error: PedidosYa branchRejectOrder-C ' + orderInfo.order.id,                    
+-             action: 'branchRejectOrder', 
+-             platformId: 1, 
+-@@ -3330,10 +3306,9 @@ async function sendReject(orderInfo, internalCode) {
+-             reason: "STORE CLOSED"
+-           };
+-           try {
+--            await axios.put(url, data, options);
+-+            await httpClient.put(url, data, options);
+-           } catch (error) {
+--            console.log(error)
+--            Log.saveError(error, {                     
+-+            Log.saveError(error, {
+-               message: 'Platform Communication Error: Rappi branchRejectOrder-C ' + orderInfo.order.id,                    
+-               action: 'branchRejectOrder', 
+-               platformId: 2, 
+-@@ -3352,7 +3327,7 @@ async function sendReject(orderInfo, internalCode) {
+-             });
+-           }     
+-         } catch (errorRappi) {
+--          Log.saveError(error, { message: 'Falló reject order concentrador rappi', platform: 'Rappi-Concentrador', tokenRappi: tokenRappi, orderInfo: orderInfo, url: url, data: data, options: options });
+-+          Log.saveError(error, { category: 'ORDER', message: '[ORDER/ERROR] rappi_reject_order failed', platform: 'Rappi-Concentrador', url: url, order_id: orderInfo?.id ?? 'unknown' });
+-         }
+-         break;
+-       }
+-@@ -3381,10 +3356,9 @@ async function sendReject(orderInfo, internalCode) {
+- 
+-         const url = `${baseUrlUber}/v1/delivery/order/${fullOrder.order.oldId}/cancel`;
+-         try {
+--          await axios.post(url, body, headersConfig);
+-+          await httpClient.post(url, body, headersConfig);
+-         } catch (error) {
+--          console.log(error)
+--          Log.saveError(error, {                     
+-+          Log.saveError(error, {
+-             message: 'Platform Communication Error: UberEats branchRejectOrder-C ' + orderInfo.order.id,                    
+-             action: 'branchRejectOrder', 
+-             platformId: 4, 
+-@@ -3417,10 +3391,9 @@ async function sendReject(orderInfo, internalCode) {
+-         };
+-         const url = `${baseUrlPedigrido}v1/Grido/CancelarPedido`;
+-         try {
+--          await axios.put(url, body, headers);
+-+          await httpClient.put(url, body, headers);
+-         } catch (error) {
+--          console.log(error)
+--          Log.saveError(error, {                     
+-+          Log.saveError(error, {
+-             message: 'Platform Communication Error: PediGrido branchRejectOrder-C ' + orderInfo.order.id,                    
+-             action: 'branchRejectOrder', 
+-             platformId: 7, 
+-@@ -3464,21 +3437,20 @@ async function sendReject(orderInfo, internalCode) {
+-           const url = `${baseUrlMercadoPago}/proximity-integration/shipments/${orderInfo.order.id}/cancel`;
+-           try {
+-             try {
+--              await axios.put(url, body, headersConfig);
+-+              await httpClient.put(url, body, headersConfig);
+-             } catch (error) {
+--              if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {                
+--                tokenMercadoPagoCloud =  await searchToken(user_id, tenant.tenantId,true);
+-+              if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
+-+                tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId,true);
+-                 decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-                 const headersConfig2 = {
+-                   headers: {
+-                     'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-                   }
+-                 }
+--                await axios.put(url, body, headersConfig2);
+--              }  else throw error;
+-+                await httpClient.put(url, body, headersConfig2);
+-+              } else throw error;
+-             }
+-           } catch (error) {
+--            console.log(error)
+-             Log.saveError(error, {                     
+-               message: 'Platform Communication Error: MercadoPago branchRejectOrder-C ' + orderInfo.order.id,                    
+-               action: 'branchRejectOrder', 
+-@@ -3504,7 +3476,7 @@ async function sendReject(orderInfo, internalCode) {
+-       case 11: { //'TOQUE'
+-         const url = `${baseUrlToque}CancelarPedido`;
+-         try {
+--          await axios.post(url,
+-+          await httpClient.post(url,
+-           {
+-             IdPedido: orderInfo.order.id,
+-             IdMotivo: 21,
+-@@ -3513,7 +3485,6 @@ async function sendReject(orderInfo, internalCode) {
+-           { username: "Toque", password: "Toque" }
+-         );
+-         } catch (error) {
+--          console.log(error)
+-           Log.saveError(error, {                     
+-             message: 'Platform Communication Error: Toque branchRejectOrder-C ' + orderInfo.order.id,                    
+-             action: 'branchRejectOrder', 
+-@@ -3551,10 +3522,9 @@ async function sendReject(orderInfo, internalCode) {
+-         };
+-         const url = `${baseUrlID}CancelarPedido`;
+-         try {
+--          await axios.post(url, body, headers);
+-+          await httpClient.post(url, body, headers);
+-         } catch (error) {
+--          console.log(error)
+--          Log.saveError(error, {                     
+-+          Log.saveError(error, {
+-             message: 'Platform Communication Error: I+D branchRejectOrder-C ' + orderInfo.order.id,                    
+-             action: 'branchRejectOrder', 
+-             platformId: 12, 
+-@@ -3580,8 +3550,7 @@ async function sendReject(orderInfo, internalCode) {
+-       break;
+-     }
+-   } catch (error) {
+--    console.log(error)
+--    Log.saveError(error, { message: 'Falló reject order concentrador', platform: 'Concentrador', internalCode: internalCode, orderInfo: orderInfo });
+-+    Log.saveError(error, { category: 'ORDER', message: '[ORDER/ERROR] reject_order failed', platform: 'Concentrador', internalCode: internalCode, order_id: orderInfo?.id ?? 'unknown' });
+-   }
+- }
+- 
+-@@ -3603,10 +3572,9 @@ async function rejectOrdersPeya() {
+-             status: 'order_accepted'
+-           };
+-           try {
+--             await axios.post(reject.url, bodyConfirm, headersConfig3);
+-+            await httpClient.post(reject.url, bodyConfirm, headersConfig3);
+-           } catch (error) {
+--            console.log(error)
+--            Log.saveError(error, {                     
+-+            Log.saveError(error, {
+-               message: 'Platform Communication Error: PedidosYa confirmOrder-C ' + reject.orderId,                    
+-               action: 'confirmOrder', 
+-               platformId: 1, 
+-@@ -3636,10 +3604,9 @@ async function rejectOrdersPeya() {
+-             }
+-           };
+-           try {
+--            await axios.put(reject.url, {}, options);
+-+            await httpClient.put(reject.url, {}, options);
+-           } catch (error) {
+--            console.log(error)
+--            Log.saveError(error, {                     
+-+            Log.saveError(error, {
+-               message: 'Platform Communication Error: Rappi confirmOrder-C ' + reject.orderId,                    
+-               action: 'confirmOrder', 
+-               platformId: 2, 
+-@@ -3674,10 +3641,9 @@ async function rejectOrdersPeya() {
+-             }
+-           };
+-           try {
+--            await axios.post(reject.url, body, headersConfig);
+-+            await httpClient.post(reject.url, body, headersConfig);
+-           } catch (error) {
+--            console.log(error)
+--            Log.saveError(error, {                     
+-+            Log.saveError(error, {
+-               message: 'Platform Communication Error: UberEats confirmOrder-C ' + reject.orderId,                    
+-               action: 'confirmOrder', 
+-               platformId: 4, 
+-@@ -3717,10 +3683,9 @@ async function rejectOrdersPeya() {
+-             'originalId': String(reject.orderId)
+-           });
+-           try {
+--            await axios.put(reject.url, body, headers);
+-+            await httpClient.put(reject.url, body, headers);
+-           } catch (error) {
+--            console.log(error)
+--            Log.saveError(error, {                     
+-+            Log.saveError(error, {
+-               message: 'Platform Communication Error: PediGrido confirmOrder-C ' + reject.orderId,                    
+-               action: 'confirmOrder', 
+-               platformId: 7, 
+-@@ -3768,22 +3733,21 @@ async function rejectOrdersPeya() {
+-           const body = { status: "accepted" };
+-           try {
+-             try {
+--              await axios.put(reject.url, body, headersConfig);
+-+              await httpClient.put(reject.url, body, headersConfig);
+-             } catch (error) {
+--              if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {                
+--                tokenMercadoPagoCloud =  await searchToken(user_id, tenant.tenantId,true);
+-+              if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
+-+                tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId,true);
+-                 decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-                 const headersConfig2 = {
+-                   headers: {
+-                     'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-                   }
+-                 }
+--                await axios.put(reject.url, body, headersConfig2);
+-+                await httpClient.put(reject.url, body, headersConfig2);
+-               }
+-               else throw error;
+-             }
+-           } catch (error) {
+--            console.log(error)
+-             Log.saveError(error, {
+-               message: 'Platform Communication Error: MercadoPago confirmOrder-C ' + reject.orderId,
+-               action: 'confirmOrder',
+-@@ -3822,9 +3786,8 @@ async function rejectOrdersPeya() {
+-             'originalId': String(reject.orderId)
+-           });
+-           try {
+--            await axios.post(reject.url, body, headers);
+-+            await httpClient.post(reject.url, body, headers);
+-           } catch (error) {
+--            console.log(error)
+-             Log.saveError(error, {
+-               message: 'Platform Communication Error: I+D confirmOrder-C ' + reject.orderId,
+-               action: 'confirmOrder',
+-@@ -3866,8 +3829,7 @@ async function rejectOrdersPeya() {
+-           break;
+-       }
+-     } catch (error) {
+--      console.log(error)
+--      Log.saveError(error, { message: 'Falló reject order concentrador-P', platform: 'Concentrador', reject: reject });
+-+      Log.saveError(error, { category: 'ORDER', message: '[ORDER/ERROR] reject_order failed', platform: 'Concentrador', order_id: reject?.orderId ?? 'unknown' });
+-       await rejectPeyaModel.findOneAndUpdate({ _id: reject.id }, { send: true });
+-     }
+-   }
+-@@ -4240,8 +4202,7 @@ const saveOne = async (req, res) =&gt; {
+-     try {
+-       platformHistoryModel.create(historyEntry);
+-     } catch (e) {
+--      Log.saveError(error, { message: 'Falló saveOne platforms ' + branchId, platform: 'Concentrador' });
+--      console.log(`Error al insertar el registro para branchId: ${branchId}. Error: ${e}`);
+-+      Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] branch_platforms_save failed', platform: 'Concentrador', branch_id: branchId ?? 'unknown' });
+-     }
+-     return res.status(200).json(result).end();
+-   } catch (error) {
+-@@ -4466,7 +4427,7 @@ const updateOne = async (req, res) =&gt; {
+-           'Content-Type': 'application/json'
+-         }
+-       };
+--      let responseLogin = await axios.post(urlAuth, JSON.stringify(payload), config);
+-+      let responseLogin = await httpClient.post(urlAuth, JSON.stringify(payload), config);
+-       let urlGetWebhook = `${baseUrls[branchActual.address.country]}/api/v2/restaurants-integrations-public-api/webhook`
+-       let urlDeleteWebhook = `${baseUrls[branchActual.address.country]}/api/v2/restaurants-integrations-public-api/webhook/ORDER_EVENT_CANCEL/remove-stores`
+-       let urlAddWebhook = `${baseUrls[branchActual.address.country]}/api/v2/restaurants-integrations-public-api/webhook/ORDER_EVENT_CANCEL/add-stores`
+-@@ -4478,7 +4439,7 @@ const updateOne = async (req, res) =&gt; {
+-         }
+-       };
+- 
+--      let responseGetWebhook = await axios.get(urlGetWebhook, options);
+-+      let responseGetWebhook = await httpClient.get(urlGetWebhook, options);
+-       let webhookCountry = responseGetWebhook.data[0]?.stores[0]?.url;
+-       let rappiNew = params.platforms.find(r =&gt; r.platform === "f3fc2fb96e42d11cc7c65b4b");
+-       if (rappiNew &amp;&amp; rappiNew.isActive) { // estaba desactivada -&gt; agregar al webhook
+-@@ -4491,10 +4452,10 @@ const updateOne = async (req, res) =&gt; {
+-           }
+-         ];
+-         try {
+--          await axios.put(urlAddWebhook, bodyAddStores, options);
+-+          await httpClient.put(urlAddWebhook, bodyAddStores, options);
+-         } catch (error) {
+--          Log.saveError(error, { message: 'Falló al agregar webhook rappi, reintentando...', urlAddWebhook: urlAddWebhook, bodyAddStores: bodyAddStores, options: options, platform: 'Concentrador' });
+--          await axios.put(urlAddWebhook, bodyAddStores, options);
+-+          Log.save('WARN', error, { category: 'INTEGRATION', message: '[INTEGRATION/WARN] rappi_webhook_add failed retrying', platform: 'Concentrador', url: urlAddWebhook, branch_id: 'unknown', order_id: 'unknown' });
+-+          await httpClient.put(urlAddWebhook, bodyAddStores, options);
+-         }     
+-       }
+-       else { // estaba activa -&gt; eliminar del webhook    
+-@@ -4504,7 +4465,7 @@ const updateOne = async (req, res) =&gt; {
+-             "stores": Array.isArray(oldRappi.branchReference) ? oldRappi.branchReference : [oldRappi.branchReference]
+-           };
+- 
+--          await axios.delete(urlDeleteWebhook, {
+-+          await httpClient.delete(urlDeleteWebhook, {
+-             data: bodyDeleteStores,
+-             ...options
+-           });
+-@@ -4513,7 +4474,7 @@ const updateOne = async (req, res) =&gt; {
+-     }
+-     return res.status(200).send(errors).end();
+-   } catch (error) {
+--    Log.saveError(error, { message: 'Falló al guardar branch concentrador', platform: 'Concentrador' });
+-+    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] branch_save failed', platform: 'Concentrador' });
+-     error = error.toString();
+-     logger.error({
+-       message: 'Failed to update branch.',
+-@@ -4588,7 +4549,6 @@ const deleteOne = (req, res) =&gt; {
+-       }
+-     })
+-     .catch((e) =&gt; {
+--      console.log(e);
+-     });
+- };
+- 
+-@@ -4597,29 +4557,9 @@ const deleteQueuesBranch = (branchId) =&gt; {
+-   return aws.deleteQueues(branchId);
+- };
+- 
+--const createConsoleLog = (headers, res) =&gt; {
+--  console.log('\n' + '***********************************************************************************');
+--  console.log(
+--    'Fecha: ' +
+--    new Date() +
+--    ' BranchId: ' +
+--    headers['branch-id'] +
+--    ', Respuesta: ' +
+--    res +
+--    ' Agente: ' +
+--    headers['agent-version'] +
+--    ' Notificador: ' +
+--    headers['notifications-version'] +
+--    ', Componente: ' +
+--    headers['component']
+--  );
+--  console.log('***********************************************************************************' + '\n');
+--};
+--
+- const login = async (req, res) =&gt; {
+-   try {
+-     if (!req.body || !req.body.branchId || !req.body.branchSecret) {
+--      createConsoleLog(req.headers, 400);
+-       logger.error({ message: 'Insufficient params.', meta: req.body });
+-       return res
+-         .status(400)
+-@@ -4651,8 +4591,7 @@ const login = async (req, res) =&gt; {
+- 
+-       }
+-     } catch (error) {
+--      console.log(error);
+--      Log.saveError(error, { message: 'Falló cronAlready concentrador', platform: 'Concentrador' });
+-+      Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] cron_already_running failed', platform: 'Concentrador' });
+-     }
+- 
+-     let savedBranch;
+-@@ -4738,7 +4677,6 @@ const login = async (req, res) =&gt; {
+-         branch_queue: config.AWS.SQS.ORDER_CONSUMER.NAME,
+-         platform_queue: config.AWS.SQS.ORDER_PRODUCER.NAME.replace('##_', savedBranch.branchId)
+-       };
+--      createConsoleLog(req.headers, 200);
+-       return res
+-         .status(200)
+-         .json({
+-@@ -4753,7 +4691,6 @@ const login = async (req, res) =&gt; {
+-     const msg = 'El login no se pudo realizar con éxito.';
+-     const meta = { error: error.toString(), body: req.body, branchId: req.body.branchId };
+-     const err = new CustomError(APP_BRANCH.LOGIN, msg, req.uuid, meta);
+--    createConsoleLog(req.headers, 401);
+-     return res.status(401).json(err).end();
+-   }
+- };
+-@@ -4773,7 +4710,7 @@ const getBranchesToExport = async (req, res) =&gt; {
+-       .lean();
+-       return res.status(200).json(branchesToExport).end();
+-   } catch (error) {
+--    Log.saveError(error, { message: 'Falló getBranchesToExport concentrador', platform: 'Concentrador' });
+-+    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] branches_export failed', platform: 'Concentrador' });
+-   }
+- };
+- 
+-@@ -4786,7 +4723,7 @@ const getBranchesToExportCount = async (req, res) =&gt; {
+-     const branchesToExport = await model.countDocuments(matchStage); 
+-       return res.status(200).json(branchesToExport).end();
+-   } catch (error) {
+--    Log.saveError(error, { message: 'Falló getBranchesToExport concentrador', platform: 'Concentrador' });
+-+    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] branches_export_count failed', platform: 'Concentrador' });
+-   }
+- };
+- 
+-@@ -4833,7 +4770,7 @@ const getParams = async (req, res) =&gt; {
+-     };
+-     return res.status(200).json(parameters).end();
+-   } catch (error) {
+--    Log.saveError(error, { message: 'Falló getParams concentrador', platform: 'Concentrador' });
+-+    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] params_fetch failed', platform: 'Concentrador' });
+-     const msg = 'No se pudieron obtener los parámetros de las plataformas';
+-     const meta = { error: error.toString() };
+-     const err = new CustomError(APP_BRANCH.PARAMS, msg, req.uuid, meta);
+-@@ -4885,7 +4822,7 @@ const getRejectedMessages = async (req, res) =&gt; {
+-     };
+-     return res.status(200).json(parameters).end();
+-   } catch (error) {
+--    Log.saveError(error, { message: 'Falló getRejectedMessages concentrador', platform: 'Concentrador' });
+-+    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] rejected_messages_fetch failed', platform: 'Concentrador' });
+-     return res.status(400).json(error).end();
+-   }
+- };
+-@@ -4971,7 +4908,7 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-           for (const remoteId of branchNames) {
+-             const urlAvailability = `${peyaBaseUrl}/v2/chains/${settings.chainCode}/remoteVendors/${remoteId}/availability`;
+-             try {
+--              const statuspos = await axios.get(urlAvailability, headersConfig3);
+-+              const statuspos = await httpClient.get(urlAvailability, headersConfig3);
+-               //retorna el primer estado
+-               if (statuspos.data[0].availabilityState === "CLOSED") {
+-                 result.push({ platform: 1, closed: true })
+-@@ -4984,7 +4921,7 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-               throw Error("Estado no existe")
+-             } catch (error) {
+-               result.push({ platform: 1, closed: "Error: " + error?.message });
+--              Log.saveError(error, { message: 'Falló ', platform: 'PedidosYa-Concentrador', urlAvailability: urlAvailability, body: req.body, headersConfig3: headersConfig3 });
+-+              Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] peya_status_check failed', platform: 'PedidosYa-Concentrador', url: urlAvailability, branch_id: branch?.branchId ?? 'unknown', status_code: error?.response?.status ?? 'unknown' });
+- 
+-             }
+-           }
+-@@ -4998,7 +4935,7 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-             const urlAvailability = `${baseUrlUber}/v1/delivery/store/${store_id}/status`;
+-             try {
+-               if(branch.address.country === "Argentina"){
+--                let statuspos = await axios.get(urlAvailability, headersConfigAr);
+-+                let statuspos = await httpClient.get(urlAvailability, headersConfigAr);
+-                 if (statuspos.data.status === "OFFLINE") {
+-                   result.push({ platform: 4, closed: true })
+-                   continue;
+-@@ -5009,7 +4946,7 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-                 }    
+-               }
+-               if(branch.address.country === "Chile"){
+--                let statuspos = await axios.get(urlAvailability, headersConfigCl);
+-+                let statuspos = await httpClient.get(urlAvailability, headersConfigCl);
+-                 if (statuspos.data.status === "OFFLINE") {
+-                   result.push({ platform: 4, closed: true })
+-                   continue;
+-@@ -5024,7 +4961,7 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+- 
+-             } catch (error) {
+-               result.push({ platform: 4, closed: "Error: " + error?.message });
+--              Log.saveError(error, { message: 'Falló obtener estado uber BO', platform: 'UberEats-Concentrador', urlAvailability: urlAvailability, body: req.body, headersConfigCl: headersConfigCl, headersConfigAr: headersConfigAr });
+-+              Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] uber_status_check failed', platform: 'UberEats-Concentrador', url: urlAvailability, branch_id: branch?.branchId ?? 'unknown', status_code: error?.response?.status ?? 'unknown' });
+-             }
+-           }
+-         }
+-@@ -5036,7 +4973,7 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-           for (const rappiNumber of branchReferences) {
+-             if (branch.address.country === "Argentina") {
+-               try {
+--                let status = await axios.post(urlAr, [rappiNumber], optionsAr);
+-+                let status = await httpClient.post(urlAr, [rappiNumber], optionsAr);
+-                 if (status.data[rappiNumber] === false) {
+-                   result.push({ platform: 2, closed: true })
+-                   continue;
+-@@ -5044,12 +4981,12 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-                 result.push({ platform: 2, closed: false })
+-               } catch (error) {
+-                 result.push({ platform: 2, closed: "Error: " + error?.message });
+--                Log.saveError(error, { message: 'Falló obtener estado rappi BO', platform: 'Concentrador', urlAr: urlAr, rappiNumber: rappiNumber, optionsAr: optionsAr });
+-+                Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] rappi_status_check failed', platform: 'Rappi-Concentrador', branch_id: branch?.branchId ?? 'unknown', rappiNumber: rappiNumber, status_code: error?.response?.status ?? 'unknown' });
+-               }
+-             }
+-             if (branch.address.country === "Perú") {
+-               try {
+--                let status = await axios.post(urlPr, [rappiNumber], optionsPr);
+-+                let status = await httpClient.post(urlPr, [rappiNumber], optionsPr);
+-                 if (status.data[rappiNumber] === false) {
+-                   result.push({ platform: 2, closed: true })
+-                   continue;
+-@@ -5057,12 +4994,12 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-                 result.push({ platform: 2, closed: false })
+-               } catch (error) {
+-                 result.push({ platform: 2, closed: "Error: " + error?.message });
+--                Log.saveError(error, { message: 'Falló obtener estado rappi BO', platform: 'Concentrador', urlPr: urlPr, rappiNumber: rappiNumber, optionsPr: optionsPr });
+-+                Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] rappi_status_check failed', platform: 'Rappi-Concentrador', branch_id: branch?.branchId ?? 'unknown', rappiNumber: rappiNumber, status_code: error?.response?.status ?? 'unknown' });
+-               }
+-             }
+-             if (branch.address.country === "Chile") {
+-               try {
+--                let status = await axios.post(urlCl, [rappiNumber], optionsCl);
+-+                let status = await httpClient.post(urlCl, [rappiNumber], optionsCl);
+-                 if (status.data[rappiNumber] === false) {
+-                   result.push({ platform: 2, closed: true })
+-                   continue;
+-@@ -5070,12 +5007,12 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-                 result.push({ platform: 2, closed: false })
+-               } catch (error) {
+-                 result.push({ platform: 2, closed: "Error: " + error?.message });
+--                Log.saveError(error, { message: 'Falló obtener estado rappi BO', platform: 'Concentrador', urlCl: urlCl, rappiNumber: rappiNumber, optionsCl: optionsCl });
+-+                Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] rappi_status_check failed', platform: 'Rappi-Concentrador', branch_id: branch?.branchId ?? 'unknown', rappiNumber: rappiNumber, status_code: error?.response?.status ?? 'unknown' });
+-               }
+-             }
+-             if (branch.address.country === "Uruguay") {
+-               try {
+--                let status = await axios.post(urlUr, [rappiNumber], optionsUr);
+-+                let status = await httpClient.post(urlUr, [rappiNumber], optionsUr);
+-                 if (status.data[rappiNumber] === false) {
+-                   result.push({ platform: 2, closed: true })
+-                   continue;
+-@@ -5083,7 +5020,7 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-                 result.push({ platform: 2, closed: false })
+-               } catch (error) {
+-                 result.push({ platform: 2, closed: "Error: " + error?.message });
+--                Log.saveError(error, { message: 'Falló obtener estado rappi BO', platform: 'Concentrador', urlUr: urlUr, rappiNumber: rappiNumber, optionsUr: optionsUr });
+-+                Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] rappi_status_check failed', platform: 'Rappi-Concentrador', branch_id: branch?.branchId ?? 'unknown', rappiNumber: rappiNumber, status_code: error?.response?.status ?? 'unknown' });
+-               }
+-             }
+-           }
+-@@ -5096,7 +5033,7 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-           for (const store_id of branchReferences) {
+-             const urlAvailability = `${baseUrlPedigrido}v1/locals/horario?branch=${store_id}`;
+-             try {
+--              const statuspos = await axios.get(urlAvailability, headersConfigPediGrido);
+-+              const statuspos = await httpClient.get(urlAvailability, headersConfigPediGrido);
+-               if (statuspos.data.estado === "apagado") {
+-                 result.push({ platform: 7, closed: true })
+-                 continue;
+-@@ -5107,10 +5044,8 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-               }
+-               throw Error("Estado no existe")
+-             } catch (error) {
+--              console.log('error')
+--              console.log(error)
+-               result.push({ platform: 7, closed: "Error: " + error?.message });
+--              Log.saveError(error, { message: 'Falló obtener estado pedigrido BO', platform: 'PediGrido-Concentrador', urlAvailability: urlAvailability, body: req.body, headersConfig: headersConfigPediGrido });
+-+              Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] pedigrido_status_check failed', platform: 'PediGrido-Concentrador', url: urlAvailability, branch_id: branch?.branchId ?? 'unknown', status_code: error?.response?.status ?? 'unknown' });
+-             }
+-           }
+-         }
+-@@ -5135,17 +5070,17 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-               try {
+-                 let statuspos;
+-                 try {
+--                  statuspos = await axios.get(urlAvailability, headersConfig);
+-+                  statuspos = await httpClient.get(urlAvailability, headersConfig);
+-                 } catch (error) {
+--                  if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {                
+--                    tokenMercadoPagoCloud =  await searchToken(user_id, tenant.tenantId,true);
+-+                  if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
+-+                    tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId,true);
+-                     decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-                     const headersConfig2 = {
+-                       headers: {
+-                         'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-                       }
+-                     }
+--                    statuspos = await axios.get(urlAvailability, headersConfig2);
+-+                    statuspos = await httpClient.get(urlAvailability, headersConfig2);
+-                   }
+-                   else throw error;
+-                 }
+-@@ -5159,27 +5094,23 @@ const getStatus = async (req, res) =&gt; {//RESPONDER EN sendOpen
+-                 }
+-                 throw Error("Estado no existe")
+-               } catch (error) {
+--                console.log('error')
+--                console.log(error)
+-                 result.push({ platform: 8, closed: "Error: " + error?.message });
+--                Log.saveError(error, { message: 'Falló obtener estado MercadoPago BO',branchId: branch.branchId, user_id: user_id, platform: 'MercadoPago-Concentrador', urlAvailability: urlAvailability, body: req.body, headersConfig: headersConfig });
+-+                Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] mercadopago_status_check failed', platform: 'MercadoPago-Concentrador', url: urlAvailability, branch_id: branch?.branchId ?? 'unknown', user_id: user_id, status_code: error?.response?.status ?? 'unknown' });
+-               }
+-             }
+-           } catch (error) {
+-             result.push({ platform: 8, closed: "Error: " + error?.message });
+--            console.log('error')
+--            console.log(error);
+--            Log.saveError(error, { message: 'Falló General estado MercadoPago BO', platform: 'MercadoPago-Concentrador', body: req.body, headersConfig: req.headers });
+-+            Log.saveError(error, { category: 'INTEGRATION', message: '[INTEGRATION/ERROR] mercadopago_status_check_general failed', platform: 'MercadoPago-Concentrador', branch_id: branch?.branchId ?? 'unknown', order_id: 'unknown', status_code: error?.response?.status ?? 'unknown' });
+-           }          
+-         }
+-       } catch (error) {
+--        Log.saveError(error, { message: 'Falló getStatus concentrador IN', branchForm: branchForm, platform: 'Concentrador' });
+-+        Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] get_status failed', platform: 'Concentrador' });
+-         continue;
+-       }
+-     }
+-     return res.status(200).json(result).end();
+-   } catch (error) {
+--    Log.saveError(error, { message: 'Falló getStatus concentrador', platform: 'Concentrador' });
+-+    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] get_status failed', platform: 'Concentrador' });
+-     return res.status(200).json(error.message).end();
+-   }
+- };
+-@@ -5263,7 +5194,7 @@ const sendOpen = async (req, res) =&gt; {
+-         await Promise.allSettled(branchNames.map(async (remoteId) =&gt; {
+-           const urlAvailability = `${peyaBaseUrl}/v2/chains/${settings.chainCode}/remoteVendors/${remoteId}/availability`;
+-           try {
+--            const statuspos = await axios.get(urlAvailability, headersConfig3);
+-+            const statuspos = await httpClient.get(urlAvailability, headersConfig3);
+-             for (const element of statuspos.data) {
+-               let body = {
+-                 "availabilityState": "OPEN",
+-@@ -5271,7 +5202,7 @@ const sendOpen = async (req, res) =&gt; {
+-                 "platformRestaurantId": element.platformRestaurantId
+-               };
+-               try {
+--                await axios.put(urlAvailability, body, headersConfig3);
+-+                await httpClient.put(urlAvailability, body, headersConfig3);
+-               } catch (error) {
+-                 Log.saveError(error, {
+-                   message: `Branch OpenClose Error: PedidosYa sendOpen OPEN ${branch.branchId}`,
+-@@ -5333,9 +5264,9 @@ const sendOpen = async (req, res) =&gt; {
+-           const urlAvailability = `${baseUrlUber}/v1/delivery/store/${store_id}/update-store-status`;
+-           try {
+-               if(branch.address.country === "Argentina")
+--                await axios.post(urlAvailability, body, headersConfigAr);
+-+                await httpClient.post(urlAvailability, body, headersConfigAr);
+-               if(branch.address.country === "Chile")
+--                await axios.post(urlAvailability, body, headersConfigCl);
+-+                await httpClient.post(urlAvailability, body, headersConfigCl);
+-           } catch (error) {
+-             Log.saveError(error, {
+-               message: `Branch OpenClose Error: Uber sendOpen OPEN ${branch.branchId}`,
+-@@ -5369,7 +5300,7 @@ const sendOpen = async (req, res) =&gt; {
+-         await Promise.allSettled(branchReferences.map(async (rappiNumber) =&gt; {
+-           if (branch.address.country === "Argentina") {
+-             try {
+--              await axios.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsAr);
+-+              await httpClient.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsAr);
+-             } catch (error) {
+-               Log.saveError(error, {
+-                 message: `Branch OpenClose Error: Rappi sendOpen OPEN ${branch.branchId}`,
+-@@ -5396,7 +5327,7 @@ const sendOpen = async (req, res) =&gt; {
+-           }
+-           if (branch.address.country === "Perú") {
+-             try {
+--              await axios.put(urlPr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsPr);
+-+              await httpClient.put(urlPr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsPr);
+-             } catch (error) {
+-               Log.saveError(error, {
+-                 message: `Branch OpenClose Error: Rappi sendOpen 'OPEN' ${branch.branchId}`,
+-@@ -5423,7 +5354,7 @@ const sendOpen = async (req, res) =&gt; {
+-           }
+-           if (branch.address.country === "Chile") {
+-             try {
+--              await axios.put(urlCl, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsCl);
+-+              await httpClient.put(urlCl, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsCl);
+-             } catch (error) {
+-               Log.saveError(error, {
+-                 message: `Branch OpenClose Error: Rappi sendOpen OPEN ${branch.branchId}`,
+-@@ -5450,7 +5381,7 @@ const sendOpen = async (req, res) =&gt; {
+-           }
+-           if (branch.address.country === "Uruguay") {
+-             try {
+--              await axios.put(urlUr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsUr);
+-+              await httpClient.put(urlUr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsUr);
+-             } catch (error) {
+-               Log.saveError(error, {
+-                 message: `Branch OpenClose Error: Rappi sendOpen OPEN ${branch.branchId}`,
+-@@ -5490,7 +5421,7 @@ const sendOpen = async (req, res) =&gt; {
+-           }
+-           const urlAvailability = `${baseUrlPedigrido}v1/locals/status`;
+-           try {
+--            await axios.put(urlAvailability, body, headersConfigPediGrido);
+-+            await httpClient.put(urlAvailability, body, headersConfigPediGrido);
+-           } catch (error) {
+-             Log.saveError(error, {
+-               message: `Branch OpenClose Error: PediGrido sendOpen OPEN ${branch.branchId}`,
+-@@ -5535,11 +5466,11 @@ const sendOpen = async (req, res) =&gt; {
+-         }
+-         for (const store_id of branchReferences) { 
+-           const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+--          try {      
+-+          try {
+-             try {
+--              await axios.put(urlAvailability, body, headersConfig);   
+-+              await httpClient.put(urlAvailability, body, headersConfig);
+-             } catch (error) {
+--              if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {                
+-+              if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
+-                 tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, true);
+-                 decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-                 const headersConfig2 = {
+-@@ -5547,13 +5478,11 @@ const sendOpen = async (req, res) =&gt; {
+-                     'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
+-                   }
+-                 }
+--                await axios.put(urlAvailability, body, headersConfig2);   
+-+                await httpClient.put(urlAvailability, body, headersConfig2);
+-               }
+-               else throw error;
+-             }
+-           } catch (error) {
+--            console.log('error')
+--            console.log(error)  
+-             Log.saveError(error, {
+-               message: `Branch OpenClose Error: MercadoPago sendOpen OPEN ${branch.branchId}`,
+-               action: 'sendOpen',
+-@@ -5580,8 +5509,7 @@ const sendOpen = async (req, res) =&gt; {
+-     }
+-     return res.status(200).json({}).end();
+-   } catch (error) {
+--    console.log(error)
+--    Log.saveError(error, { message: 'Falló sendOpen concentrador', platform: 'Concentrador' });
+-+    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] send_open failed', platform: 'Concentrador' });
+-     return res.status(200).json(error.message).end();
+-   }
+- };
+-@@ -5617,8 +5545,7 @@ const updatePlatformsRule = async (req, res) =&gt; {
+- 
+-     return res.status(200).json({}).end();
+-   } catch (error) {
+--    console.log(error);
+--    Log.saveError(error, { message: 'Falló updatePlatformsRule concentrador', platform: 'Concentrador' });
+-+    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] platforms_rule_update failed', platform: 'Concentrador' });
+-   }
+- 
+- };
+-diff --git a/api/src/controllers/courierDate.js b/api/src/controllers/courierDate.js
+-index e6f00262..fef895cc 100644
+---- a/api/src/controllers/courierDate.js
+-+++ b/api/src/controllers/courierDate.js
+-@@ -8,7 +8,6 @@ const findAll = (req, res) =&gt; {
+- };
+- 
+- const saveOne = async (req, res) =&gt; {
+--  console.log(req.body)
+-   return await _helpers.save(model, req, res);
+- };
+- 
+-@@ -34,7 +33,6 @@ const deleteDates = async (req, res) =&gt; {
+-     await model.deleteOne({ branchId: req.params.id });
+-     return res.status(200).json({}).end();
+-   } catch (error) {
+--    console.log('error', error);
+-     return res.status(400).json({ error }).end();
+-   }
+- };
+-diff --git a/api/src/controllers/delivery.js b/api/src/controllers/delivery.js
+-index 42768d97..eb9cee84 100644
+---- a/api/src/controllers/delivery.js
+-+++ b/api/src/controllers/delivery.js
+-@@ -88,7 +88,6 @@ const findTimesAll = async (req, res) =&gt; {
+-     const url = `${config.apiUrl}/concentrador/`;
+-     await axios.post(url, { delivery }, { headers });
+-   } catch (error) {
+--    console.log(error);
+-   }
+- };
+-  */
+-diff --git a/api/src/controllers/glovo.js b/api/src/controllers/glovo.js
+-index 577ca655..7e46486a 100644
+---- a/api/src/controllers/glovo.js
+-+++ b/api/src/controllers/glovo.js
+-@@ -42,7 +42,6 @@ const getOrder = async (req, res) =&gt; {
+-     const glovo = getGlovoInstance();
+-     glovo.getOrderById(req.params.id)
+-         .then((order) =&gt; {
+--            console.log(order);
+-             res.status(200)
+-                 .send(order)
+-                 .end()</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El bloque transversal documentado en este commit reduce el logging directo por consola, unifica el cliente HTTP utilizado por varias integraciones y normaliza el contexto de los errores. Por su alcance, impacta distintos flujos operativos del Concentrador además del ajuste específico de PedidosYa.</p>
+                </div>
+            </div>
+        </details>
+    </section>
+    <section id="conclusion" class="service-section">
+        <h2>Conclusión General</h2>
+        <p>El release conserva el identificador remoto en los errores de apertura y cierre de PedidosYa y mejora la trazabilidad de las integraciones del Concentrador mediante un cliente HTTP común y logs categorizados. La nueva información permite relacionar un fallo con su sucursal o plataforma sin cambiar el resultado funcional de las operaciones. El análisis también incluye un bloque `diff` generado por el harness con cambios transversales de logging y comunicación que forman parte del commit.</p>
+    </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>Prism.highlightAll();</script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Concentrador 9.8.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            line-height: 1.7;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; }
+
+        .main-header {
+            background-color: var(--card-bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+
+        .deployment-info-box {
+            background-color: var(--deployment-bg);
+            border-left: 4px solid var(--deployment-border);
+            padding: 1em 1.5em;
+            margin-bottom: 2.5em;
+            border-radius: 4px;
+        }
+
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 {
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .component-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .component-header {
+            padding: 1em 1.5em;
+            background-color: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .component-body h5 { margin-top: 1.5em; font-size: 1.1em; font-weight: 700; }
+
+        .analysis-box {
+            background-color: var(--analysis-bg);
+            border-left: 4px solid var(--analysis-border);
+            padding: 1em 1.5em;
+            margin-top: 1.5em;
+            border-radius: 4px;
+        }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+
+        pre[class*="language-"] {
+            padding: 1.2em !important;
+            margin: 1em 0 !important;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.5 !important;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            overflow-wrap: break-word !important;
+            background-color: #2d2d2d;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Notas de Release: Concentrador 9.8.0</h1>
+            <p>La versión 9.8.0 del Concentrador hace configurable el destino de los logs (consola/Graylog y MongoDB) sin depender de un reinicio del servicio.</p>
+        </header>
+
+        <div class="deployment-info-box">
+            <h4>Información de Despliegue</h4>
+            <p><b>Versión:</b> 9.8.0</p>
+            <p><b>Fecha de Despliegue:</b> 21/07/2026</p>
+            <p><b>AWS Task:</b> [Pendiente]</p>
+            <p><b>JIRA Task:</b> GITSFP-1641</p>
+            <p><b>Commits:</b> bc5806213f5cc9c58c045f71ac1a8d45c160ee49</p>
+        </div>
+
+        <section id="summary" class="service-section">
+            <h2>Resumen General de la Versión</h2>
+            <p>Hasta ahora, cada registro de log del Concentrador se guardaba siempre en consola/Graylog y en MongoDB al mismo tiempo, sin posibilidad de desactivar ninguno de los dos destinos. Con esta versión, dos configuraciones independientes permiten elegir dónde se registran los logs -en consola, en Mongo, en ambos o en ninguno- y el cambio se aplica sin reiniciar el servicio.</p>
+        </section>
+
+        <section id="technical-analysis" class="service-section">
+            <h2>Análisis Técnico Detallado</h2>
+
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/src/controllers/branch.js</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Sondeo de la configuración de logging</b></p>
+                        <p>La tarea programada que ya consultaba la colección de configuración para los horarios forzados ahora también lee los flags <code>consoleLogEnabled</code> y <code>mongoLogEnabled</code>. Al detectar un valor distinto al que tiene cargado en memoria, actualiza el logger central a través de <code>Log.configure(...)</code>. Esto permite cambiar el destino de los logs sin reiniciar el servicio.</p>
+                        <p><b>2. Reducción de la frecuencia del sondeo</b></p>
+                        <p>La tarea programada que ejecuta esta lectura pasa de correr cada 5 segundos a cada 30 segundos. Al sumarle la consulta de los flags de logging, se reduce la frecuencia de acceso a la configuración.</p>
+                        <p><b>3. Cambios de espacios en blanco sin efecto funcional</b></p>
+                        <p>El resto de los hunks del archivo (en <code>closeBranchPeya</code>, en la actualización de plataformas de una sucursal y en <code>login</code>) solo eliminan o agregan espacios al final de la línea, sin cambios de comportamiento.</p>
+                    </div>
+
+                    <h4>Código ANTES</h4>
+                    <pre class="language-javascript"><code>@@ líneas 80-95 @@
+  1: { horarios: [], max: 0 },
+  2: { horarios: [], max: 0 },
+  3: { horarios: [], max: 0 },
+  4: { horarios: [], max: 0 },
+  5: { horarios: [], max: 0 },
+  6: { horarios: [], max: 0 },
+  7: { horarios: [], max: 0 },
+};
+
+
+async function pediGridoLogin() {
+  let body = {
+    "Usuario": config.pediGridoParams.usuario,
+    "Password": config.pediGridoParams.password
+  }
+  let configData = {
+
+@@ líneas 1747-1763 @@
+
+  const scheduledeleteTokens = '0 */3 * * *';
+  const schedulegetTokensNewMercadoPagoCloud = '*/1 * * * *';
+  const schedulePeyaReject = '*/2 * * * *';
+  const scheduleDeadLetterSave = '*/1 * * * *';
+  const scheduleOrerTimesAvg = '0 8 * * *';
+
+  const scheduleGetInfoBranchesGrido = '30 6 * * *';
+  const scheduleforcedCronHorarios = '*/5 * * * * *';
+  const scheduleforcedCronCheckIns = '*/15 * * * * *';
+
+  cron.schedule(schedulegetTokensNewMercadoPagoCloud, async () =&gt; await getTokensNewMercadoPagoCloudBranch());
+  cron.schedule(scheduledeleteTokens, async () =&gt; await initialData.deleteTokens());
+  cron.schedule(scheduleLoginUber, async () =&gt; await uberLogin());
+  cron.schedule(scheduleLoginRappi, async () =&gt; await rappiLogin());
+  cron.schedule(schedulePeyaLogin, async () =&gt; await peyaLogin(baseUrl));
+  cron.schedule(schedulePediGridoLogin, async () =&gt; await pediGridoLogin());
+
+@@ líneas 1796-1811 @@
+  return {
+    hour: Math.floor(totalMinutes / 60),
+    minute: totalMinutes % 60
+  };
+}
+
+async function checkforcedCronHorarios() {
+  let forcedCronHorarios = await configsModel.findOne({});
+  if (!forcedCronHorarios.forcedCronHorarios)
+    return;
+  await configsModel.updateOne({}, { forcedCronHorarios: false });
+  await getInfoBranchesGrido();
+}
+
+async function checkforcedCheckins() {
+  let platform;    
+
+@@ líneas 2819-2835 @@
+      message: `Error en sendClosedToPlatformsAfterRejectClosed  para branch: ${branchId}`,
+      branchId: branchId
+    });
+  }
+}
+
+async function closeBranchPeya(branch, platform) {
+  const branchData = { branchId: branch?.branchId, results: [] };
+  try {    
+    const branchName = platform.branchName;
+    const branchNames = Array.isArray(branchName) ? branchName : [branchName];
+
+    const headersConfig = {
+      headers: {
+        'Authorization': `Bearer ${tokenPeya}`,
+        'Content-Type': 'application/json'
+      }
+
+@@ líneas 2840-2856 @@
+      const statusResponse = await httpClient.get(url, headersConfig);
+      for (const element of statusResponse.data) {
+        const body = {
+          availabilityState: "CLOSED",
+          closedReason: "OTHER",
+          platformKey: element.platformKey,
+          platformRestaurantId: element.platformRestaurantId
+        };
+        try {          
+          let response = await httpClient.put(url, body, headersConfig);
+          branchData.results.push({
+            branchName: remoteId,
+            type: "Closed",
+            result: true,
+            resultApi: response.data,
+            resultStatus: response.status
+          });
+
+@@ líneas 4623-4639 @@
+            }
+          }
+        }
+      );
+    }
+    let rappiActiveBak = params.rappiActive;
+    delete params.rappiActive;
+
+    if (params.platforms) {
+      params.platforms = params.platforms.map(p =&gt; {
+        const existing = currentBranch.platforms.find(ep =&gt; ep.platform.toString() === p.platform);
+        return {
+          ...p,
+          rules: existing?.rules,
+          mercadoPagoUserId: p.mercadoPagoUserId // Se agrega el atributo si está presente en el body
+        };
+      });
+
+@@ líneas 4787-4803 @@
+    });
+};
+
+const deleteQueuesBranch = (branchId) =&gt; {
+  const aws = new Aws();
+  return aws.deleteQueues(branchId);
+};
+
+const login = async (req, res) =&gt; {
+  try {
+    if (!req.body || !req.body.branchId || !req.body.branchSecret) {
+      logger.error({ message: 'Insufficient params.', meta: req.body });
+      return res
+        .status(400)
+        .json({
+          error: 'Insufficient params.'
+        })
+</code></pre>
+
+                    <h4>Código DESPUÉS</h4>
+                    <pre class="language-javascript"><code>@@ líneas 80-97 @@
+  1: { horarios: [], max: 0 },
+  2: { horarios: [], max: 0 },
+  3: { horarios: [], max: 0 },
+  4: { horarios: [], max: 0 },
+  5: { horarios: [], max: 0 },
+  6: { horarios: [], max: 0 },
+  7: { horarios: [], max: 0 },
+};
+let consoleLogEnabled = ''; 
+let mongoLogEnabled = '';
+
+
+async function pediGridoLogin() {
+  let body = {
+    "Usuario": config.pediGridoParams.usuario,
+    "Password": config.pediGridoParams.password
+  }
+  let configData = {
+
+@@ líneas 1749-1765 @@
+
+  const scheduledeleteTokens = '0 */3 * * *';
+  const schedulegetTokensNewMercadoPagoCloud = '*/1 * * * *';
+  const schedulePeyaReject = '*/2 * * * *';
+  const scheduleDeadLetterSave = '*/1 * * * *';
+  const scheduleOrerTimesAvg = '0 8 * * *';
+
+  const scheduleGetInfoBranchesGrido = '30 6 * * *';
+  const scheduleforcedCronHorarios = '*/30 * * * * *';
+  const scheduleforcedCronCheckIns = '*/15 * * * * *';
+
+  cron.schedule(schedulegetTokensNewMercadoPagoCloud, async () =&gt; await getTokensNewMercadoPagoCloudBranch());
+  cron.schedule(scheduledeleteTokens, async () =&gt; await initialData.deleteTokens());
+  cron.schedule(scheduleLoginUber, async () =&gt; await uberLogin());
+  cron.schedule(scheduleLoginRappi, async () =&gt; await rappiLogin());
+  cron.schedule(schedulePeyaLogin, async () =&gt; await peyaLogin(baseUrl));
+  cron.schedule(schedulePediGridoLogin, async () =&gt; await pediGridoLogin());
+
+@@ líneas 1798-1822 @@
+  return {
+    hour: Math.floor(totalMinutes / 60),
+    minute: totalMinutes % 60
+  };
+}
+
+async function checkforcedCronHorarios() {
+  let forcedCronHorarios = await configsModel.findOne({});
+  if(consoleLogEnabled === '' || mongoLogEnabled === '') {
+    consoleLogEnabled = forcedCronHorarios.consoleLogEnabled;
+    mongoLogEnabled = forcedCronHorarios.mongoLogEnabled;   
+    Log.configure({ consoleLogEnabled: forcedCronHorarios.consoleLogEnabled, mongoLogEnabled: forcedCronHorarios.mongoLogEnabled });
+  } else if(consoleLogEnabled !== forcedCronHorarios.consoleLogEnabled || mongoLogEnabled !== forcedCronHorarios.mongoLogEnabled) {
+    mongoLogEnabled = forcedCronHorarios.mongoLogEnabled;
+    consoleLogEnabled = forcedCronHorarios.consoleLogEnabled;    
+    Log.configure({ consoleLogEnabled: forcedCronHorarios.consoleLogEnabled, mongoLogEnabled: forcedCronHorarios.mongoLogEnabled });
+  }
+  if (!forcedCronHorarios.forcedCronHorarios)
+    return;
+  await configsModel.updateOne({}, { forcedCronHorarios: false });
+  await getInfoBranchesGrido();
+}
+
+async function checkforcedCheckins() {
+  let platform;    
+
+@@ líneas 2830-2846 @@
+      message: `Error en sendClosedToPlatformsAfterRejectClosed  para branch: ${branchId}`,
+      branchId: branchId
+    });
+  }
+}
+
+async function closeBranchPeya(branch, platform) {
+  const branchData = { branchId: branch?.branchId, results: [] };
+  try {
+    const branchName = platform.branchName;
+    const branchNames = Array.isArray(branchName) ? branchName : [branchName];
+
+    const headersConfig = {
+      headers: {
+        'Authorization': `Bearer ${tokenPeya}`,
+        'Content-Type': 'application/json'
+      }
+
+@@ líneas 2851-2867 @@
+      const statusResponse = await httpClient.get(url, headersConfig);
+      for (const element of statusResponse.data) {
+        const body = {
+          availabilityState: "CLOSED",
+          closedReason: "OTHER",
+          platformKey: element.platformKey,
+          platformRestaurantId: element.platformRestaurantId
+        };
+        try {
+          let response = await httpClient.put(url, body, headersConfig);
+          branchData.results.push({
+            branchName: remoteId,
+            type: "Closed",
+            result: true,
+            resultApi: response.data,
+            resultStatus: response.status
+          });
+
+@@ líneas 4634-4650 @@
+            }
+          }
+        }
+      );
+    }
+    let rappiActiveBak = params.rappiActive;
+    delete params.rappiActive;
+
+    if (params.platforms) {     
+      params.platforms = params.platforms.map(p =&gt; {
+        const existing = currentBranch.platforms.find(ep =&gt; ep.platform.toString() === p.platform);
+        return {
+          ...p,
+          rules: existing?.rules,
+          mercadoPagoUserId: p.mercadoPagoUserId // Se agrega el atributo si está presente en el body
+        };
+      });
+
+@@ líneas 4798-4814 @@
+    });
+};
+
+const deleteQueuesBranch = (branchId) =&gt; {
+  const aws = new Aws();
+  return aws.deleteQueues(branchId);
+};
+
+const login = async (req, res) =&gt; { 
+  try {
+    if (!req.body || !req.body.branchId || !req.body.branchSecret) {
+      logger.error({ message: 'Insufficient params.', meta: req.body });
+      return res
+        .status(400)
+        .json({
+          error: 'Insufficient params.'
+        })
+</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>El controlador de sucursales pasa a sondear los flags de logging desde la configuración global y a propagarlos al logger central cuando cambian. La tarea programada que hace ese sondeo, que antes solo atendía los horarios forzados, baja su frecuencia de cada 5 a cada 30 segundos.</p>
+                    </div>
+                </div>
+            </details>
+
+            <details class="component-card" open>
+                <summary class="component-header">
+                    <h3>api/src/utils/log.js</h3>
+                </summary>
+                <div class="component-body">
+                    <div class="analysis-box">
+                        <h4>Modificaciones Identificadas</h4>
+                        <p><b>1. Flags de destino para el logger</b></p>
+                        <p>Se agrega un objeto <code>configs</code> con <code>consoleLogEnabled</code> (<code>true</code> por defecto) y <code>mongoLogEnabled</code> (<code>false</code> por defecto), y un método estático <code>configure</code> que los actualiza en tiempo de ejecución. Reemplaza el comportamiento anterior, donde ambos destinos estaban activos sin posibilidad de desactivarlos.</p>
+                        <p><b>2. Escritura condicional en consola y en Mongo</b></p>
+                        <p>El método <code>save</code> deja de escribir siempre en la salida estándar y de intentar guardar siempre en Mongo. Cada una de las dos acciones pasa a depender del flag correspondiente, de modo que un log puede terminar en consola, en Mongo, en ambos destinos o en ninguno según la configuración vigente.</p>
+                    </div>
+
+                    <h4>Código ANTES</h4>
+                    <pre class="language-javascript"><code>@@ líneas 1-18 @@
+'use strict'
+import logErrorModel from '../models/logError';
+import sanitizeHeaders from './sanitizeHeaders';
+
+const VALID_LEVELS = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL'];
+const VALID_CATEGORIES = ['INTEGRATION', 'ORDER', 'INFRA', 'PERF'];
+const SERVICE_NAME = process.env.SERVICE_NAME ?? 'unknown';
+const LOG_STDOUT = process.env.LOG_STDOUT !== 'false';
+
+class Log {
+    static _stdout(level, customData, error) {
+        if (!LOG_STDOUT) return;
+        const { message, category, branch_id, platform_id, order_id, ...rest } = customData;
+        const entry = {
+            timestamp: new Date().toISOString(),
+            service: SERVICE_NAME,
+            level,
+            category: category ?? undefined,
+
+@@ líneas 23-39 @@
+            ...(error?.message &amp;&amp; { error: error.message }),
+            ...(error?.code &amp;&amp; { error_code: error.code }),
+            ...(Object.keys(rest).length &amp;&amp; { rest })
+        };
+        process.stdout.write(JSON.stringify(entry) + '\n');
+    }
+
+    static async save(level = 'ERROR', error, customData = {}) {
+        Log._stdout(level, customData, error);
+        try {
+            let customDataAfter = sanitizeHeaders({ ...customData });
+            delete customDataAfter.message;
+            delete customDataAfter.level;
+            delete customDataAfter.category;
+            try {
+                await logErrorModel.create({
+                    message: customData.message,
+</code></pre>
+
+                    <h4>Código DESPUÉS</h4>
+                    <pre class="language-javascript"><code>@@ líneas 1-26 @@
+'use strict'
+import logErrorModel from '../models/logError';
+import sanitizeHeaders from './sanitizeHeaders';
+
+const VALID_LEVELS = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL'];
+const VALID_CATEGORIES = ['INTEGRATION', 'ORDER', 'INFRA', 'PERF'];
+const SERVICE_NAME = process.env.SERVICE_NAME ?? 'unknown';
+const LOG_STDOUT = process.env.LOG_STDOUT !== 'false';
+const configs = {
+    consoleLogEnabled: true,
+    mongoLogEnabled: false
+};
+
+class Log {
+    static configure(options = {}) {
+        configs.consoleLogEnabled = options.consoleLogEnabled ?? configs.consoleLogEnabled;
+        configs.mongoLogEnabled   = options.mongoLogEnabled ?? configs.mongoLogEnabled;
+    }
+    static _stdout(level, customData, error) {
+        if (!LOG_STDOUT) return;
+        const { message, category, branch_id, platform_id, order_id, ...rest } = customData;
+        const entry = {
+            timestamp: new Date().toISOString(),
+            service: SERVICE_NAME,
+            level,
+            category: category ?? undefined,
+
+@@ líneas 31-49 @@
+            ...(error?.message &amp;&amp; { error: error.message }),
+            ...(error?.code &amp;&amp; { error_code: error.code }),
+            ...(Object.keys(rest).length &amp;&amp; { rest })
+        };
+        process.stdout.write(JSON.stringify(entry) + '\n');
+    }
+
+    static async save(level = 'ERROR', error, customData = {}) {
+      if(configs.consoleLogEnabled)
+        Log._stdout(level, customData, error);
+      if(configs.mongoLogEnabled)
+        try {
+            let customDataAfter = sanitizeHeaders({ ...customData });
+            delete customDataAfter.message;
+            delete customDataAfter.level;
+            delete customDataAfter.category;
+            try {
+                await logErrorModel.create({
+                    message: customData.message,
+</code></pre>
+
+                    <div class="analysis-box">
+                        <h4>Conclusión del Archivo</h4>
+                        <p>El logger deja de escribir siempre en consola y en Mongo de forma simultánea y pasa a hacerlo según los flags que le configuren. El destino de cada log queda desacoplado del código y puede cambiar sin un nuevo despliegue.</p>
+                    </div>
+                </div>
+            </details>
+
+        </section>
+
+        <section id="conclusion" class="service-section">
+            <h2>Conclusión General</h2>
+            <p>Este release desacopla el destino de los logs del código: los flags <code>consoleLogEnabled</code> y <code>mongoLogEnabled</code>, guardados en la configuración global, determinan si un log se envía a consola/Graylog y si se persiste en MongoDB, de forma independiente entre sí. El logger del Concentrador incorpora el método <code>configure</code> para recibir esos valores, y la tarea programada que ya sondeaba la configuración para los horarios forzados pasa a leerlos y aplicarlos también, sin necesidad de reiniciar el servicio. Esa misma tarea reduce su frecuencia de cada 5 a cada 30 segundos.</p>
+        </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

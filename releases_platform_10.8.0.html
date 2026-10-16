@@ -1,0 +1,1259 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Platform 10.8.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 2em; line-height: 1.7; }
+        .container { max-width: 960px; margin: 0 auto; }
+        .main-header { background-color: var(--card-bg-color); padding: 2em; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 2.5em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+        .deployment-info-box { background-color: var(--deployment-bg); border-left: 4px solid var(--deployment-border); padding: 1em 1.5em; margin-bottom: 2.5em; border-radius: 4px; }
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 { font-size: 1.8em; color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5em; margin-bottom: 1.5em; }
+        .component-card { background-color: var(--card-bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 2em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
+        .component-header { padding: 1em 1.5em; background-color: #fafafa; border-bottom: 1px solid var(--border-color); cursor: pointer; list-style: none; }
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .analysis-box { background-color: var(--analysis-bg); border-left: 4px solid var(--analysis-border); padding: 1em 1.5em; margin-top: 1.5em; border-radius: 4px; }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+        pre[class*="language-"] { padding: 1.2em !important; margin: 1em 0 !important; border-radius: 6px; font-family: 'Fira Code', monospace !important; font-size: 0.9em !important; line-height: 1.5 !important; border: 1px solid var(--border-color); white-space: pre-wrap !important; word-break: break-all !important; overflow-wrap: break-word !important; background-color: #2d2d2d; color: #ccc; }
+
+        pre.diff-highlight { white-space: pre !important; overflow-x: auto; word-break: normal !important; overflow-wrap: normal !important; tab-size: 4; }
+        pre.diff-highlight > code { display: block; min-width: max-content; }
+        pre.diff-highlight .token.deleted:not(.prefix) { display: block; background: #67060c; color: #ffdcd7; }
+        pre.diff-highlight .token.inserted:not(.prefix) { display: block; background: #033a16; color: #aff5b4; }
+        pre.diff-highlight .token.deleted .prefix { color: #ff7b72; user-select: text; }
+        pre.diff-highlight .token.inserted .prefix { color: #7ee787; user-select: text; }
+        pre.diff-highlight .token.coord { color: #79c0ff; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="main-header">
+        <h1>Notas de Release: Platform 10.8.0</h1>
+        <p></p>
+    </header>
+    <div class="deployment-info-box">
+        <h4>Información de Despliegue</h4>
+        <p><b>Versión:</b> 10.8.0</p>
+        <p><b>Fecha de Despliegue:</b> 29/07/2026</p>
+        <p><b>AWS Task:</b> [Pendiente]</p>
+        <p><b>JIRA Task:</b> GITSFP-1630, GITSFP-1661</p>
+        <p><b>Commits:</b> 5ea4d9aa1a53e0b99741dafb3fcc754001433a02 — Merge pull request #105 from smartit-ar/autoBillingDelivere</p>
+    </div>
+    <section id="summary" class="service-section">
+        <h2>Resumen General de la Versión</h2>
+        <p></p>
+    </section>
+    <section id="technical-analysis" class="service-section">
+        <h2>Análisis Técnico Detallado</h2>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/interfaces/mercadoPago.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Lectura de órdenes MercadoPago con el sobre del evento**</b></p>
+
+<p>Los datos de la orden, incluidos identificadores, fechas y observaciones, se leen desde `data.order`. El mapper recibe ahora el objeto externo completo, desde el cual también copia `autoBillingDelivered` al pedido normalizado.</p>
+
+<p><b>2. **Persistencia del modo automático en la orden**</b></p>
+
+<p>El indicador queda asociado a `order` para que el procesamiento posterior de estados pueda determinar si debe ejecutar la secuencia automatizada.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -32,29 +32,30 @@ module.exports = {
+           sku != '999999' &amp;&amp; sku &lt; 2147483647
+         )
+           return true;
+         return false;
+       };
+       const orderMapper = (data, platform, note, tenant) =&gt; {
+         try {
+           let order = {};
+-          order.id = data.id;
+-          order.originalId = data.id.toString();
+-          order.type = data.type;
+-          order.displayId = data.id;
++          order.id = data.order.id;
++          order.originalId = data.order.id.toString();
++          order.type = data.order.type;
++          order.displayId = data.order.id;
+           order.platformId = platform.internalCode;
+           order.statusId = NewsStateSingleton.idByCod(stateCod);
+-          order.orderTime = (new Date(data.createdAt)).toISOString();
+-          order.deliveryTime = (new Date(data.createdAt)).toISOString();
++          order.orderTime = (new Date(data.order.createdAt)).toISOString();
++          order.deliveryTime = (new Date(data.order.createdAt)).toISOString();
+           order.pickupOnShop = false;
+           order.pickupDateOnShop = null;
++          order.autoBillingDelivered = data.autoBillingDelivered;
+           order.preOrder = false;
+-          order.observations = data?.displayId ? `#${data.displayId}` : '';
+-          order.ownDelivery = data.total?.otherFees?.value &gt; 0 ? true :  false;
++          order.observations = data?.order?.displayId ? `#${data.order.displayId}` : '';
++          order.ownDelivery = data?.order?.total?.otherFees?.value &gt; 0 ? true :  false;
+           order.deliveryType = '';
+ 
+           if (order.pickupOnShop) {
+               order.deliveryType = 'forPickup';
+           } else if (order.ownDelivery) {
+               order.deliveryType = 'forRestaurant';
+           } else {
+               order.deliveryType = 'forLogistics';
+@@ -359,17 +360,17 @@ module.exports = {
+         news.viewed = null;
+         news.typeId = NewsTypeSingleton.idByCod(newsCode);
+         news.branchId = data.branchId;
+ 
+         let note = data.order.items
+           .map(item =&gt; item.specialInstructions)
+           .filter(instr =&gt; !!instr)
+           .join(' | ');
+-        news.order = orderMapper(data.order, platform, note, tenant);
++        news.order = orderMapper(data, platform, note, tenant);
+         news.order.customer = customerMapper(data.order.customer, data.order.delivery);
+         news.order.details = detailsMapper(data.order.items, data.order.total);
+         news.order.payment = paymentenMapper(data.order.payments, data.order.total, data.order.item_discounts ?? null);
+         news.order.driver = driverMapper();
+ 
+         let fullItemsPrice = 0;
+         let shipping = 0;
+         let sellerDiscount = 0;</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El adaptador de MercadoPago consume el evento con el objeto `order` anidado y conserva el indicador de automatización en la orden normalizada. Sus campos de identificación, fecha y observaciones se obtienen del mismo objeto.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/interfaces/pedidosYa.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Propagación del modo automático**</b></p>
+
+<p>El adaptador copia `autoBillingDelivered` al pedido normalizado recibido por Platform. El indicador queda disponible junto con los datos de la orden para el procesamiento del flujo.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -332,16 +332,17 @@ module.exports = {
+               order.orderTime = new Date((new Date(data.order.createdAt).getTime()) + tzo * 60 * 60 *1000);
+               order.deliveryTime = data.order.delivery ?
+                 new Date((new Date(data.order.delivery.expectedDeliveryTime).getTime()) + tzo * 60 * 60 *1000)
+                 : null;
+               order.pickupOnShop = data.order.pickup ? true : false;
+               order.pickupDateOnShop = data.order.pickup ?
+                 new Date((new Date(data.order.pickup.pickupTime).getTime()) + tzo * 60 * 60 *1000)
+                 : null;
++              order.autoBillingDelivered = data.autoBillingDelivered;
+               order.preOrder = data.order.preOrder;
+               order.observations = '#'+ data.order.shortCode + ' | '+
+                 data.order.comments.customerComment + '|';
+               data.order.discounts.forEach((d, i) =&gt; {
+                 if (d.type.toLowerCase().includes('voucher')) {
+                   // order.observations += ` Voucher: ${d.name}: ${d.amount} |`;
+                   order.observations += ' Descuento por Voucher PedidosYa |';
+                 }</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>PedidosYa incorpora el indicador recibido en la orden normalizada. El flujo de estados puede consultar esta configuración al procesar las novedades del POS.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/interfaces/rappi.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Propagación del modo automático**</b></p>
+
+<p>El adaptador agrega `autoBillingDelivered` a los datos normalizados de la orden. Platform dispone así del valor configurado para decidir cómo procesar los estados posteriores.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -333,16 +333,17 @@ module.exports = {
+             order.originalId = data.originalId.toString();
+             order.displayId = data.displayId;
+             order.platformId = platform.internalCode;
+             order.statusId = NewsStateSingleton.idByCod(stateCod);
+             order.orderTime = data.order.order_detail.created_at;//  country.country === "Perú" ? new Date((new Date(data.order.order_detail.created_at).getTime()) + 2 * 60 * 60 *1000) : 
+             order.deliveryTime = null;
+             order.pickupOnShop = false;
+             order.pickupDateOnShop = null;
++            order.autoBillingDelivered = data.autoBillingDelivered;
+             order.preOrder = false;
+             order.observations = '';
+             order.ownDelivery = data.order.order_detail.delivery_method &amp;&amp; data.order.order_detail.delivery_method === "marketplace";
+             order.delivery_operation_type = delivery_operation_type ?? "regular"
+ 
+             order.deliveryType = '';
+             if (order.pickupOnShop) {
+                 order.deliveryType = 'forPickup';</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>Rappi conserva en la orden normalizada el indicador que activa el procesamiento automatizado. La modificación se limita a transportar la configuración recibida.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/interfaces/thirdParty.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Propagación del modo automático**</b></p>
+
+<p>El adaptador agrega `autoBillingDelivered` a la orden normalizada de terceros. El valor queda disponible para que Platform aplique el flujo correspondiente a esa orden.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -23,16 +23,17 @@ module.exports = {
+             order.originalId = data.originalId.toString();
+             order.displayId = data.displayId;
+             order.platformId = platform.internalCode;
+             order.statusId = NewsStateSingleton.idByCod(stateCod);
+             order.orderTime =  country.country === "Perú" ? new Date((new Date(data.order.registeredDate).getTime()) + 2 * 60 * 60 *1000) : data.order.registeredDate;
+             order.deliveryTime = data.order.deliveryDate;
+             order.pickupOnShop = data.order.pickup;
+             order.pickupDateOnShop = data.order.pickupDate;
++            order.autoBillingDelivered = data.autoBillingDelivered;
+             order.preOrder = data.order.preOrder;
+             order.observations = data.order.notes;
+             order.ownDelivery = data.order.logistics;
+             order.deliveryPartner = data.order.deliveryPartner;
+             if (data.order.pickup) order.ownDelivery = false;
+             order.deliveryType = '';
+ 
+             if (order.pickupOnShop) {</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El adaptador de terceros incorpora el indicador de automatización al pedido que procesa Platform, sin cambiar el resto de su mapeo en este diff.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/interfaces/uberEats.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Lectura del sobre de orden UberEats**</b></p>
+
+<p>La identificación, fecha, pago y observaciones se obtienen desde `data.order`; el mapper recibe el evento completo y guarda `autoBillingDelivered` en la orden normalizada.</p>
+
+<p><b>2. **Reconocimiento de modificadores de promociones a granel**</b></p>
+
+<p>La comparación del SKU del grupo convierte el resultado numérico a String antes de compararlo con el valor de referencia. Esto permite que los grupos de contenedores se reconozcan con el mismo tipo de dato que conserva el parser y se agreguen junto con sus sabores.</p>
+
+<p><b>3. **Conservación del tipo de SKU**</b></p>
+
+<p>El SKU de comparación permanece como String durante la búsqueda del grupo de modificadores. Los ítems seleccionados siguen generándose según su SKU, manteniendo separados los grupos de granel y los productos enteros.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -35,28 +35,29 @@ module.exports = {
+   newsFromOrders: async function (data, platform, newsCode, stateCod, branch, uuid, tenant) {
+     try {
+       const country = await countryModel.findOne({ country: branch.address.country });
+       const tzo = parseFloat(country.tzo);
+       return new Promise((resolve, reject) =&gt; {
+         const orderMapper = (data, platform, note, tenant) =&gt; {
+           try {
+             let order = {};
+-            order.id = data.id;
+-            order.originalId = data.id.toString();
+-            order.displayId = data.id;
++            order.id = data.order.id;
++            order.originalId = data.order.id.toString();
++            order.displayId = data.order.id;
+             order.platformId = platform.internalCode;
+             order.statusId = NewsStateSingleton.idByCod(stateCod);          
+-            order.orderTime = (new Date((new Date(data.created_time).getTime()) + tzo * 60 * 60 *1000)).toISOString();      
+-            order.deliveryTime = (new Date((new Date(data.created_time).getTime()) + tzo * 60 * 60 *1000)).toISOString();     
++            order.orderTime = (new Date((new Date(data.order.created_time).getTime()) + tzo * 60 * 60 *1000)).toISOString();      
++            order.deliveryTime = (new Date((new Date(data.order.created_time).getTime()) + tzo * 60 * 60 *1000)).toISOString();     
+             order.pickupOnShop = false;
+             order.pickupDateOnShop = null;
++            order.autoBillingDelivered = data.autoBillingDelivered;
+             order.preOrder = false;
+-            let notetemp =  note ? data.display_id + ' '+ note : data.display_id;
+-            order.observations = country.country === 'Argentina' &amp;&amp; data.payment.payment_detail.cash_amount_due ? '| Medio de pago: Cash Collection | ' + notetemp : notetemp;
++            let notetemp =  note ? data.order.display_id + ' '+ note : data.order.display_id;
++            order.observations = country.country === 'Argentina' &amp;&amp; data.order.payment.payment_detail.cash_amount_due ? '| Medio de pago: Cash Collection | ' + notetemp : notetemp;
+             order.ownDelivery = false;
+ 
+             order.deliveryType = '';
+             if (order.pickupOnShop) {
+                 order.deliveryType = 'forPickup';
+             } else if (order.ownDelivery) {
+                 order.deliveryType = 'forRestaurant';
+             } else {
+@@ -206,17 +207,17 @@ module.exports = {
+                         detDetails.count = option.quantity.amount;
+ 
+                         const optionDetail = Object.assign({}, detDetails);
+                         details.push(optionDetail);
+                       }
+                     }
+ 
+                   //Si son iguales es porque los options unicamente tenia sabores
+-                  if (parseInt(validExternalData(optionsGroups.external_data), 10) === skuComparator) {
++                  if (String(parseInt(validExternalData(optionsGroups.external_data), 10)) === skuComparator) {
+                     detDetails.sku = skuComparator;
+                     detDetails.optionalText = optionsString;
+                     details.push(detDetails);
+                   }
+                 }
+ 
+                 numberOfPromotions += 1;
+               } else {
+@@ -302,17 +303,17 @@ module.exports = {
+               driver: []
+             }
+           };
+           news.viewed = null;
+           news.typeId = NewsTypeSingleton.idByCod(newsCode);
+           news.branchId = data.branchId;
+         // let dataOrder = data.order;
+ 
+-          news.order = orderMapper(data.order, platform, data.order.carts[0].special_instructions, tenant);
++          news.order = orderMapper(data, platform, data.order.carts[0].special_instructions, tenant);
+           news.order.customer = customerMapper(data.order.customers[0]);
+           news.order.details = detailsMapper(data.order.carts[0], data.order.payment);
+           news.order.payment = paymentenMapper(data.order.payment);
+           news.order.driver = driverMapper();
+           news.extraData = extraDataMapper(branch, platform);
+ 
+           let total = parseFloat(data.order.payment.payment_detail.order_total.gross.amount_e5 / 100000);
+           news.order.totalAmount = truncarADosDecimales(total);</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El adaptador de UberEats conserva el indicador para el flujo automatizado, lee los campos del evento desde el objeto `order` y reconoce los grupos de contenedores comparando SKUs como String. La orden puede incluir los renglones de granel con sus sabores en los detalles.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/platform.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Inclusión de plataformas en la consulta de configuración**</b></p>
+
+<p>La consulta de sucursales proyecta el arreglo `platforms`, necesario para consultar la configuración asociada a la plataforma de cada orden.</p>
+
+<p><b>2. **Valor predeterminado del indicador**</b></p>
+
+<p>Al construir el objeto de plataforma para la orden, el servicio entrega `autoBillingDelivered` como booleano y usa `false` cuando el campo no está definido o está desactivado.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -721,16 +721,17 @@ class Platform {
+         { $unwind: { path: '$joinClients', preserveNullAndEmptyArrays: true } },
+         { $unwind: { path: '$joinPlatforms', preserveNullAndEmptyArrays: true } },
+         { $unwind: { path: '$joinRegions', preserveNullAndEmptyArrays: true } },
+         {
+           $project: {
+             name: '$name',
+             branchId: '$branchId',
+             cloud: '$cloud',
++            platforms: '$platforms',
+             'chain.chain': '$joinChains.chain',
+             'platform.name': '$joinPlatforms.name',
+             'platform.platform': '$joinPlatforms._id',
+             lastGetNews: '$lastGetNews',
+             'platform.progClosed': '$platforms.progClosed',
+             'platform.isActive': '$platforms.isActive',
+             'client.businessName': '$joinClients.businessName',
+             'address.region': '$joinRegions.region',
+@@ -796,16 +797,17 @@ class Platform {
+             throw { orderId: originalId, error };
+           }
+           try {
+ 
+             orderCreator = {
+               thirdParty: this._platform.name,
+               internalCode: this._platform.internalCode,
+               state: order.state,
++              autoBillingDelivered: branch.platforms.autoBillingDelivered || false,
+               posId,
+               displayId,
+               originalId,
+               branchId: branch.branchId,
+               order
+             };
+             const tenant = tenants.find( r =&gt; r.name ===  branch.chain.chain.toLowerCase().replace(/\s+/g, '') );
+             const newCreator = await this.parser.newsFromOrders(</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>La gestión de Platform incorpora la configuración por sucursal y plataforma al objeto que acompaña la orden. Las órdenes sin el indicador activo conservan el valor predeterminado `false`.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/newsTypeStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Identificación de trazas generadas por Platform**</b></p>
+
+<p>La creación de trazas acepta el indicador del flujo automatizado. Cuando se recibe, la entidad de la traza queda como `PLATFORM`; en el flujo habitual se mantiene la entidad configurada por la estrategia.</p>
+
+<p><b>2. **Transmisión del contexto de automatización**</b></p>
+
+<p>La actualización de la orden pasa el indicador a la creación de la traza, permitiendo conservar el origen del cambio de estado.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -12,20 +12,20 @@ import {Types} from 'mongoose';
+ class NewsTypeStrategy {
+   constructor(newToSet) {
+     this.newToSet = newToSet;
+     this.typeId = newToSet.typeId;
+     this.uuid = '0000';
+     this.entity = 'BRANCH';
+   }
+ 
+-  createTrace(platformResult, isValid) {
++  createTrace(platformResult, isValid, newNew = null) {
+     try {
+       this.trace = {
+-        entity: this.entity,
++        entity: newNew ? 'PLATFORM' : this.entity,
+         update: {
+           typeId: this.typeId,
+           orderStatusId: this.statusId,
+           isValid: isValid,
+           platformResult: platformResult,
+           updatedAt: new Date()
+         }
+       };
+@@ -39,19 +39,19 @@ class NewsTypeStrategy {
+         typeId:      this.typeId ?? 'unknown'
+       });
+       const msg = 'No se pudo generar el objeto trace.';
+       const meta = { ...this };
+       new CustomError(APP_BRANCH.SETNEWS, msg, this.uuid, meta);
+     }
+   }
+ 
+-  createObjectsUpdate(platformResult, isValid) {
++  createObjectsUpdate(platformResult, isValid, newNew) {
+     try {
+-      this.createTrace(platformResult, isValid);
++      this.createTrace(platformResult, isValid, newNew);
+       const findQuery = this.savedNew._id;
+       let updateQuery;
+       if (isValid) {
+         updateQuery = {
+           typeId: this.typeId,
+           'order.statusId': this.statusId,
+           $push: { traces: this.trace }
+         };</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>La estrategia base puede registrar el origen `PLATFORM` para los estados intermedios generados automáticamente, mientras mantiene el origen habitual para las acciones ordinarias.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/orderStrategy/branchRejectStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Compatibilidad de la estrategia de rechazo de sucursal**</b></p>
+
+<p>La estrategia acepta el contexto opcional del flujo automatizado y lo transmite a la actualización de la traza. Si no recibe ese contexto, ejecuta el camino existente.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -12,19 +12,19 @@ class BranchRejectStrategy extends NewsTypeStrategy {
+     this.statusId = NewsStateSingleton.idByCod('rej');
+     this.typeId = NewsTypeSingleton.idByCod('rej_ord');
+   }
+ 
+   validateTransition() {
+     return !this.findTrace(this.typeId);
+   }
+ 
+-  createObjectsUpdate(platformResult, isValid) {
++  createObjectsUpdate(platformResult, isValid, newNew) {
+     try {
+-      this.createTrace(platformResult, isValid);
++      this.createTrace(platformResult, isValid, newNew);
+       this.trace.update.rejected = {
+         rejectMessageId: this.newToSet.rejectMessageId,
+         rejectMessageDescription: this.newToSet.rejectMessageDescription,
+         rejectMessageNote: this.newToSet.rejectMessageNote,
+         entity: this.entity
+       };
+       const findQuery = this.savedNew._id;
+       let updateQuery;
+@@ -44,17 +44,17 @@ class BranchRejectStrategy extends NewsTypeStrategy {
+     } catch (error) {
+       Log.save('ERROR', error, { message: '[ORDER/ERROR] createObjectsUpdate BranchRejectStrategy failed', category: 'ORDER', strategy: this.constructor.name, branch_id: this.savedNew?.branchId ?? this.newToSet?.branchId ?? 'unknown', platform_id: this.savedNew?.order?.platformId ?? this.newToSet?.platformId ?? 'unknown', order_id: this.savedNew?.order?.id ?? this.newToSet?.id ?? 'unknown', typeId: this.typeId ?? 'unknown' });
+       const msg = 'No se pudo generar el findQuery o updateQuery.';
+       const meta = { ...this.newToSet, error: error.toString() };
+       new CustomError(APP_BRANCH.SETNEWS, msg, this.uuid, meta);
+     }
+   }
+ 
+-  async manageNewType() {
++  async manageNewType(newNew = null) {
+     return new Promise(async (resolve, reject) =&gt; {
+       try {
+         this.savedNew = await this.findNew(this.newToSet.id);
+ 
+         if (this.savedNew.order?.orderPickedUp === true) {
+           Log.save('INFO', null, { message: '[ORDER/INFO] branchRejectOrder skipped order_already_picked_up', category: 'ORDER', order_id: this.savedNew?.order?.id ?? 'unknown', branch_id: this.savedNew?.branchId ?? 'unknown' });
+           return resolve();
+         }
+@@ -70,17 +70,18 @@ class BranchRejectStrategy extends NewsTypeStrategy {
+           );
+           this.requestLastMile(this.savedNew, {
+             rejectMessageId: this.newToSet.rejectMessageId,
+             rejectMessageNote: this.newToSet.rejectMessageNote
+           });
+         }
+         const { findQuery, updateQuery, options } = this.createObjectsUpdate(
+           platformResult,
+-          isValid
++          isValid,
++          newNew
+         );
+ 
+         await this.updateNew(findQuery, updateQuery, options);
+ 
+         if (!isValid) {
+           const msg =
+             'La novedad no cumple los requisitos de transición. RechazoSucursal.';
+           const meta = {</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El rechazo de sucursal admite el parámetro que permite a las estrategias propagar el origen del estado automatizado. El comportamiento usual se conserva cuando se omite.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/orderStrategy/confirmStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Confirmación compatible con estados automatizados**</b></p>
+
+<p>La estrategia recibe un indicador opcional que permite considerar válida la transición originada por la cadena automática, sin repetir la validación de transición habitual.</p>
+
+<p><b>2. **Registro del origen del estado**</b></p>
+
+<p>El contexto se transmite a la creación de la traza. En esta ruta se deja de invocar `requestLastMile` y se conserva la actualización del estado y sus resultados.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -13,19 +13,19 @@ class ConfirmStrategy extends NewsTypeStrategy {
+     this.typeId = NewsTypeSingleton.idByCod('confirm_ord');
+   }
+ 
+   validateTransition() {
+     const prevType = NewsTypeSingleton.idByCod('view_ord');
+     return !!this.findTrace(prevType) &amp;&amp; !this.findTrace(this.typeId);
+   }
+ 
+-  createObjectsUpdate(platformResult, isValid) {
++  createObjectsUpdate(platformResult, isValid, newNew) {
+     try {
+-      this.createTrace(platformResult, isValid);
++      this.createTrace(platformResult, isValid, newNew);
+       this.trace.update.deliveryTimeId = this.newToSet.deliveryTimeId;
+       const findQuery = this.savedNew._id;
+       const updateQuery = {
+         typeId: this.typeId,
+         'order.statusId': this.statusId,
+         $push: { traces: this.trace }
+       };
+       const options = {};
+@@ -35,33 +35,33 @@ class ConfirmStrategy extends NewsTypeStrategy {
+     } catch (error) {
+       Log.save('ERROR', error, { message: '[ORDER/ERROR] createObjectsUpdate ConfirmStrategy failed', category: 'ORDER', strategy: this.constructor.name, branch_id: this.savedNew?.branchId ?? this.newToSet?.branchId ?? 'unknown', platform_id: this.savedNew?.order?.platformId ?? this.newToSet?.platformId ?? 'unknown', order_id: this.savedNew?.order?.id ?? this.newToSet?.id ?? 'unknown', typeId: this.typeId ?? 'unknown' });
+       const msg = 'No se pudo generar el findQuery o updateQuery.';
+       const meta = { ...this.newToSet, error: error.toString() };
+       new CustomError(APP_BRANCH.SETNEWS, msg, this.uuid, meta);
+     }
+   }
+ 
+-  async manageNewType() {
++  async manageNewType(newNew = null) {
+     return new Promise(async (resolve, reject) =&gt; {
+       try {
+-        this.savedNew = await this.findNew(this.newToSet.id);
+-        const isValid = this.validateTransition();
++        this.savedNew = await this.findNew(this.newToSet.id);    
++        const isValid = newNew || this.validateTransition();
+         let platformResult = null;
+         if (isValid) {
+           platformResult = await this.platform.confirmOrder(
+             this.savedNew.order,
+             this.newToSet.deliveryTimeId
+           );
+-          this.requestLastMile(this.savedNew);
++          //this.requestLastMile(this.savedNew);
+         }
+-
+         const { findQuery, updateQuery, options } = this.createObjectsUpdate(
+           platformResult,
+-          isValid
++          isValid,
++          newNew
+         );
+         await this.updateNew(findQuery, updateQuery, options);
+ 
+         if (!isValid) {
+           const msg =
+             'La novedad no cumple los requisitos de transición. Confirmado.';
+           const meta = {
+             ...this.newToSet,</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>La confirmación puede procesarse como parte de la cadena generada por Platform y registrar el origen correspondiente en la traza. La llamada a `requestLastMile` queda desactivada en esta estrategia.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/orderStrategy/deliveryStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Entrega compatible con la cadena automática**</b></p>
+
+<p>La estrategia recibe el indicador opcional para procesar la transición generada por Platform como válida. La creación de la traza mantiene la entidad habitual, según el comentario del cambio sobre el estado de entrega automatizado.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -13,33 +13,33 @@ class DeliveryStrategy extends NewsTypeStrategy {
+     this.savedNew = { _id: newToSet.id };
+   }
+ 
+   validateTransition() {
+     const prevType = NewsTypeSingleton.idByCod('disp_ord');
+     return !!this.findTrace(prevType) &amp;&amp; !this.findTrace(this.typeId);
+   }
+ 
+-  async manageNewType() {
++  async manageNewType(newNew = null) {
+     return new Promise(async (resolve, reject) =&gt; {
+       try {
+         this.savedNew = await this.findNew(this.newToSet.id);
+-
+-        const isValid = this.validateTransition();
++        const isValid = newNew || this.validateTransition();
+ 
+         let platformResult = null;
+         if (isValid) {
+           platformResult = await this.platform.deliveryOrder(
+             this.savedNew.order
+           );
+         }
+ 
+         const { findQuery, updateQuery, options } = this.createObjectsUpdate(
+           platformResult,
+-          isValid
++          isValid,
++          null,//autobilling pero q no se muestra como platform
+         );
+         await this.updateNew(findQuery, updateQuery, options);
+ 
+         if (!isValid) {
+           const msg =
+             'The news does not meet the transition requirements. Submitted.';
+           const meta = {
+             ...this.newToSet,</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>La entrega acepta el contexto del flujo automatizado y actualiza el estado por la ruta existente, conservando el origen de traza configurado para que no aparezca como una acción de Platform.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/orderStrategy/dispatchStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Despacho compatible con estados automatizados**</b></p>
+
+<p>La estrategia admite el indicador que permite procesar la transición generada automáticamente. Lo transmite a la creación de la traza para señalar el origen `PLATFORM` cuando corresponde.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -15,32 +15,31 @@ class DispatchStrategy extends NewsTypeStrategy {
+ 
+     validateTransition() {
+         const prevType = NewsTypeSingleton.idByCod('confirm_ord');
+         const prevType2 = NewsTypeSingleton.idByCod('ready_ord');        
+         return (!!this.findTrace(prevType) &amp;&amp; !this.findTrace(this.typeId)) ||
+                (!!this.findTrace(prevType2) &amp;&amp; !this.findTrace(this.typeId));
+     }
+ 
+-    async manageNewType() {
++    async manageNewType(newNew = null) {
+         return new Promise(async (resolve, reject) =&gt; {
+             try {
+-                this.savedNew = await this.findNew(this.newToSet.id);
+-
+-                const isValid = this.validateTransition();
++                this.savedNew = await this.findNew(this.newToSet.id);              
++                const isValid = newNew || this.validateTransition();
+ 
+                 let platformResult = null;
+                 if (isValid) {
+                     platformResult = await this.platform
+                         .dispatchOrder(
+                             this.savedNew.order)
+ 
+                 }
+                 const { findQuery, updateQuery, options } =
+-                    this.createObjectsUpdate(platformResult, isValid);
++                this.createObjectsUpdate(platformResult, isValid, newNew);
+                 await this.updateNew(findQuery, updateQuery, options);
+ 
+                 if (!isValid) {
+                     const msg = 'La novedad no cumple los requisitos de transición. Despachado.';
+                     const meta = { ...this.newToSet, typeId: this.typeId, statusId: this.statusId };
+                     throw new CustomError(APP_BRANCH.SETNEWS, msg, this.uuid, meta);
+                 }
+                 resolve();</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El despacho admite el modo automático y propaga su contexto a la traza. Sin ese indicador, mantiene la validación de transición habitual.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/orderStrategy/platformRejectStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Compatibilidad de rechazo de Platform**</b></p>
+
+<p>La estrategia admite el indicador opcional del flujo generado y lo pasa a la actualización de la traza. La ejecución normal puede continuar sin ese parámetro.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -25,17 +25,17 @@ class PlatformRejectStrategy extends NewsTypeStrategy {
+       NewsStateSingleton.idByCod('ready')
+     ];
+     const prevStatusOk = posiblePrevStatus.some(
+       (s) =&gt; s === this.savedNew.order.statusId
+     );
+     return prevStatusOk &amp;&amp; !this.findTrace(this.typeId);
+   }
+ 
+-  async manageNewType() {
++  async manageNewType(newNew = null) {
+     return new Promise(async (resolve, reject) =&gt; {
+       try {
+         const closed_rejId =
+           RejectedMessagesSingleton.closedResRejectedMessages.id;
+         this.savedNew = await news.find({ 'order.id': this.order.id }).lean();
+         this.savedNew = this.savedNew.pop();
+         if (
+           !!this.savedNew &amp;&amp;
+@@ -55,17 +55,18 @@ class PlatformRejectStrategy extends NewsTypeStrategy {
+         if (isValid) {
+           platformResult = await this.platform.rejectPlatformOrder(
+             this.savedNew.order.id
+           );
+           this.requestLastMile(this.savedNew);
+         }
+         const { findQuery, updateQuery, options } = this.createObjectsUpdate(
+           platformResult,
+-          isValid
++          isValid,
++          newNew
+         );
+         const rej = RejectedMessagesSingleton.platformRejectedMessages;
+ 
+         const rejectedExtraData = {
+           rejectMessageId: rej.id,
+           rejectMessageDescription: rej.name,
+           rejectMessageNote: null,
+           entity: 'PLATFORM'</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El rechazo de Platform integra la firma compartida que permite transmitir el origen de un estado automatizado a la traza.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/orderStrategy/readyStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Estado listo compatible con automatización**</b></p>
+
+<p>La estrategia acepta un indicador que marca la transición como válida cuando forma parte de la secuencia automática. El contexto se transmite a la traza para registrar el origen `PLATFORM`.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -13,19 +13,19 @@ class ReadyStrategy extends NewsTypeStrategy {
+     this.typeId = NewsTypeSingleton.idByCod('ready_ord');
+   }
+ 
+   validateTransition() {
+     const prevType = NewsTypeSingleton.idByCod('confirm_ord');
+     return !!this.findTrace(prevType) &amp;&amp; !this.findTrace(this.typeId);
+   }
+ 
+-  createObjectsUpdate(platformResult, isValid) {
++  createObjectsUpdate(platformResult, isValid, newNew) {
+     try {
+-      this.createTrace(platformResult, isValid);
++      this.createTrace(platformResult, isValid, newNew);
+       this.trace.update.deliveryTimeId = this.newToSet.deliveryTimeId;
+       const findQuery = this.savedNew._id;
+       const updateQuery = {
+         typeId: this.typeId,
+         'order.statusId': this.statusId,
+         $push: { traces: this.trace }
+       };
+       const options = {};
+@@ -35,33 +35,33 @@ class ReadyStrategy extends NewsTypeStrategy {
+     } catch (error) {
+       Log.save('ERROR', error, { message: '[ORDER/ERROR] manageNewType ReadyStrategy failed', category: 'ORDER', strategy: this.constructor.name, branch_id: this.savedNew?.branchId ?? this.newToSet?.branchId ?? 'unknown', platform_id: this.savedNew?.order?.platformId ?? this.newToSet?.platformId ?? 'unknown', order_id: this.savedNew?.order?.id ?? this.newToSet?.id ?? 'unknown', typeId: this.typeId ?? 'unknown' });
+       const msg = 'No se pudo generar el findQuery o updateQuery.';
+       const meta = { ...this.newToSet, error: error.toString() };
+       new CustomError(APP_BRANCH.SETNEWS, msg, this.uuid, meta);
+     }
+   }
+ 
+-  async manageNewType() {
++  async manageNewType(newNew = null) {
+     return new Promise(async (resolve, reject) =&gt; {
+       try {
+-        this.savedNew = await this.findNew(this.newToSet.id);
+-        const isValid = this.validateTransition();
++     this.savedNew = await this.findNew(this.newToSet.id);  
++        const isValid = newNew || this.validateTransition();
+         let platformResult = null;
+         if (isValid) {
+           platformResult = await this.platform.readyOrder(this.savedNew.order);
+           this.requestLastMile(this.savedNew);
+         }
+ 
+         const { findQuery, updateQuery, options } = this.createObjectsUpdate(
+           platformResult,
+-          isValid
++          isValid,
++          newNew
+         );
+         await this.updateNew(findQuery, updateQuery, options);
+-
+         if (!isValid) {
+           const msg =
+             'La novedad no cumple los requisitos de transición. Listo.';
+           const meta = {
+             ...this.newToSet,
+             typeId: this.typeId,
+             statusId: this.statusId
+           };</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El estado listo puede ejecutarse desde la cadena automatizada y registrarse con su origen correspondiente. Cuando se procesa una acción habitual, la estrategia mantiene su validación existente.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/orderStrategy/receiveStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Recepción integrada a la firma común de las estrategias**</b></p>
+
+<p>La estrategia acepta el parámetro opcional usado por los estados generados automáticamente y lo pasa al constructor de la actualización. En esta ruta se envía `null` como origen de automatización para conservar la representación ordinaria de la recepción.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -15,19 +15,19 @@ class ReceiveStrategy extends NewsTypeStrategy {
+     return this.savedNew.traces.find(
+       (trace) =&gt;
+         trace.update.typeId == this.newToSet.typeId &amp;&amp;
+         trace.update.typeIdPrev == this.newToSet.typeIdPrev &amp;&amp;
+         trace.entity == this.entity
+     );
+   }
+ 
+-  createObjectsUpdate(platformResult, isValid) {
++  createObjectsUpdate(platformResult, isValid, newNew) {
+     try {
+-      this.createTrace(platformResult, isValid);
++      this.createTrace(platformResult, isValid, newNew);
+       this.trace.update.typeIdPrev = this.newToSet.typeIdPrev;
+       const findQuery = this.savedNew._id;
+       const updateQuery = {
+         typeId: this.typeId,
+         viewed: new Date(),
+         $push: { traces: this.trace }
+       };
+       const options = {};
+@@ -38,29 +38,30 @@ class ReceiveStrategy extends NewsTypeStrategy {
+     } catch (error) {
+       Log.save('ERROR', error, { message: '[ORDER/ERROR] createObjectsUpdate ReceiveStrategy failed', category: 'ORDER', strategy: this.constructor.name, branch_id: this.savedNew?.branchId ?? this.newToSet?.branchId ?? 'unknown', platform_id: this.savedNew?.order?.platformId ?? this.newToSet?.platformId ?? 'unknown', order_id: this.savedNew?.order?.id ?? this.newToSet?.id ?? 'unknown', typeId: this.typeId ?? 'unknown' });
+       const msg = 'No se pudo generar el findQuery o updateQuery.';
+       const meta = { ...this.newToSet, error: error.toString() };
+       new CustomError(APP_BRANCH.SETNEWS, msg, this.uuid, meta);
+     }
+   }
+ 
+-  async manageNewType() {
++  async manageNewType(newNew = null) {
+     return new Promise(async (resolve, reject) =&gt; {
+       try {
+         let dateSQS = new Date();
+-        this.savedNew = await this.findNew(this.newToSet.id);
++        this.savedNew = await this.findNew(this.newToSet.id);    
+         const isValid = true;
+         const platformResult = await this.platform.receiveOrder(
+           this.savedNew.order, 
+           dateSQS
+         );
+         const { findQuery, updateQuery, options } = this.createObjectsUpdate(
+           platformResult,
+-          isValid
++          isValid,
++          null,//autobilling pero q no se muestra como platform
+         );
+ 
+         await this.updateNew(findQuery, updateQuery, options);
+         resolve();
+       } catch (error) {
+         Log.save('ERROR', error, { message: '[ORDER/ERROR] manageNewType ReceiveStrategy failed', category: 'ORDER', strategy: this.constructor.name, branch_id: this.savedNew?.branchId ?? this.newToSet?.branchId ?? 'unknown', platform_id: this.savedNew?.order?.platformId ?? this.newToSet?.platformId ?? 'unknown', order_id: this.savedNew?.order?.id ?? this.newToSet?.id ?? 'unknown', typeId: this.typeId ?? 'unknown' });
+         reject(error);
+       }</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>La recepción acepta la nueva firma de procesamiento y mantiene el origen de traza esperado para el evento recibido directamente desde el POS.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/orderStrategy/retriveDriverStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Propagación del contexto de trazas**</b></p>
+
+<p>La estrategia de recuperación del repartidor admite el indicador opcional de automatización y lo transmite al registrar la actualización del estado.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -9,19 +9,19 @@ class RetrieveDriverStrategy extends NewsTypeStrategy {
+     super(newToSet);
+     this.savedNew = { _id: newToSet.id };
+   }
+ 
+   validateTransition() {
+     return this.savedNew.ownDelivery === false;
+   }
+ 
+-  createObjectsUpdate(platformResult, isValid) {
++  createObjectsUpdate(platformResult, isValid, newNew) {
+     try {
+-      this.createTrace(platformResult, isValid);
++      this.createTrace(platformResult, isValid, newNew);
+       const findQuery = this.savedNew._id;
+       const updateQuery = {
+         typeId: this.typeId,
+         viewed: null,
+         'order.driver': driver,
+         $push: { traces: this.trace }
+       };
+       const options = {};
+@@ -31,34 +31,35 @@ class RetrieveDriverStrategy extends NewsTypeStrategy {
+     } catch (error) {
+       Log.save('ERROR', error, { message: '[ORDER/ERROR] createObjectsUpdate RetrieveDriverStrategy failed', category: 'ORDER', strategy: this.constructor.name, branch_id: this.savedNew?.branchId ?? this.newToSet?.branchId ?? 'unknown', platform_id: this.savedNew?.order?.platformId ?? this.newToSet?.platformId ?? 'unknown', order_id: this.savedNew?.order?.id ?? this.newToSet?.id ?? 'unknown', typeId: this.typeId ?? 'unknown' });
+       const msg = 'No se pudo generar el findQuery o updateQuery.';
+       const meta = { ...this.newToSet, error: error.toString() };
+       new CustomError(APP_BRANCH.SETNEWS, msg, this.uuid, meta);
+     }
+   }
+ 
+-  async manageNewType() {
++  async manageNewType(newNew = null) {
+     return new Promise(async (resolve, reject) =&gt; {
+       try {
+         this.savedNew = await this.findNew(this.newToSet.id);
+         this.typeId = NewsTypeSingleton.idByCod('upd_ord');
+ 
+         const isValid = this.validateTransition();
+ 
+         let platformResult = null;
+         if (isValid) {
+           platformResult = await this.platform.retriveDriver(
+             this.savedNew.order
+           );
+         }
+ 
+         const { findQuery, updateQuery, options } = this.createObjectsUpdate(
+           platformResult,
+-          isValid
++          isValid,
++          newNew
+         );
+         await this.updateNew(findQuery, updateQuery, options);
+ 
+         if (!isValid) {
+           const msg =
+             'La novedad no cumple los requisitos de transición. ConsultaDelivery.';
+           const meta = {
+             ...this.newToSet,</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>La recuperación del repartidor queda compatible con la firma compartida de las estrategias, con soporte para transmitir el origen automatizado cuando se utiliza.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/orderStrategy/viewStrategy.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Visualización compatible con procesamiento asíncrono**</b></p>
+
+<p>La estrategia de visualización pasa a ser asíncrona y acepta el contexto opcional del flujo automático. Puede procesar la transición como válida y transferir el contexto a la traza.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -17,29 +17,30 @@ class ViewStrategy extends NewsTypeStrategy {
+   validateTransition() {
+     const rejType = NewsTypeSingleton.idByCod('platform_rej_ord');
+     return (
+       !this.findTrace(this.typeId) &amp;&amp;
+       !this.savedNew.traces.find((trace) =&gt; trace.update.typeId == rejType)
+     );
+   }
+ 
+-  manageNewType() {
++  async manageNewType(newNew = null) {
+     return new Promise(async (resolve, reject) =&gt; {
+       try {
+-        this.savedNew = await this.findNew(this.newToSet.id);
+-        const isValid = this.validateTransition();
++        this.savedNew = await this.findNew(this.newToSet.id);        
++        const isValid = newNew || this.validateTransition();
+ 
+         let platformResult = null;
+         if (isValid) {
+           platformResult = await this.platform.viewOrder(this.savedNew.order);
+         }
+         const { findQuery, updateQuery, options } = this.createObjectsUpdate(
+           platformResult,
+-          isValid,
++          isValid,          
++          newNew
+         );
+         await this.updateNew(findQuery, updateQuery, options);
+         if (!isValid) {
+           const msg =
+             'La novedad no cumple los requisitos de transición. Visto.';
+           const meta = {
+             ...this.newToSet,
+             typeId: this.typeId,</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>La visualización puede participar en la secuencia generada por Platform y registrar el contexto correspondiente. El camino de validación existente se mantiene para las llamadas habituales.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/management/strategies/set-news.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Generación automática de estados al recibir la orden**</b></p>
+
+<p>Al procesar `receive_ord`, la estrategia consulta en Mongo el estado de la orden y `autoBillingDelivered`. Si la orden está en el estado previsto y el indicador está activo, procesa la recepción y genera en orden la visualización, confirmación, preparación y despacho, marcando como automatizados los estados intermedios.</p>
+
+<p><b>2. **Prevención del procesamiento duplicado de visualización**</b></p>
+
+<p>Cuando el indicador está activo, la estrategia omite una visualización que llegue por la ruta independiente, ya que ese paso se incorpora a la secuencia generada al recibir la orden.</p>
+
+<p><b>3. **Procesamiento del evento de entrega**</b></p>
+
+<p>Para órdenes con automatización activa, el evento `deliv_ord` se deriva a la estrategia de entrega con el contexto previsto. Los eventos y órdenes fuera de las condiciones indicadas siguen por el flujo estándar.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -1,35 +1,100 @@
+ import NewsTypeSingleton from '../../../utils/newsType';
+ import { APP_BRANCH } from '../../../utils/errors/codeError';
+ import CustomError from '../../../utils/errors/customError';
++import newsModel from '../../../models/news';
+ 
+ import ReceiveStrategy from './orderStrategy/receiveStrategy';
+ import ViewStrategy from './orderStrategy/viewStrategy';
+ import ConfirmStrategy from './orderStrategy/confirmStrategy';
+ import ReadyStrategy from './orderStrategy/readyStrategy';
+ import BranchRejectStrategy from './orderStrategy/branchRejectStrategy';
+ import DispatchStrategy from './orderStrategy/dispatchStrategy';
+ import DeliveryStrategy from './orderStrategy/deliveryStrategy';
+ import RetrieveDriverStrategy from './orderStrategy/retriveDriverStrategy';
+ import CloseRestaurantStrategy from './globalStrategy/closeRestaurantStrategy';
+ import OpenRestaurantStrategy from './globalStrategy/openRestaurantStrategy';
+ import WarningRestaurantStrategy from './globalStrategy/warningRestaurantStrategy';
+ import NewStrategy from './orderStrategy/newStrategy';
+ import PlatformRejectStrategy from './orderStrategy/platformRejectStrategy';
+ import Log from '../../../utils/log';
++import {Types} from 'mongoose';
+ 
+ class SetNews {
+   constructor(branchId, uuid) {
+     this.branchId = branchId;
+     this.uuid = uuid;
+   }
+ 
+-  setNews(newToSet, data) {
++  async setNews(newToSet, data) {
+     try {
++      if(newToSet.typeId === NewsTypeSingleton.idByCod('receive_ord')) {
++        let savedNew = await newsModel.aggregate([
++          { $match: { _id: new Types.ObjectId(newToSet.id) } },
++          {
++            $project: {
++              'order.statusId': '$order.statusId',
++              'order.autoBillingDelivered': '$order.autoBillingDelivered'      
++            }
++          },
++          { $limit: 1 }
++        ]);
++        savedNew = savedNew.pop();
++        //savedNew = savedNew[0];
++        if((savedNew.order.statusId === 1 || savedNew.order.statusId === 9) &amp;&amp; savedNew.order.autoBillingDelivered) {
++          this.strategy = new ReceiveStrategy(newToSet);
++          this.strategy.uuid = this.uuid;
++          await this.strategy.manageNewType(true);
++          this.strategy = new ViewStrategy(newToSet);
++          await this.strategy.manageNewType(true);
++          this.strategy = new ConfirmStrategy(newToSet);
++          await this.strategy.manageNewType(true);
++          this.strategy = new ReadyStrategy(newToSet);
++          await this.strategy.manageNewType(true);
++          this.strategy = new DispatchStrategy(newToSet);
++          return await this.strategy.manageNewType(true);
++        }
++      }  
++
++      if(newToSet.typeId === NewsTypeSingleton.idByCod('view_ord')){
++        let savedNew = await newsModel.aggregate([
++          { $match: { _id: new Types.ObjectId(newToSet.id) } },
++          {
++            $project: {
++              'order.statusId': '$order.statusId',
++              'order.autoBillingDelivered': '$order.autoBillingDelivered'      
++            }
++          },
++          { $limit: 1 }
++        ]);
++        savedNew = savedNew.pop();
++        if(savedNew.order.autoBillingDelivered) {          
++          return resolve();
++        }
++      }
++
++      if(newToSet.typeId === NewsTypeSingleton.idByCod('deliv_ord')){
++        let savedNew = await newsModel.aggregate([
++          { $match: { _id: new Types.ObjectId(newToSet.id) } },
++          {
++            $project: {
++              'order.statusId': '$order.statusId',
++              'order.autoBillingDelivered': '$order.autoBillingDelivered'      
++            }
++          },
++          { $limit: 1 }
++        ]);
++        savedNew = savedNew.pop();
++        if(savedNew.order.autoBillingDelivered) {
++          this.strategy = new DeliveryStrategy(newToSet);
++          return await this.strategy.manageNewType(true);  
++        }
++      }
++
+       switch (newToSet.typeId) {
+         /* Branch Received order */
+         case NewsTypeSingleton.idByCod('ready_ord'):
+           this.strategy = new ReadyStrategy(newToSet);
+           break;
+ 
+         /* Branch Received order */
+         case NewsTypeSingleton.idByCod('receive_ord'):</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>La estrategia de asignación de estados consulta el indicador persistido en la orden y, al recibirla, genera la cadena intermedia hasta el despacho. También evita procesar dos veces la visualización y mantiene el evento de entrega bajo la estrategia existente.</p>
+                </div>
+            </div>
+        </details>
+    </section>
+    <section id="conclusion" class="service-section">
+        <h2>Conclusión General</h2>
+        <p>Platform propaga `autoBillingDelivered` desde la configuración de sucursal y plataforma hasta las órdenes normalizadas y usa ese valor para generar automáticamente los estados intermedios desde la recepción del POS. Las trazas de los pasos automatizados identifican a `PLATFORM`, mientras recepción y entrega conservan su tratamiento previsto. En paralelo, UberEats corrige la comparación de SKUs de grupos de granel para que los contenedores y sabores se incluyan en los detalles de la promoción.
+La automatización se aplica cuando la orden cumple el estado esperado y tiene el indicador activo; el flujo habitual sigue disponible para las demás órdenes. La corrección de promociones conserva el procesamiento individual de productos con SKU válido y permite representar cada grupo de sabores a granel como su contenedor correspondiente.</p>
+    </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>Prism.highlightAll();</script>
+</body>
+</html>

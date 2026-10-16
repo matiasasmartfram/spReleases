@@ -1,0 +1,550 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Platform 10.9.4</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 2em; line-height: 1.7; }
+        .container { max-width: 960px; margin: 0 auto; }
+        .main-header { background-color: var(--card-bg-color); padding: 2em; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 2.5em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+        .deployment-info-box { background-color: var(--deployment-bg); border-left: 4px solid var(--deployment-border); padding: 1em 1.5em; margin-bottom: 2.5em; border-radius: 4px; }
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 { font-size: 1.8em; color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5em; margin-bottom: 1.5em; }
+        .component-card { background-color: var(--card-bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 2em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
+        .component-header { padding: 1em 1.5em; background-color: #fafafa; border-bottom: 1px solid var(--border-color); cursor: pointer; list-style: none; }
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .analysis-box { background-color: var(--analysis-bg); border-left: 4px solid var(--analysis-border); padding: 1em 1.5em; margin-top: 1.5em; border-radius: 4px; }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+        pre[class*="language-"] { padding: 1.2em !important; margin: 1em 0 !important; border-radius: 6px; font-family: 'Fira Code', monospace !important; font-size: 0.9em !important; line-height: 1.5 !important; border: 1px solid var(--border-color); white-space: pre-wrap !important; word-break: break-all !important; overflow-wrap: break-word !important; background-color: #2d2d2d; color: #ccc; }
+
+        pre.diff-highlight { white-space: pre !important; overflow-x: auto; word-break: normal !important; overflow-wrap: normal !important; tab-size: 4; }
+        pre.diff-highlight > code { display: block; min-width: max-content; }
+        pre.diff-highlight .token.deleted:not(.prefix) { display: block; background: #67060c; color: #ffdcd7; }
+        pre.diff-highlight .token.inserted:not(.prefix) { display: block; background: #033a16; color: #aff5b4; }
+        pre.diff-highlight .token.deleted .prefix { color: #ff7b72; user-select: text; }
+        pre.diff-highlight .token.inserted .prefix { color: #7ee787; user-select: text; }
+        pre.diff-highlight .token.coord { color: #79c0ff; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="main-header">
+        <h1>Notas de Release: Platform 10.9.4</h1>
+        <p>Este release amplía la compatibilidad de los mappers con los nuevos SKU de sabores y ajusta el tratamiento de identificadores en distintas integraciones. También corrige y completa el registro del flujo de webhooks de UberEats para conservar el contexto de eventos con datos opcionales.</p>
+    </header>
+    <div class="deployment-info-box">
+        <h4>Información de Despliegue</h4>
+        <p><b>Versión:</b> 10.9.4</p>
+        <p><b>Fecha de Despliegue:</b> 18/08/2026</p>
+        <p><b>AWS Task:</b> [Pendiente]</p>
+        <p><b>JIRA Task:</b> GITSFP-1671, GITSFP-1662</p>
+        <p><b>Commits:</b> 5f70a1fa9fee2b2c843ece67f56ba7e52e7fba62 — Merge pull request #110 from smartit-ar/baseurl<br>8ffc59dc93645e2612d0088f46608ea87a9e6812 — Merge pull request #111 from smartit-ar/uberparse</p>
+    </div>
+    <section id="summary" class="service-section">
+        <h2>Resumen General de la Versión</h2>
+        <p>Este release amplía la compatibilidad de los mappers con los nuevos SKU de sabores y ajusta el tratamiento de identificadores en distintas integraciones. También corrige y completa el registro del flujo de webhooks de UberEats para conservar el contexto de eventos con datos opcionales.</p>
+    </section>
+    <section id="technical-analysis" class="service-section">
+        <h2>Análisis Técnico Detallado</h2>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/interfaces/pedidosYa.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Reconocimiento de SKU de sabores en productos y promociones**</b></p>
+
+<p>El mapper normaliza los códigos de opciones y grupos antes de compararlos, usando `validationSKU` para conservar los SKU válidos como texto y aplicar `99999` como valor genérico cuando no corresponden a un producto. Esto permite mantener el armado de sabores y productos en los caminos de unidades sueltas y promociones.</p>
+
+<p><b>2. **Construcción consistente del texto adicional**</b></p>
+
+<p>Los códigos de las opciones se convierten antes de decidir si representan un sabor o un producto. La comparación del SKU del grupo con el SKU de sus opciones conserva la agrupación de sabores y el texto adicional con cantidades.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -71,16 +71,19 @@ function detailsMapperParseGrido(order) {
+         let skuComparator = validationSKU(optionsGroups.remoteCode)
+           ? String(optionsGroups.remoteCode)
+           : '99999';
+ 
+         let optionsString = '';
+ 
+         if (optionsGroups.children.length)
+           for (let option of optionsGroups.children) {
++            option.remoteCode = validationSKU(option.remoteCode)
++              ? String(option.remoteCode)
++              : '99999';
+             if (option.remoteCode === '99999') {
+               optionsString +=
+                 ' ' + option.name + ' X ' + option.quantity;
+             } else {
+               skuComparator = validationSKU(option.remoteCode)
+                 ? String(option.remoteCode)
+                 : '99999';
+               optionsString = option.name;
+@@ -88,16 +91,19 @@ function detailsMapperParseGrido(order) {
+               detDetails.optionalText = optionsString;
+               detDetails.count = option.quantity;
+               if (option.price &gt; 0) detDetails.price = option.price;
+               const optionDetail = Object.assign({}, detDetails);
+               details.push(optionDetail);
+             }
+ 
+           }
++          optionsGroups.remoteCode = validationSKU(optionsGroups.remoteCode)
++            ? String(optionsGroups.remoteCode)
++            : '99999';
+         //Si son iguales es porque los options unicamente tenia sabores
+         if (optionsGroups.remoteCode === skuComparator) {
+           detDetails.sku = skuComparator;
+           detDetails.optionalText = optionsString;
+           details.push(detDetails);
+         }
+       }
+       numberOfPromotions += 1;
+@@ -116,16 +122,19 @@ function detailsMapperParseGrido(order) {
+       det.cupon = false;
+       let adicional = [];
+       let optionsString = '';
+ 
+       if (detail.selectedToppings.length &gt; 0) {
+         for (let optionsGroups of detail.selectedToppings) {
+           optionsString += ' ' + optionsGroups.name;
+           for (let options of optionsGroups.children) {
++            options.remoteCode = validationSKU(options.remoteCode)
++                ? String(options.remoteCode)
++                : '99999';
+             if (options.remoteCode &amp;&amp; options.remoteCode != '' &amp;&amp; options.remoteCode != '99999') {
+               skuComparator = validationSKU(options.remoteCode)
+                 ? String(options.remoteCode)
+                 : '99999';
+               optionsString += ' ' + options.name;
+             } else {
+               optionsString +=
+                 ' ' + options.name + ' X ' + options.quantity + ' | ';</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El mapper de PedidosYa normaliza los códigos recibidos de opciones y grupos antes de construir el detalle del pedido. Los SKU válidos se conservan como strings y los valores no reconocidos continúan usando el código genérico de sabor.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/interfaces/rappi.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Conservación textual de SKU en productos y promociones**</b></p>
+
+<p>Los identificadores de producto dejan de convertirse con `parseInt` y se obtienen mediante `validationSKU`. Los códigos válidos se envían como `String`, mientras que los códigos no reconocidos usan `99999` en encabezados, productos, subitems y toppings.</p>
+
+<p><b>2. **Compatibilidad con SKU no numéricos**</b></p>
+
+<p>La misma normalización se aplica a productos sueltos, promociones, productos a granel y sustitutos. Esto evita perder identificadores con formato de texto al construir `productId` y `sku`.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -137,17 +137,17 @@ module.exports = {
+             let details = [];
+             let numberOfPromotions = 1;
+             for (let detail of order.order_detail.items) {
+               let det = {};
+               if (detail.name.trim().toLowerCase().startsWith('promo') || detail.name.trim().toLowerCase().startsWith('combo') ) {
+                 detail.sku = detail.sku.split('-')[0];
+                 let detHeader = {};
+                 // creating promo header
+-                detHeader.productId = parseInt(detail.sku, 10);
++                detHeader.productId = validationSKU(detail.sku) ? String(detail.sku) : '99999';
+                 detHeader.count = detail.quantity;
+                 detHeader.price = parseFloat(detail.price);
+                 detHeader.promo = 2;
+                 detHeader.groupId = numberOfPromotions;
+                 detHeader.discount = 0;
+                 detHeader.description = detail.name;
+                 detHeader.sku = validationSKU(detail.sku) ? String(detail.sku) : '99999';
+                 detHeader.note = detail.comments;
+@@ -158,33 +158,33 @@ module.exports = {
+                 if(detail.subitems.some(r =&gt; r.sku.includes('-'))) {
+                   let itemsNoSig = detail.subitems.filter(i =&gt; !i.sku.includes('-'));
+                   let itemSig = detail.subitems.filter(i =&gt; i.sku.includes('-'));
+                   //itemsSig = itemSig.map(i =&gt; i, i.already= false);
+                   let itemSigGranel = itemSig.filter(i =&gt; i.sku.split('-').length === 2);
+                   
+                   for (let product of itemsNoSig) {                  
+                     let detDetails = {};
+-                    detDetails.productId = parseInt(product.sku, 10);
++                    detDetails.productId = validationSKU(product.sku) ? String(product.sku) : '99999';
+                     detDetails.promo = 1;
+                     detDetails.groupId = numberOfPromotions;
+                     detDetails.description = product.name;
+                     detDetails.count = product.quantity;
+                     detDetails.sku = validationSKU(product.sku)
+                       ? String(product.sku)
+                       : '99999';
+ 
+                     let number = 0;
+                     detDetails.optionalText = '';
+                     details.push(detDetails);
+                   }
+                   
+                   for (let product of itemSigGranel) {
+                     let detDetails = {};
+-                    detDetails.productId = parseInt(product.sku.split('-')[0], 10);
++                    detDetails.productId =  validationSKU(product.sku.split('-')[0]) ? String(product.sku.split('-')[0]) : '99999';
+                     detDetails.promo = 1;
+                     detDetails.groupId = numberOfPromotions;
+                     detDetails.description = product.name;
+                     detDetails.count = product.quantity;
+                     detDetails.optionalText = '';
+                     detDetails.sku = validationSKU(product.sku.split('-')[0])
+                       ? String(product.sku.split('-')[0])
+                       : '99999';
+@@ -194,50 +194,50 @@ module.exports = {
+                     }
+                     details.push(detDetails);
+                   }
+                   numberOfPromotions += 1; 
+                 }
+                 else
+                 for (let product of detail.subitems) {                  
+                   let detDetails = {};
+-                  detDetails.productId = parseInt(product.sku, 10);
++                  detDetails.productId = validationSKU(product.sku) ? String(product.sku) : '99999';
+                   detDetails.promo = 1;
+                   detDetails.groupId = numberOfPromotions;
+                   detDetails.description = product.name;
+                   detDetails.count = product.quantity;
+                   detDetails.sku = validationSKU(product.sku)
+                     ? String(product.sku)
+                     : '99999';
+ 
+                   let number = 0;
+                   detDetails.optionalText = '';
+                   //NO ENTRA NUNCA
+                   if (!!product.toppings)
+                     for (let topping of product.toppings) {
+                       /* If the product has an item with sku 99999. It's sku is inside toppings */
+                       if (product.sku == '99999') {
+-                        detDetails.productId = parseInt(topping.sku, 10);
++                        detDetails.productId = validationSKU(topping.sku) ? String(topping.sku) : '99999';
+                         detDetails.sku = validationSKU(topping.sku)
+                           ? String(topping.sku)
+                           : '99999';
+                       }
+                       if (number == 0) {
+                         detDetails.optionalText += topping.quantity.toString() + 'x ' + topping.name;
+                         number += 1;
+                       } else {
+                         detDetails.optionalText += ', ' + topping.quantity.toString() + 'x ' + topping.name;
+                       }
+                     }
+ 
+                   details.push(detDetails);
+                 }
+                 numberOfPromotions += 1;
+               } else {
+-                det.productId = parseInt(detail.sku, 10);
++                det.productId = validationSKU(detail.sku) ? String(detail.sku) : '99999';
+                 det.count = detail.quantity;
+                 det.price = parseFloat(detail.price);
+                 det.promo = 0;
+                 det.groupId = '0'; //numberOfPromotions
+                 det.discount = 0;
+                 det.description = detail.name;
+                 det.sku = validationSKU(detail.sku) ? String(detail.sku) : '99999';
+                 det.note = detail.comments;
+@@ -253,50 +253,50 @@ module.exports = {
+                     let isSubstitute = product.categoryDescription &amp;&amp; product.categoryDescription.toLowerCase().includes('sustituto');
+                     if(isSubstitute){
+                       substituteName = product.name.trim();
+                       continue;
+                     }
+                     
+                     if (product.unit_price_without_discount &gt; 0) {
+                       let detDetails = {};
+-                      detDetails.productId = parseInt(product.sku, 10);
++                      detDetails.productId = validationSKU(product.sku) ? String(product.sku) : '99999';
+                       detDetails.promo = 0;
+                       detDetails.groupId = numberOfPromotions;
+                       detDetails.description = product.name;
+                       detDetails.sku = validationSKU(product.sku)
+                         ? String(product.sku)
+                         : '99999';
+                       detDetails.price = product.price;
+                       detDetails.count = product.quantity;
+                       let number = 0;
+                       detDetails.optionalText = '';
+ 
+                       if (!!product.subitems)
+                         for (let topping of product.subitems) {
+                           /* If the product has an item with sku 99999. It's sku is inside toppings */
+                           if (product.sku == '99999') {
+-                            detDetails.productId = parseInt(topping.sku, 10);
++                            detDetails.productId = validationSKU(topping.sku) ? String(topping.sku) : '99999';
+                             detDetails.sku = validationSKU(topping.sku)
+                               ? String(topping.sku)
+                               : '99999';
+                           }
+                           if (!isSubstitute) {
+                             if (number == 0) {
+                               detDetails.optionalText += topping.quantity.toString() + 'x ' + topping.name;
+                               number += 1;
+                             } else {
+                               detDetails.optionalText += ', ' + topping.quantity.toString() + 'x ' + topping.name;
+                             }
+                           }
+                         }
+                       details.push(detDetails);
+                     } else {
+                       if (detail.sku == '99999') {
+-                        det.productId = parseInt(product.sku, 10);
++                        det.productId = validationSKU(product.sku) ? String(product.sku) : '99999';
+                         det.sku = validationSKU(product.sku)
+                           ? String(product.sku)
+                           : '99999';
+                       }
+                       if (!isSubstitute) {
+                         if (number == 0) {
+                           det.optionalText += product.quantity.toString() + 'x ' + product.name;
+                           number += 1;</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El mapper de Rappi conserva como texto los SKU aceptados por la validación en todos los niveles del pedido y usa el valor genérico para los restantes. La transformación mantiene alineados `productId` y `sku` para productos y componentes de promociones.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/platforms/interfaces/uberEats.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Validación de códigos de sabores de UberEats**</b></p>
+
+<p>Se incorpora una validación específica para los SKU externos y se reconoce el prefijo `sab0` al formar el texto adicional de opciones. Los valores de las opciones se normalizan antes de decidir si corresponden a un sabor o a un producto.</p>
+
+<p><b>2. **Compatibilidad entre formatos de SKU**</b></p>
+
+<p>El mapper conserva como texto los códigos aceptados y utiliza `99999` cuando el valor no es válido. La lógica mantiene el tratamiento de los códigos históricos y permite procesar opciones con el formato nuevo en el flujo alcanzado.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -26,16 +26,26 @@ function truncarADosDecimales(num) {
+ 
+ function validExternalData(externalData = '99999'){
+   if( externalData.includes('.')){
+     return externalData.split('.')[0];
+   }
+   return externalData;
+ }
+ 
++
++function validationSKU (sku) {
++  if(sku.includes('.'))
++    return true;  
++  if ((sku == null || sku.match(/[A-Za-z]/g) === null) &amp;&amp; sku != '9999' &amp;&amp; sku != '999999' &amp;&amp; sku &lt; 2147483647)
++    return true;
++  return false;
++};
++
++
+ module.exports = {
+   newsFromOrders: async function (data, platform, newsCode, stateCod, branch, uuid, tenant) {
+     try {
+       const country = await countryModel.findOne({ country: branch.address.country });
+       const tzo = parseFloat(country.tzo);
+       return new Promise((resolve, reject) =&gt; {
+         const orderMapper = (data, platform, note, tenant) =&gt; {
+           try {
+@@ -191,17 +201,17 @@ module.exports = {
+                   let skuComparator = isNaN(parseInt(validExternalData(optionsGroups.external_data), 10)) 
+                     ? '99999'
+                     : String(parseInt(validExternalData(optionsGroups.external_data), 10));
+ 
+                   let optionsString = '';
+ 
+                   if (optionsGroups?.selected_items.length)
+                     for (let option of optionsGroups.selected_items) {
+-                      if (isNaN(parseInt(validExternalData(option.external_data))) || validExternalData(option.external_data) === "99999") {
++                      if (isNaN(parseInt(validExternalData(option.external_data))) || validExternalData(option.external_data) === "99999" || option.external_data.includes('sab0')) {
+                         optionsString +=
+                           ' ' + option.title + ' X ' + option.quantity.amount + ' | ';
+                       } else {
+                         skuComparator = String(parseInt(validExternalData(option.external_data)));
+                         optionsString = option.title;
+                         detDetails.sku = skuComparator;
+                         detDetails.optionalText = optionsString;
+                         detDetails.count = option.quantity.amount;
+@@ -234,18 +244,22 @@ module.exports = {
+                 det.note = detail.customer_request?.special_instructions;
+                 let adicional = [];
+                 let optionsString = '';
+ 
+                 if (detail.selected_modifier_groups?.length &gt; 0) {
+                   for (let optionsGroups of detail.selected_modifier_groups) {
+                     optionsString += ' ' + optionsGroups.title;
+                     for (let options of optionsGroups.selected_items) {
+-                      if (validExternalData(options.external_data) &amp;&amp; validExternalData(options.external_data) != '' &amp;&amp; validExternalData(options.external_data) != '99999') {
+-                        skuComparator = isNaN(parseInt(validExternalData(options.external_data), 10)) ? '99999' : String(parseInt(validExternalData(options.external_data), 10));
++                      options.external_data = validExternalData(options.external_data);
++                      options.external_data = validationSKU(options.external_data)
++                        ? String(options.external_data)
++                        : '99999';
++                      if (options.external_data &amp;&amp; options.external_data != '' &amp;&amp; options.external_data != '99999') {
++                        skuComparator = isNaN(parseInt(options.external_data, 10)) ? '99999' : String(parseInt(options.external_data, 10));
+                         optionsString += ' ' + options.title;
+                       } else {
+                         optionsString +=
+                           ' ' + options.title + ' X ' + options.quantity.amount + ' | ';
+                       }
+                     }
+                   }
+                 }</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El mapper de UberEats incorpora una validación común para los códigos externos y adapta el armado de opciones para distinguir sabores de productos. Los valores normalizados se utilizan para comparar grupos, construir el texto adicional y conservar la información del pedido.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/controllers/uberEats.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Acceso seguro a datos opcionales del webhook**</b></p>
+
+<p>El procesamiento utiliza acceso opcional para obtener el tipo de evento y el identificador de orden cuando el body o sus metadatos no están completos. Esto permite que el registro y el manejo de errores conserven el flujo disponible sin asumir la presencia de todos los campos.</p>
+
+<p><b>2. **Ajuste del flujo de eventos y logs**</b></p>
+
+<p>La rama de `orders.failure` mantiene el registro del rechazo procesado y el fallback registra los eventos no reconocidos. El procesamiento conserva el registro de errores de orden y la respuesta del webhook.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -127,41 +127,43 @@ async function processUberQueue() {
+             cloud: ordersSaved.cloud ? ordersSaved.cloud : false,
+             latencyTimestamp: {
+               platformDate: order.created_time,
+               entryDate: entryDate,
+               responseDate: new Date(),
+               sendSqsDate: ordersSaved.sendSqsDate
+             }      
+           });          
+-        } else if (event === 'orders.failure') {
++        } 
++        
++        if (event === 'orders.failure') {
+           let orderToCancel = await orderModel.findOne({'order.oldId': body.meta.resource_id});     
+           let setNews = new SetNews(element.orderUberSync.tokenOrderUber);      
+           let newToSet = { typeId: NewsTypeSingleton.idByCod('platform_rej_ord') };
+           await setNews.setNews(newToSet, orderToCancel.order.id);
+           Log.save('INFO', null, {
+             category: 'ORDER',
+             message: '[ORDER/INFO] order_failure_processed platform=UberEats',
+-            order_id: body.meta.resource_id,
++            order_id: body?.meta?.resource_id,
+             branchId: orderToCancel?.branchId,
+             platform: 'UberEats'
+           });
+         } else {
+           Log.save('WARN', null, {
+             category: 'INTEGRATION',
+             message: '[INTEGRATION/WARN] unhandled_webhook_event platform=UberEats',
+             event_type: event,
+-            order_id: body.meta?.resource_id,
++            order_id: body?.meta?.resource_id,
+             platform: 'UberEats'
+           });
+         }
+         processedElements.push(element);
+       } catch (error) {
+         processedElements.push(element);
+-        Log.saveError(error, { category: 'ORDER', message: '[ORDER/ERROR] UberEats order processing failed', order_id: body.meta?.resource_id, platform: 'UberEats' });
++        Log.saveError(error, { category: 'ORDER', message: '[ORDER/ERROR] UberEats order processing failed', platform: 'UberEats' });
+         continue;
+       }    
+     }
+     // Eliminar procesados exitosamente
+     ordenesUber = ordenesUber.filter(r =&gt; !processedElements.includes(r));
+   }
+   catch (error) {
+     Log.saveError(error, { category: 'ORDER', message: '[ORDER/ERROR] UberEats getOrders general error', platform: 'UberEats' });
+@@ -170,29 +172,29 @@ async function processUberQueue() {
+   }
+ }
+ 
+ const uberNotification = async (req, res) =&gt; {
+   try {
+     Log.save('INFO', null, {
+       category: 'INTEGRATION',
+       message: '[INTEGRATION/INFO] webhook_received platform=UberEats',
+-      event_type: req.body.event_type,
++      event_type: req.body?.event_type,
+       order_id: req.body?.meta?.resource_id,
+       country: req.params.country,
+       platform: 'UberEats',
+     });
+     const calculatedSignature = crypto.createHmac('sha256', 'PwSRCIwjNLTstCJUpur4R_NYHvEShOefE8WheAmN')
+                                       .update(JSON.stringify(req.body))
+                                       .digest('hex');
+     if (calculatedSignature !== req.headers['x-uber-signature']) {
+       Log.save('WARN', null, {
+         category: 'INTEGRATION',
+         message: '[INTEGRATION/WARN] webhook_signature_mismatch platform=UberEats',
+-        event_type: req.body.event_type,
++        event_type: req.body?.event_type,
+         order_id: req.body?.meta?.resource_id,
+         country: req.params.country,
+         platform: 'UberEats'
+       });
+       return res.status(401).send('No fue posible validar firma de Uber');
+     }
+     let itemQueue = {
+       ...req.body,</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El controlador de UberEats ajusta el acceso a los datos opcionales del webhook y mantiene la trazabilidad de eventos procesados, no reconocidos y fallidos. La recepción continúa registrando el tipo de evento, la orden, el país y la plataforma cuando esos datos están disponibles.</p>
+                </div>
+            </div>
+        </details>
+    </section>
+    <section id="conclusion" class="service-section">
+        <h2>Conclusión General</h2>
+        <p>El release adapta los mappers de PedidosYa, Rappi y UberEats para convivir con SKU históricos y nuevos códigos de sabores, manteniendo los identificadores como strings cuando son válidos y usando el valor genérico en los casos restantes. Además, el flujo de webhooks de UberEats conserva el contexto de recepción y procesamiento aun cuando falten datos opcionales en el payload.</p>
+    </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>Prism.highlightAll();</script>
+</body>
+</html>

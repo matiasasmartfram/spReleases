@@ -41,3 +41,7 @@ confluence_concentrador_8.6.6.txt
 
 # Gemini / IDE metadata
 .gemini/
+
+# Scripts locales de preparación y generación de releases
+generate_html.ps1
+prepare_release.ps1

@@ -1,0 +1,659 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Concentrador 9.11.1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 2em; line-height: 1.7; }
+        .container { max-width: 960px; margin: 0 auto; }
+        .main-header { background-color: var(--card-bg-color); padding: 2em; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 2.5em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+        .deployment-info-box { background-color: var(--deployment-bg); border-left: 4px solid var(--deployment-border); padding: 1em 1.5em; margin-bottom: 2.5em; border-radius: 4px; }
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 { font-size: 1.8em; color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5em; margin-bottom: 1.5em; }
+        .component-card { background-color: var(--card-bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 2em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
+        .component-header { padding: 1em 1.5em; background-color: #fafafa; border-bottom: 1px solid var(--border-color); cursor: pointer; list-style: none; }
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .analysis-box { background-color: var(--analysis-bg); border-left: 4px solid var(--analysis-border); padding: 1em 1.5em; margin-top: 1.5em; border-radius: 4px; }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+        pre[class*="language-"] { padding: 1.2em !important; margin: 1em 0 !important; border-radius: 6px; font-family: 'Fira Code', monospace !important; font-size: 0.9em !important; line-height: 1.5 !important; border: 1px solid var(--border-color); white-space: pre-wrap !important; word-break: break-all !important; overflow-wrap: break-word !important; background-color: #2d2d2d; color: #ccc; }
+
+        pre.diff-highlight { white-space: pre !important; overflow-x: auto; word-break: normal !important; overflow-wrap: normal !important; tab-size: 4; }
+        pre.diff-highlight > code { display: block; min-width: max-content; }
+        pre.diff-highlight .token.deleted:not(.prefix) { display: block; background: #67060c; color: #ffdcd7; }
+        pre.diff-highlight .token.inserted:not(.prefix) { display: block; background: #033a16; color: #aff5b4; }
+        pre.diff-highlight .token.deleted .prefix { color: #ff7b72; user-select: text; }
+        pre.diff-highlight .token.inserted .prefix { color: #7ee787; user-select: text; }
+        pre.diff-highlight .token.coord { color: #79c0ff; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="main-header">
+        <h1>Notas de Release: Concentrador 9.11.1</h1>
+        <p>Este release mejora la trazabilidad de las aperturas ejecutadas desde Backoffice y establece un tiempo máximo global de 20 segundos para las solicitudes Axios del Concentrador. Las operaciones Open de las plataformas ahora dejan resultados detallados en los logs de Open/Closed, tanto cuando finalizan correctamente como cuando fallan.</p>
+    </header>
+    <div class="deployment-info-box">
+        <h4>Información de Despliegue</h4>
+        <p><b>Versión:</b> 9.11.1</p>
+        <p><b>Fecha de Despliegue:</b> 10/08/2026</p>
+        <p><b>AWS Task:</b> [Pendiente]</p>
+        <p><b>JIRA Task:</b> GITSFP-1658, GITSFP-1670</p>
+        <p><b>Commits:</b> e6b98922155aa70965bd8786f8b36c5481367da7 — Merge pull request #66 from smartit-ar/baseurl</p>
+    </div>
+    <section id="summary" class="service-section">
+        <h2>Resumen General de la Versión</h2>
+        <p>Este release mejora la trazabilidad de las aperturas ejecutadas desde Backoffice y establece un tiempo máximo global de 20 segundos para las solicitudes Axios del Concentrador. Las operaciones Open de las plataformas ahora dejan resultados detallados en los logs de Open/Closed, tanto cuando finalizan correctamente como cuando fallan.</p>
+    </section>
+    <section id="technical-analysis" class="service-section">
+        <h2>Análisis Técnico Detallado</h2>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/controllers/branch.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p>La operación `sendOpen` incorpora una estructura acumuladora por sucursal para registrar el resultado de cada apertura enviada a PedidosYa, Uber, Rappi, PediGrido y MercadoPago. Para cada intento exitoso se almacenan la identificación de la sucursal, el tipo de operación, la respuesta de la API y su estado HTTP; ante un error se conserva la misma información con `result: false` y los datos disponibles de la respuesta fallida.</p>
+
+<p>Al finalizar el procesamiento de cada plataforma se crea un documento en `openClosedLogModel` con el resultado agregado, los detalles por operación, el identificador de plataforma y `type: "OpenFromBO"`. El flujo de MercadoPago también reorganiza el manejo de autenticación, renovación de token y errores de solicitud para que los fallos queden incluidos en el resultado y en el registro operativo.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -5483,34 +5483,49 @@ const sendOpen = async (req, res) =&gt; {
+         'x-authorization': 'bearer ' + tokenRappi["Uruguay"]
+       }
+     };
+ 
+     let branchForms = req.body;
+     let branch = await model.findOne({
+       branchId: branchForms[0].branchId
+     }).populate("chain");
++    let branchData = { branchId: branch?.branchId, results: [] };
+     for (const branchForm of branchForms) {
+       // pedidosya
+       if (branchForm.platform === 1) {
+         const branchName = branch.platforms.find(pm =&gt; pm.platform == peyaId).branchName;
+         const branchNames = Array.isArray(branchName) ? branchName : [branchName];
+         await Promise.allSettled(branchNames.map(async (remoteId) =&gt; {
+           const urlAvailability = `${peyaBaseUrl}/v2/chains/${settings.chainCode}/remoteVendors/${remoteId}/availability`;
+           try {
+             const statuspos = await httpClient.get(urlAvailability, headersConfig3);
+             for (const element of statuspos.data) {
+               let body = {
+                 "availabilityState": "OPEN",
+                 "platformKey": element.platformKey,
+                 "platformRestaurantId": element.platformRestaurantId
+               };
+               try {
+-                await httpClient.put(urlAvailability, body, headersConfig3);
++                let response = await httpClient.put(urlAvailability, body, headersConfig3);
++                branchData.results.push({
++                  branchName: remoteId,
++                  type: "Open",
++                  result: true,
++                  resultApi: response.data,
++                  resultStatus: response.status
++                });
+               } catch (error) {
++                branchData.results.push({
++                  branchName: remoteId,
++                  type: "Open",
++                  result: false,
++                  resultApi: error?.response?.data,
++                  resultStatus: error?.response?.status
++                });
+                 Log.saveError(error, {
+                   message: `Branch OpenClose Error: PedidosYa sendOpen OPEN ${branch.branchId}`,
+                   action: 'sendOpen',
+                   platformId: 1,
+                   operation: 'OPEN',
+                   branch: {
+                     branchReferenceId: remoteId,
+                     branchId: branch.branchId
+@@ -5524,16 +5539,23 @@ const sendOpen = async (req, res) =&gt; {
+                   response: {
+                     status: error?.response?.status,
+                     data: error?.response?.data
+                   }
+                 });
+               }
+             }
+           } catch (error) {
++            branchData.results.push({
++              branchName: remoteId,
++              type: "Open",
++              result: false,
++              resultApi: error?.response?.data,
++              resultStatus: error?.response?.status
++            });
+             Log.saveError(error, {
+               message: `Branch OpenClose Error: PedidosYa sendOpen GENERAL ${branch.branchId}`,
+               action: 'sendOpen',
+               platformId: 1,
+               operation: 'GENERAL',
+               branch: {
+                 branchReferenceId: remoteId,
+                 branchId: branch.branchId
+@@ -5546,35 +5568,58 @@ const sendOpen = async (req, res) =&gt; {
+               },
+               response: {
+                 status: error?.response?.status,
+                 data: error?.response?.data
+               }
+             });
+           }
+         }));
++        await openClosedLogModel.create({
++          result: !branchData.results.some(r =&gt; r.result === false),
++          Ident: "PedidosYa",
++          extraData: branchData,
++          platformId: 1,
++          type: "OpenFromBO"
++        });
+       }
+ 
+       // uber
+       if (branchForm.platform === 4) {
++        branchData = { branchId: branch?.branchId, results: [] };
+         const branchReference = branch.platforms.find(pm =&gt; pm.platform == uberId).branchReference;
+         const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+ 
+         await Promise.allSettled(branchReferences.map(async (store_id) =&gt; {
+           let body = {
+             "status": "ONLINE",
+             "reason": "STORE OPEN"
+           };
+           const urlAvailability = `${baseUrlUber}/v1/delivery/store/${store_id}/update-store-status`;
+           try {
++            let response;
+             if (branch.address.country === "Argentina")
+-              await httpClient.post(urlAvailability, body, headersConfigAr);
++              response = await httpClient.post(urlAvailability, body, headersConfigAr);
+             if (branch.address.country === "Chile")
+-              await httpClient.post(urlAvailability, body, headersConfigCl);
++              response = await httpClient.post(urlAvailability, body, headersConfigCl);
++              branchData.results.push({
++                branchReference: store_id,
++                type: "Open",
++                result: true,
++                resultApi: response.data,
++                resultStatus: response.status
++              });
+           } catch (error) {
++              branchData.results.push({
++                branchReference: store_id,
++                type: "Open",
++                result: false,
++                resultApi: error?.response?.data,
++                resultStatus: error?.response?.status
++              });
+             Log.saveError(error, {
+               message: `Branch OpenClose Error: Uber sendOpen OPEN ${branch.branchId}`,
+               action: 'sendOpen',
+               platformId: 4,
+               operation: 'OPEN',
+               branch: {
+                 branchReferenceId: store_id,
+                 branchId: branch.branchId
+@@ -5587,28 +5632,50 @@ const sendOpen = async (req, res) =&gt; {
+               },
+               response: {
+                 status: error?.response?.status,
+                 data: error?.response?.data
+               }
+             });
+           }
+         }));
++        await openClosedLogModel.create({
++          result: !branchData.results.some(r =&gt; r.result === false),
++          Ident: "Uber",
++          extraData: branchData,
++          platformId: 4,
++          type: "OpenFromBO"
++        });
+       }
+ 
+       // rappi
+       if (branchForm.platform === 2) {
++        branchData = { branchId: branch?.branchId, results: [] };
+         const branchReference = branch.platforms.find(pm =&gt; pm.platform == rappiId).branchReference;
+         const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+ 
+         await Promise.allSettled(branchReferences.map(async (rappiNumber) =&gt; {
+           if (branch.address.country === "Argentina") {
+             try {
+-              await httpClient.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsAr);
++              let response = await httpClient.put(urlAr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsAr);
++              branchData.results.push({
++                rappiNumber: rappiNumber,
++                type: "Open",
++                result: true,
++                resultApi: response.data,
++                resultStatus: response.status
++              });
+             } catch (error) {
++              branchData.results.push({
++                rappiNumber: rappiNumber,
++                type: "Open",
++                result: false,
++                resultApi: error?.response?.data,
++                resultStatus: error?.response?.status
++              });
+               Log.saveError(error, {
+                 message: `Branch OpenClose Error: Rappi sendOpen OPEN ${branch.branchId}`,
+                 action: 'sendOpen',
+                 platformId: 2,
+                 operation: 'OPEN',
+                 branch: {
+                   branchReferenceId: rappiNumber,
+                   country: branch.address.country,
+@@ -5624,18 +5691,32 @@ const sendOpen = async (req, res) =&gt; {
+                   status: error?.response?.status,
+                   data: error?.response?.data
+                 }
+               });
+             }
+           }
+           if (branch.address.country === "Perú") {
+             try {
+-              await httpClient.put(urlPr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsPr);
++              let response = await httpClient.put(urlPr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsPr);
++              branchData.results.push({
++                rappiNumber: rappiNumber,
++                type: "Open",
++                result: true,
++                resultApi: response.data,
++                resultStatus: response.status
++              });
+             } catch (error) {
++              branchData.results.push({
++                rappiNumber: rappiNumber,
++                type: "Open",
++                result: false,
++                resultApi: error?.response?.data,
++                resultStatus: error?.response?.status
++              });
+               Log.saveError(error, {
+                 message: `Branch OpenClose Error: Rappi sendOpen 'OPEN' ${branch.branchId}`,
+                 action: 'sendOpen',
+                 platformId: 2,
+                 operation: 'OPEN',
+                 branch: {
+                   branchReferenceId: rappiNumber,
+                   country: branch.address.country,
+@@ -5651,18 +5732,32 @@ const sendOpen = async (req, res) =&gt; {
+                   status: error?.response?.status,
+                   data: error?.response?.data
+                 }
+               });
+             }
+           }
+           if (branch.address.country === "Chile") {
+             try {
+-              await httpClient.put(urlCl, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsCl);
++              let response = await httpClient.put(urlCl, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsCl);
++              branchData.results.push({
++                rappiNumber: rappiNumber,
++                type: "Open",
++                result: true,
++                resultApi: response.data,
++                resultStatus: response.status
++              });
+             } catch (error) {
++              branchData.results.push({
++                rappiNumber: rappiNumber,
++                type: "Open",
++                result: false,
++                resultApi: error?.response?.data,
++                resultStatus: error?.response?.status
++              });
+               Log.saveError(error, {
+                 message: `Branch OpenClose Error: Rappi sendOpen OPEN ${branch.branchId}`,
+                 action: 'sendOpen',
+                 platformId: 2,
+                 operation: 'OPEN',
+                 branch: {
+                   branchReferenceId: rappiNumber,
+                   country: branch.address.country,
+@@ -5678,18 +5773,32 @@ const sendOpen = async (req, res) =&gt; {
+                   status: error?.response?.status,
+                   data: error?.response?.data
+                 }
+               });
+             }
+           }
+           if (branch.address.country === "Uruguay") {
+             try {
+-              await httpClient.put(urlUr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsUr);
++              let response = await httpClient.put(urlUr, { stores: [{ store_id: rappiNumber, is_enabled: true }] }, optionsUr);
++              branchData.results.push({
++                rappiNumber: rappiNumber,
++                type: "Open",
++                result: true,
++                resultApi: response.data,
++                resultStatus: response.status
++              });
+             } catch (error) {
++              branchData.results.push({
++                rappiNumber: rappiNumber,
++                type: "Open",
++                result: false,
++                resultApi: error?.response?.data,
++                resultStatus: error?.response?.status
++              });
+               Log.saveError(error, {
+                 message: `Branch OpenClose Error: Rappi sendOpen OPEN ${branch.branchId}`,
+                 action: 'sendOpen',
+                 platformId: rappiId,
+                 operation: req.body.is_enabled ? 'OPEN' : 'CLOSE',
+                 branch: {
+                   branchReferenceId: rappiNumber,
+                   country: branch.address.country,
+@@ -5704,32 +5813,54 @@ const sendOpen = async (req, res) =&gt; {
+                 response: {
+                   status: error?.response?.status,
+                   data: error?.response?.data
+                 }
+               });
+             }
+           }
+         }));
++        await openClosedLogModel.create({
++          result: !branchData.results.some(r =&gt; r.result === false),
++          Ident: "Rappi",
++          extraData: branchData,
++          platformId: 2,
++          type: "OpenFromBO"
++        });
+       }
+ 
+       // pedigrido
+       if (branchForm.platform === 7) {
++        branchData = { branchId: branch?.branchId, results: [] };
+         const branchReference = branch.platforms.find(pm =&gt; pm.platform == pedigridoId).branchReference;
+         const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+ 
+         await Promise.allSettled(branchReferences.map(async (store_id) =&gt; {
+           let body = {
+             "branch": store_id,
+             "active": true
+           }
+           const urlAvailability = `${baseUrlPedigrido}v1/locals/status`;
+           try {
+-            await httpClient.put(urlAvailability, body, headersConfigPediGrido);
++            let response = await httpClient.put(urlAvailability, body, headersConfigPediGrido);       
++            branchData.results.push({
++              branchReference: store_id,
++              type: "Open",
++              result: true,
++              resultApi: response.data,
++              resultStatus: response.status
++            });
+           } catch (error) {
++            branchData.results.push({
++              branchReference: store_id,
++              type: "Open",
++              result: false,
++              resultApi: error?.response?.data,
++              resultStatus: error?.response?.status
++            });
+             Log.saveError(error, {
+               message: `Branch OpenClose Error: PediGrido sendOpen OPEN ${branch.branchId}`,
+               action: 'sendOpen',
+               platformId: 7,
+               operation: 'OPEN',
+               branch: {
+                 branchReferenceId: store_id,
+                 branchId: branch.branchId
+@@ -5742,76 +5873,123 @@ const sendOpen = async (req, res) =&gt; {
+               },
+               response: {
+                 status: error?.response?.status,
+                 data: error?.response?.data
+               }
+             });
+           }
+         }));
++        await openClosedLogModel.create({
++          result: !branchData.results.some(r =&gt; r.result === false),
++          Ident: "PediGrido",
++          extraData: branchData,
++          platformId: 7,
++          type: "OpenFromBO"
++        });
+       }
+ 
+       // mercadopago
+       if (branchForm.platform === 8) {
++        branchData = { branchId: branch?.branchId, results: [] };
+         const platformTemp = branch.platforms.find(pm =&gt; pm.platform == mercadopagoId);
+-        const branchReference = platformTemp.branchReference;
++        const branchReference = platformTemp.branchReference; 
+         const branchReferences = Array.isArray(branchReference) ? branchReference : [branchReference];
+-        let user_id = platformTemp?.mercadoPagoUserId;
+-        let tenant = tenants.find(r =&gt; r.name === branch.chain.chain.toLowerCase());
+-        let tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, false);
+-        let decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-        const headersConfig = {
+-          headers: {
+-            'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
++        try {
++          let user_id = platformTemp?.mercadoPagoUserId;
++          let tenant = tenants.find(r =&gt; r.name === branch.chain.chain.toLowerCase());
++          let tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, false);
++          let decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
++          const headersConfig = {
++            headers: {
++              'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
++            }
+           }
+-        }
+-        let body = {
+-          status: "enabled"
+-        }
+-        for (const store_id of branchReferences) {
+-          const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+-          try {
++          let body = {
++            status: "enabled"
++          }
++          for (const store_id of branchReferences) {
++            const urlAvailability = `${baseUrlMercadoPago}/proximity-integration/stores/${store_id}/status`;
+             try {
+-              await httpClient.put(urlAvailability, body, headersConfig);
+-            } catch (error) {
+-              if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
+-                tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, true);
+-                decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
+-                const headersConfig2 = {
+-                  headers: {
+-                    'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
++              try {
++                let response = await httpClient.put(urlAvailability, body, headersConfig);
++                branchData.results.push({
++                  branchReference: store_id,
++                  type: "Open",
++                  result: true,
++                  resultApi: response.data,
++                  resultStatus: response.status
++                });
++              } catch (error) {
++                if (error?.response?.status === 401 &amp;&amp; tokenMercadoPagoCloud.tokenCached) {
++                  tokenMercadoPagoCloud = await searchToken(user_id, tenant.tenantId, true);
++                  decryptedTokenMercadoPagoCloud = await Token.decrypt(tokenMercadoPagoCloud?.token);
++                  const headersConfig2 = {
++                    headers: {
++                      'Authorization': `Bearer ${decryptedTokenMercadoPagoCloud}`
++                    }
+                   }
++                  let response = await httpClient.put(urlAvailability, body, headersConfig2);
++                  branchData.results.push({
++                    branchReference: store_id,
++                    type: "Open",
++                    result: true,
++                    resultApi: response.data,
++                    resultStatus: response.status
++                  });
+                 }
+-                await httpClient.put(urlAvailability, body, headersConfig2);
++                else throw error;
+               }
+-              else throw error;
++            } catch (error) {
++              branchData.results.push({
++                branchReference: store_id,
++                type: "Open",
++                result: false,
++                resultApi: error?.response?.data,
++                resultStatus: error?.response?.status
++              });
++              Log.saveError(error, {
++                message: `Branch OpenClose Error: MercadoPago sendOpen OPEN ${branch.branchId}`,
++                action: 'sendOpen',
++                platformId: 8,
++                operation: 'OPEN',
++                branch: {
++                  branchReferenceId: store_id,
++                  branchId: branch.branchId
++                },
++                request: {
++                  url: urlAvailability,
++                  method: 'PUT',
++                  body: body,
++                  header: headersConfigPediGrido.headers
++                },
++                response: {
++                  status: error?.response?.status,
++                  data: error?.response?.data
++                }
++              });
+             }
+-          } catch (error) {
+-            Log.saveError(error, {
+-              message: `Branch OpenClose Error: MercadoPago sendOpen OPEN ${branch.branchId}`,
+-              action: 'sendOpen',
+-              platformId: 8,
+-              operation: 'OPEN',
+-              branch: {
+-                branchReferenceId: store_id,
+-                branchId: branch.branchId
+-              },
+-              request: {
+-                url: urlAvailability,
+-                method: 'PUT',
+-                body: body,
+-                header: headersConfigPediGrido.headers
+-              },
+-              response: {
+-                status: error?.response?.status,
+-                data: error?.response?.data
+-              }
+-            });
+-          }
+-        }
++          }    
++        } catch (error) { 
++          branchData.results.push({
++            branchReference: 'Error',
++            type: "Open",
++            result: false,
++            resultApi: error?.response?.data,
++            resultStatus: error?.response?.status
++          });
++          Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] send_open failed', platform: 'Concentrador' });
++        }   
++        await openClosedLogModel.create({
++          result: !branchData.results.some(r =&gt; r.result === false),
++          Ident: "MercadoPago",
++          extraData: branchData,
++          platformId: 8,
++          type: "OpenFromBO"
++        });
+       }
+     }
+     return res.status(200).json({}).end();
+   } catch (error) {
+     Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] send_open failed', platform: 'Concentrador' });
+     return res.status(200).json(error.message).end();
+   }
+ };</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>`branch.js` extiende `sendOpen` para que las aperturas originadas en Backoffice sean observables en la hoja de logs de Open/Closed. El registro conserva el detalle de cada plataforma y permite distinguir una apertura completamente exitosa de otra con uno o más fallos, sin perder los errores ya enviados al sistema de logging.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/index.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p>Se incorpora Axios como dependencia del módulo de arranque y se configura `axios.defaults.timeout = 20000` al iniciar el servicio. La configuración aplica un límite global de 20 segundos a las solicitudes Axios que no definan un timeout específico, acotando la espera de integraciones externas.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -4,18 +4,20 @@ mongoose.plugin(require('@meanie/mongoose-to-json'));
+ import settings from './config/settings';
+ import { app } from './app';
+ import logger from './config/logger';
+ import CustomError from './utils/errors/customError';
+ import { CORE, DB } from './utils/errors/codeError';
+ import checkUTC from './utils/checkUTC';
+ import Aws from './provider/aws';
+ import Log from './utils/log';
++import axios from 'axios';
+ 
+ async function start() {
++  axios.defaults.timeout = 20000; // 20 segundos
+   connectWithRetry();
+   Log.save('INFO', null, { category: 'INFRA', message: '[INFRA/INFO] database_connected', host: settings.database.host });
+   if (process.env.NODE_ENV === 'production') await checkUTC.checkUTC()
+   await Aws.deadLetterSave();
+   app.listen(settings.port, () =&gt; {
+     Log.save('INFO', null, { category: 'INFRA', message: '[INFRA/INFO] server_running', port: settings.port, env: process.env.NODE_ENV?.toUpperCase() });
+   });
+ }</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>`index.js` establece el timeout global antes de iniciar las conexiones y el servidor HTTP. El resto de la secuencia de arranque se mantiene sin cambios, por lo que la modificación queda concentrada en el comportamiento temporal de las llamadas Axios.</p>
+                </div>
+            </div>
+        </details>
+    </section>
+    <section id="conclusion" class="service-section">
+        <h2>Conclusión General</h2>
+        <p>El release mejora el seguimiento de las aperturas realizadas desde Backoffice al registrar resultados exitosos y fallidos por plataforma en `OpenFromBO`, incluyendo respuestas y estados HTTP cuando están disponibles. Además, fija un timeout global de 20 segundos para Axios, reduciendo esperas indefinidas en integraciones externas y manteniendo intacto el flujo general de inicio del Concentrador.</p>
+    </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>Prism.highlightAll();</script>
+</body>
+</html>

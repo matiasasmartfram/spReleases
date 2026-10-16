@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Release: Concentrador 9.11.2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400&display=swap');
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg-color: #ffffff;
+            --text-color: #212529;
+            --text-muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #0056b3;
+            --analysis-bg: #e6f7ff;
+            --analysis-border: #91d5ff;
+            --deployment-bg: #f0fdf4;
+            --deployment-border: #86efac;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 2em; line-height: 1.7; }
+        .container { max-width: 960px; margin: 0 auto; }
+        .main-header { background-color: var(--card-bg-color); padding: 2em; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 2.5em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .main-header h1 { margin: 0 0 0.25em 0; font-size: 2.2em; color: var(--primary-color); }
+        .main-header p { margin: 0; font-size: 1.1em; color: var(--text-muted-color); }
+        .deployment-info-box { background-color: var(--deployment-bg); border-left: 4px solid var(--deployment-border); padding: 1em 1.5em; margin-bottom: 2.5em; border-radius: 4px; }
+        .deployment-info-box h4 { margin-top: 0; font-size: 1.2em; color: #166534; }
+        .deployment-info-box p { margin: 0.5em 0 0 0; font-family: 'Fira Code', monospace; font-size: 0.95em; }
+        .service-section { margin-bottom: 3em; }
+        .service-section > h2 { font-size: 1.8em; color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5em; margin-bottom: 1.5em; }
+        .component-card { background-color: var(--card-bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 2em; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
+        .component-header { padding: 1em 1.5em; background-color: #fafafa; border-bottom: 1px solid var(--border-color); cursor: pointer; list-style: none; }
+        .component-header::-webkit-details-marker { display: none; }
+        .component-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1.2em; }
+        .component-body { padding: 1.5em; }
+        .component-body h4 { margin-top: 1.5em; font-size: 1.2em; color: #343a40; }
+        .analysis-box { background-color: var(--analysis-bg); border-left: 4px solid var(--analysis-border); padding: 1em 1.5em; margin-top: 1.5em; border-radius: 4px; }
+        .analysis-box h4 { margin-top: 0; font-size: 1.1em; color: var(--primary-color); }
+        pre[class*="language-"] { padding: 1.2em !important; margin: 1em 0 !important; border-radius: 6px; font-family: 'Fira Code', monospace !important; font-size: 0.9em !important; line-height: 1.5 !important; border: 1px solid var(--border-color); white-space: pre-wrap !important; word-break: break-all !important; overflow-wrap: break-word !important; background-color: #2d2d2d; color: #ccc; }
+
+        pre.diff-highlight { white-space: pre !important; overflow-x: auto; word-break: normal !important; overflow-wrap: normal !important; tab-size: 4; }
+        pre.diff-highlight > code { display: block; min-width: max-content; }
+        pre.diff-highlight .token.deleted:not(.prefix) { display: block; background: #67060c; color: #ffdcd7; }
+        pre.diff-highlight .token.inserted:not(.prefix) { display: block; background: #033a16; color: #aff5b4; }
+        pre.diff-highlight .token.deleted .prefix { color: #ff7b72; user-select: text; }
+        pre.diff-highlight .token.inserted .prefix { color: #7ee787; user-select: text; }
+        pre.diff-highlight .token.coord { color: #79c0ff; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="main-header">
+        <h1>Notas de Release: Concentrador 9.11.2</h1>
+        <p>Este release traslada al registro de plataformas las URLs utilizadas para autenticación y gestión de locales. El Concentrador deja de depender de las URLs de autenticación y operación definidas en los archivos de ambiente para los flujos alcanzados, y expone una operación REST para actualizar la URL de autenticación desde Backoffice.</p>
+    </header>
+    <div class="deployment-info-box">
+        <h4>Información de Despliegue</h4>
+        <p><b>Versión:</b> 9.11.2</p>
+        <p><b>Fecha de Despliegue:</b> 11/08/2026</p>
+        <p><b>AWS Task:</b> [Pendiente]</p>
+        <p><b>JIRA Task:</b> GITSFP-1666</p>
+        <p><b>Commits:</b> 77c1061ff354c9b16363d9603bfeb0af8ca832a4 — Merge pull request #67 from smartit-ar/baseurl</p>
+    </div>
+    <section id="summary" class="service-section">
+        <h2>Resumen General de la Versión</h2>
+        <p>Este release traslada al registro de plataformas las URLs utilizadas para autenticación y gestión de locales. El Concentrador deja de depender de las URLs de autenticación y operación definidas en los archivos de ambiente para los flujos alcanzados, y expone una operación REST para actualizar la URL de autenticación desde Backoffice.</p>
+    </section>
+    <section id="technical-analysis" class="service-section">
+        <h2>Análisis Técnico Detallado</h2>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/config/env/production.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Retiro de URLs específicas del código de ambiente**</b></p>
+
+<p>Los archivos de producción, staging y testing dejan de declarar la URL de autenticación de UberEats y la URL de gestión de PediGrido dentro de la configuración estática. Las credenciales y URLs pasan a resolverse desde la configuración persistida de cada plataforma.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -15,24 +15,19 @@ module.exports = {
+   },
+   smlParams: {
+     client_id: 'Kzcb6qdI49ysCBiqiVagNUYAPITcWToy',
+     client_secret: 'xxx', 
+     audience : 'webservicecg',
+     url: 'https://smartfran-cloud-platform-pro.azurewebsites.net/api/v1/Security/token',
+     api: 'https://bot-security.smartfran.com'
+   },
+-  uberParams: {
+-    authUrl: 'https://auth.uber.com/oauth/v2/token'    
+-  },
+   pediGridoParams: {
+     usuario: 'Smartfran_api',
+-    password: 'xxx',
+-    baseUrl: 'https://app.pedigrido.com/'
+-    // baseUrl: 'https://backoffice-staging.pedigrido.com/'
++    password: 'xxx'
+   },
+   chainCode: 'LATAMSMARTFRAN0001',
+   mail: 'smartpedidos@smartfran.com',
+   //SENDGRID_API_KEY: "xxx",
+   SENDGRID_API_KEY: "xxx",
+   baseUrl: process.env.BASE_URL || 'http://localhost',
+   apiUrl: 'https://prodpedidos.smartfran.com/api',
+   backoffice: 'https://boprodpedidos.smartfran.com',</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>La configuración por ambiente ya no contiene los valores específicos de autenticación de UberEats ni de gestión de PediGrido. Esto permite que esos datos sean administrados junto con la plataforma, manteniendo el resto de la configuración de cada ambiente.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/config/env/staging.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Lectura de URLs desde la configuración de plataformas**</b></p>
+
+<p>La carga inicial y la recarga de URLs toman la URL de autenticación de UberEats y la URL utilizada por PediGrido desde `credentials.data` de cada plataforma. Los flujos de login de ambas integraciones reutilizan esos valores en lugar de consultar propiedades estáticas del ambiente.</p>
+
+<p><b>2. **Actualización de referencias en los flujos operativos**</b></p>
+
+<p>La autenticación de UberEats y el login de PediGrido quedan asociados a la configuración actual de la plataforma. La recarga de URLs mantiene sincronizadas estas referencias cuando se actualizan los datos de configuración.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -15,23 +15,19 @@ module.exports = {
+   },
+   smlParams: {
+     client_id: '6cbiHgyQ4o7dB991UA5ZDWHysnlGeQgA',
+     client_secret: 'xxx', 
+     audience : 'https://azsl-webservicecg-test.smartfran.com/',
+     url: 'https://smartfran-cloud-platform-dev.azurewebsites.net/api/v1/Security/token',
+     api: 'https://azsl-webservicecg-test02.smartfran.com:805'
+   },
+-  uberParams: {
+-    authUrl: 'https://sandbox-login.uber.com/oauth/v2/token'    
+-  },
+   pediGridoParams: {
+     usuario: 'Smartfran_api',
+-    password: 'xxx',
+-    baseUrl: 'https://backoffice-staging.pedigrido.com/'
++    password: 'xxx'
+   },
+   mail: 'tuMail@smartfran.com',
+   chainCode: 'SMARTFRANTEST0001',
+   SENDGRID_API_KEY: "xxx",
+   baseUrl: process.env.BASE_URL || 'http://localhost',
+   apiUrl: "https://stgpedidos.smartfran.com/api",
+   backoffice: 'https://bostgpedidos.smartfran.com',
+   port: process.env.NODE_PORT || 3086,</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El controlador de sucursales resuelve las URLs necesarias para autenticación y gestión de locales a partir de las plataformas almacenadas. Los cambios de configuración pueden reflejarse durante la recarga sin depender de las propiedades retiradas de los archivos de ambiente.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/config/env/testing.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Nuevo endpoint para actualizar la URL de autenticación**</b></p>
+
+<p>Se agrega una operación que recibe el identificador de la plataforma y la nueva URL, actualiza `credentials.data.authUrl` y devuelve la plataforma modificada. Si la plataforma no existe responde con estado 404; los errores de procesamiento se registran y responden con estado 400.</p>
+
+<p><b>2. **Solicitud de sincronización de configuración**</b></p>
+
+<p>Después de actualizar la URL, el controlador activa los indicadores de sincronización del Concentrador y Platform para que ambos servicios vuelvan a cargar la configuración.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -12,23 +12,19 @@ module.exports = {
+   apiUrl: "http://localhost:3087/api",
+   smlParams: {
+     client_id: '6cbiHgyQ4o7dB991UA5ZDWHysnlGeQgA',
+     client_secret: 'xxx',
+     audience : 'https://azsl-webservicecg-test.smartfran.com/',
+     url: 'https://smartfran-cloud-platform-dev.azurewebsites.net/api/v1/Security/token',
+     api: 'https://azsl-webservicecg-test02.smartfran.com:805'
+   },
+-  uberParams: {
+-    authUrl: 'https://sandbox-login.uber.com/oauth/v2/token'    
+-  },
+   pediGridoParams: {
+     usuario: 'Smartfran_api',
+-    password: 'xxx',
+-    baseUrl: 'https://backoffice-staging.pedigrido.com/'
++    password: 'xxx'   
+   },
+   mail: "tuMail@smartfran.com",
+   backoffice: 'https://bostgpedidos.smartfran.com',
+   port: process.env.NODE_PORT || 3086,
+   url: function () {
+     return this.baseUrl + ':' + this.port;
+   },
+   path: path.normalize(path.join(__dirname, '..')),</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>El controlador de terceros incorpora la actualización persistida de la URL de autenticación y la notificación de sincronización asociada. La nueva operación completa el flujo administrativo necesario para cambiar este dato desde Backoffice.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/controllers/branch.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p><b>1. **Exposición de la ruta `updateAuthUrl`**</b></p>
+
+<p>Se publica el endpoint `PUT /thirdParty/updateAuthUrl` con autenticación Bearer y documentación Swagger. La ruta delega en el controlador la actualización de la URL de autenticación de una plataforma.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -43,16 +43,17 @@ import gridoBranchModel from '../models/gridoBranch';
+ const sha256 = require('crypto-js/sha256');
+ 
+ let cronAlready = false;
+ let tokenPeya = '';
+ let tokenID = '';
+ let baseUrlID = '';
+ let tokenPedigrido = '';
+ let baseUrlPedigrido = '';
++let authUrlUberEats = '';
+ let peyaBaseUrl = '';
+ let pedigridoId = '';
+ let mercadopagoId = '';
+ let uberId = '';
+ let rappiId = '';
+ let peyaId = '';
+ let tokenSML = '';
+ let expires_in = '';
+@@ -94,17 +95,17 @@ async function pediGridoLogin() {
+     "Usuario": config.pediGridoParams.usuario,
+     "Password": config.pediGridoParams.password
+   }
+   let configData = {
+     headers: {
+       'Content-Type': 'application/json'
+     }
+   }
+-  await httpClient.post(`${config.pediGridoParams.baseUrl}v1/login`, body, configData).then(r =&gt; {
++  await httpClient.post(`${baseUrlPedigrido}v1/login`, body, configData).then(r =&gt; {
+     tokenPediGridoOpenClose = r.data.accessToken;
+   });
+ }
+ 
+ async function searchToken(user_id, tenantId, cached = false) {
+   let tokenCached = false;
+   let tokenMercadoPagoCloud = tokensCache.get(user_id);
+   if (!tokenMercadoPagoCloud &amp;&amp; !cached) {
+@@ -271,17 +272,17 @@ async function loginCountryUber(country, clientId) {
+     const dataSend = new FormData();
+     dataSend.append('client_id', clientId);
+     dataSend.append('client_secret', uberClientSecret[country]);
+     dataSend.append('grant_type', 'client_credentials');
+     dataSend.append('scope', 'eats.order eats.store eats.store.orders.cancel eats.store.orders.read eats.store.status.write');
+ 
+     const config = {
+       method: 'post',
+-      url: settings.uberParams.authUrl,
++      url: authUrlUberEats,
+       headers: {
+         ...dataSend.getHeaders(),
+       },
+       data: dataSend,
+     };
+ 
+     const response = await axios(config);
+     tokenUber[country] = response.data.access_token;
+@@ -304,17 +305,18 @@ async function tokensLoad() {
+   });
+   stateRej = await newsStatesModel.findOne({ cod: "rej" });
+   typeRej = await newsTypesModel.findOne({ cod: "rej_ord" });
+   rejectedExtraData = await rejectedMessageModel.findOne({ id: -10 });
+   tokenID = IMD.credentials.data.token;
+   tokenPedigrido = PediGrido.credentials.data.token;
+   baseUrlID = IMD.credentials.data.baseUrl;
+   // baseUrlPedigrido = PediGrido.credentials.data.baseUrl;
+-  baseUrlPedigrido = config.pediGridoParams.baseUrl;
++  baseUrlPedigrido = PediGrido.credentials.data.authUrl;// config.pediGridoParams.baseUrl;
++  authUrlUberEats = UberEats.credentials.data.authUrl;
+   pedigridoId = PediGrido.id;
+   mercadopagoId = MercadoPago.id;
+   uberId = UberEats.id;
+   peyaId = PedidosYa.id;
+   rappiId = Rappi.id;
+   peyaBaseUrl = PedidosYa.credentials.data.baseUrl;
+   baseUrlToque = Toque.credentials.data.baseUrl;
+   baseUrlMercadoPago = MercadoPago.credentials.data.baseUrl;
+@@ -1805,19 +1807,19 @@ async function baseUrlsReload(localHour, localMinute, tzo) {
+   let IMD = await platforms.findOne({ name: 'I+D' });
+   let PediGrido = await platforms.findOne({ name: 'PediGrido' });
+   let PedidosYa = await platforms.findOne({ name: 'PedidosYa' });
+   let Toque = await platforms.findOne({ name: 'Toque' });
+   let UberEats = await platforms.findOne({ name: 'UberEats' });
+   let Rappi = await platforms.findOne({ name: 'Rappi' });
+   let MercadoPago = await platforms.findOne({ name: 'MercadoPago' });
+   baseUrlID = IMD.credentials.data.baseUrl;
+-  // baseUrlPedigrido = PediGrido.credentials.data.baseUrl;
+-  //baseUrlPedigrido = config.pediGridoParams.baseUrl;
++  baseUrlPedigrido = PediGrido.credentials.data.authUrl;
+   peyaBaseUrl = PedidosYa.credentials.data.baseUrl;
++  authUrlUberEats = UberEats.credentials.data.authUrl;
+   baseUrlToque = Toque.credentials.data.baseUrl;
+   baseUrlMercadoPago = MercadoPago.credentials.data.baseUrl;
+   baseUrlUber = UberEats.credentials.data.baseUrl;
+   baseUrlRappi = JSON.parse(Rappi.credentials.data.baseUrl);
+ }
+ 
+ async function checkforcedCronHorarios() {
+   let forcedCronHorarios = await configsModel.findOne({});</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p>Las rutas de terceros exponen una operación REST documentada para actualizar la URL de autenticación de una plataforma, manteniendo el patrón de autorización y delegación utilizado por el resto del módulo.</p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/controllers/thirdParty.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+<p>El release centraliza en la configuración de cada plataforma las URLs necesarias para autenticación y gestión de locales, reduciendo la dependencia de valores definidos por ambiente. El Concentrador puede recargar esas referencias para los flujos de UberEats y PediGrido, y ofrece el endpoint que permite actualizar la URL de autenticación junto con la señal de sincronización para los servicios involucrados.</p>
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -154,19 +154,44 @@ const updateBaseUrl = async (req, res) =&gt; {
+     await configsModel.updateOne({}, { syncBaseurlConcentrador: true, syncBaseurlPlatform: true });
+     return res.status(200).json(updatedPlatform);
+   } catch (error) {
+     Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] failed updateBaseUrl', data: req.body, platform: 'Concentrador' });
+     return res.status(400).json(error).end();
+   }  
+ };
+ 
++const updateAuthUrl = async (req, res) =&gt; {
++  try {
++      const { platform, authurl } = req.body;  
++     const updatedPlatform = await model.findOneAndUpdate(
++      { _id: platform },
++      { 
++        $set: { 
++          "credentials.data.authUrl": authurl
++        } 
++      },
++      { new: true, runValidators: true }
++    );  
++    if (!updatedPlatform) {
++      return res.status(404).json({ error: "Plataforma no encontrada" });
++    }
++    await configsModel.updateOne({}, { syncBaseurlConcentrador: true, syncBaseurlPlatform: true });
++    return res.status(200).json(updatedPlatform);
++  } catch (error) {
++    Log.saveError(error, { category: 'INFRA', message: '[INFRA/ERROR] failed updateAuthUrl', data: req.body, platform: 'Concentrador' });
++    return res.status(400).json(error).end();
++  }  
++};
++
++
+ module.exports = {
+   findAll,
+   findById,
+   saveOne,
+   updateOne,
+   deleteOne,
+   getPlatformsHistory,
+   getPlatformsCheckIns,
+   savePlatformsCheckIns,
+-  updateBaseUrl
++  updateBaseUrl,
++  updateAuthUrl
+ };</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p></p>
+                </div>
+            </div>
+        </details>
+        <details class="component-card" open>
+            <summary class="component-header">
+                <h3>api/src/routes/thirdParty.js</h3>
+            </summary>
+            <div class="component-body">
+                <div class="analysis-box">
+                    <h4>Modificaciones Identificadas</h4>
+                    
+
+                </div>
+                <h4>Diff de código</h4><pre class="diff-highlight language-diff-javascript"><code class="language-diff-javascript">@@ -110,16 +110,36 @@ router.route("/savePlatformsCheckIns")
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CountryInfo'
+ */
+ router.route("/updateBaseUrl")
+ .put(controller.updateBaseUrl);
+ 
++/**
++* @swagger
++* /thirdParty/updateAuthUrl:
++*   put:
++*     summary: Actualiza Auth Url de plataforma.
++*     tags:
++*       - ThirdParty
++*     security:
++*       - bearerAuth: []
++*     responses:
++*       200:
++*         description: Respuesta exitosa
++*         content:
++*           application/json:
++*             schema:
++*               $ref: '#/components/schemas/CountryInfo'
++*/
++router.route("/updateAuthUrl")
++.put(controller.updateAuthUrl);
++
+ /**
+ * @swagger
+ * /thirdParty/{id}:
+ *   get:
+ *     parameters:
+ *       - in: path
+ *         name: id 
+ *         schema:</code></pre>
+                <div class="analysis-box">
+                    <h4>Conclusión del Archivo</h4>
+                    <p></p>
+                </div>
+            </div>
+        </details>
+    </section>
+    <section id="conclusion" class="service-section">
+        <h2>Conclusión General</h2>
+        <p></p>
+    </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/diff-highlight/prism-diff-highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>Prism.highlightAll();</script>
+</body>
+</html>
